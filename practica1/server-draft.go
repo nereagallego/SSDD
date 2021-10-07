@@ -56,6 +56,7 @@ func FindPrimes(interval com.TPInterval) (primes []int) {
 // petición a la estructura de datos mediante el canal addChan
 func sendReply(id int, primes []int, encoder *gob.Encoder) {
 	reply := com.Reply{id, primes}
+
 	err := encoder.Encode(&reply)
 	checkError(err)
 }
@@ -70,6 +71,7 @@ func receiveRequest(decoder *gob.Decoder, encoder *gob.Encoder) {
 	for {
 		var request com.Request
 		err := decoder.Decode(&request)
+
 		checkError(err)
 		sendReply(request.Id, FindPrimes(request.Interval), encoder)
 	}
@@ -78,7 +80,7 @@ func receiveRequest(decoder *gob.Decoder, encoder *gob.Encoder) {
 func main() {
 
 	CONN_TYPE := "tcp"
-	CONN_HOST := "127.0.0.1"
+	CONN_HOST := "155.210.154.205"
 	CONN_PORT := "30000"
 
 	fmt.Println("Esperando clientes")

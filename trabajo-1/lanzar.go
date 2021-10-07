@@ -159,30 +159,21 @@ func rutineServer(ssh *SshClient, err error) {
 
 func main() {
 
-	ssh1, err := NewSshClient(
+	ssh, err := NewSshClient(
 		"a801950",
 		"155.210.154.200",
 		22,
 		"/home/nereagallego/.ssh/id_rsa",
 		"")
-
-	go rutineServer(ssh1, err)
-
-	fmt.Println("Lanzando cliente...")
-	ssh, err := NewSshClient(
-		"a801950",
-		"155.210.154.201",
-		22,
-		"/home/nereagallego/.ssh/id_rsa",
-		"")
-
+	fmt.Println("Lanzando servidor...")
 	if err != nil {
 		log.Printf("SSH init error %v", err)
 	} else {
-		output, err := ssh.RunCommand("cd SSDD/trabajo-1 && go run client.go")
+		output, err := ssh.RunCommand("cd SSDD/trabajo-1 && go run server.go")
 		fmt.Println(output)
 		if err != nil {
 			log.Printf("SSH run command error %v", err)
 		}
 	}
+
 }

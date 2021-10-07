@@ -66,9 +66,12 @@ func sendReply(id int, primes []int, encoder *gob.Encoder) {
 // temporal. Para evitar condiciones de carrera, la estructura de datos compartida se almacena en una Goroutine
 // (handleRequests) y que controla los accesos a través de canales síncronos. En este caso, se añade una nueva
 // petición a la estructura de datos mediante el canal addChan
-func receiveRequest(encoder *gob.Encoder, request com.Request) {
-
-	sendReply(request.Id, FindPrimes(request.Interval), encoder)
+func receiveRequest(encoder *gob.Encoder, ch chan com.Request) {
+	//	var request com.Request
+	for {
+		request := <-ch
+		sendReply(request.Id, FindPrimes(request.Interval), encoder)
+	}
 }
 
 func main() {
@@ -76,6 +79,7 @@ func main() {
 	CONN_TYPE := "tcp"
 	CONN_HOST := "155.210.154.205"
 	CONN_PORT := "30000"
+	Chan := make(chan com.Request)
 
 	fmt.Println("Esperando clientes")
 	listener, err := net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
@@ -94,11 +98,15 @@ func main() {
 	fmt.Println("Creado encoder y decoder")
 	var request com.Request
 	err = decoder.Decode(&request)
-	checkError(err)
+
+	for i := 0; i < 6 i++ {
+		go receiveRequest(encoder, Chan)
+		//	err = decoder.Decode(&request)
+		//checkError(err)
+	}
 	for {
-		go receiveRequest(encoder, request)
 		err = decoder.Decode(&request)
 		checkError(err)
+		Chan <- request
 	}
-
 }
