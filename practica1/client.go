@@ -34,6 +34,7 @@ func checkError(err error) {
 // petición a la estructura de datos mediante el canal addChan
 func sendRequest(id int, interval com.TPInterval, encoder *gob.Encoder, addChan chan com.TimeRequest) {
 	request := com.Request{id, interval}
+	fmt.Println("Peticion enviada", request.Id)
 	timeReq := com.TimeRequest{id, time.Now()}
 	err := encoder.Encode(request)
 	checkError(err)
@@ -77,7 +78,7 @@ func receiveReply(decoder *gob.Decoder, delChan chan com.TimeReply) {
 }
 
 func main() {
-	endpoint := "155.210.154.205:30000"
+	endpoint := "155.210.154.205:30010"
 	numIt := 10
 	requestTmp := 2
 	interval := com.TPInterval{1000, 70000}

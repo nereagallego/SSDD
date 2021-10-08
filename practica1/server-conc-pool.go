@@ -99,7 +99,7 @@ func main() {
 	var request com.Request
 	err = decoder.Decode(&request)
 
-	for i := 0; i < 6 i++ {
+	for i := 0; i < 6; i++ {
 		go receiveRequest(encoder, Chan)
 		//	err = decoder.Decode(&request)
 		//checkError(err)
