@@ -61,40 +61,45 @@ func sendReply(id int, primes []int, encoder *gob.Encoder) {
 	checkError(err)
 }
 
-func handleClients(clients chan net.Conn) {
+// receiveReply recibe las respuestas (id, primos) del servidor. Respuestas que corresponden con peticiones previamente
+// realizadas.
+// el encoder y una vez enviada la petición se almacena en una estructura de datos, junto con una estampilla
+// temporal. Para evitar condiciones de carrera, la estructura de datos compartida se almacena en una Goroutine
+// (handleRequests) y que controla los accesos a través de canales síncronos. En este caso, se añade una nueva
+// petición a la estructura de datos mediante el canal addChan
+func receiveRequest(decoder *gob.Decoder, encoder *gob.Encoder) {
 	for {
-		conn, ok := <-clients
-		if ok == false {
-			break
-		} else {
-			encoder := gob.NewEncoder(conn)
-			decoder := gob.NewDecoder(conn)
-			var request com.Request
-			err := decoder.Decode(&request)
+		var request com.Request
+		err := decoder.Decode(&request)
 
-			checkError(err)
-			sendReply(request.Id, FindPrimes(request.Interval), encoder)
-			conn.Close()
-		}
+		checkError(err)
+		sendReply(request.Id, FindPrimes(request.Interval), encoder)
 	}
-
 }
 
 func main() {
+
 	CONN_TYPE := "tcp"
 	CONN_HOST := "155.210.154.205"
-	CONN_PORT := "30017"
+	CONN_PORT := "30000"
 
-	listener, err := net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
-	checkError(err)
-	clients := make(chan net.Conn)
-	go handleClients(clients)
-
+	fmt.Println("Esperando clientes")
 	for {
-		conn, err := listener.Accept()
-		clients <- conn
+		listener, err := net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
 		checkError(err)
-	}
 
-	// TO DO
+		conn, err := listener.Accept()
+		defer conn.Close()
+		checkError(err)
+
+		// TO DO
+		fmt.Println("Cliente conectado")
+
+		encoder := gob.NewEncoder(conn)
+		decoder := gob.NewDecoder(conn)
+
+		fmt.Println("Creado encoder y decoder")
+
+		receiveRequest(decoder, encoder)
+	}
 }

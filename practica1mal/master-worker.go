@@ -154,19 +154,6 @@ func parsePemBlock(block *pem.Block) (interface{}, error) {
 	}
 }
 
-func rutineServer(ssh *SshClient, err error) {
-	fmt.Println("Lanzando servidor...")
-	if err != nil {
-		log.Printf("SSH init error %v", err)
-	} else {
-		output, err := ssh.RunCommand("cd SSDD/trabajo-1 && go run server.go")
-		fmt.Println(output)
-		if err != nil {
-			log.Printf("SSH run command error %v", err)
-		}
-	}
-}
-
 func checkError(err error) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())
@@ -190,11 +177,18 @@ func sendReply(ch chan com.Reply, encoder *gob.Encoder) {
 		if ok == false {
 			break
 		} else {
-			//	reply := <-ch
 			err := encoder.Encode(reply)
-			//fmt.Println("Respuesta enviada", reply.Id)
 			checkError(err)
 		}
+	}
+}
+
+func receiveReply(decoder *gob.Decoder, repl chan com.Reply) {
+	for {
+		var replay com.Reply
+		err := decoder.Decode(&replay)
+		checkError(err)
+		repl <- replay
 	}
 }
 
@@ -210,7 +204,7 @@ func lanzaWorker(ip string, puerto string, req chan com.Request, repl chan com.R
 	if err != nil {
 		log.Printf("SSH init error %v", err)
 	} else {
-		output, err := ssh.RunCommand("cd SSDD/practica1 && go run worker.go " + ip)
+		output, err := ssh.RunCommand("cd SSDD/practica1 && go run worker.go " + ip + " " + puerto)
 		fmt.Println(output)
 		if err != nil {
 			log.Printf("SSH run command error %v", err)
@@ -220,10 +214,8 @@ func lanzaWorker(ip string, puerto string, req chan com.Request, repl chan com.R
 }
 
 func conectaWorker(maquina string, req chan com.Request, repl chan com.Reply, permiso chan int) {
-	fmt.Println(maquina)
 	_ = <-permiso
 	time.Sleep(time.Duration(8000) * time.Millisecond)
-	fmt.Println("permiso concedido")
 	endpoint := maquina
 	tcpAddr, err := net.ResolveTCPAddr("tcp", endpoint)
 	checkError(err)
@@ -235,40 +227,16 @@ func conectaWorker(maquina string, req chan com.Request, repl chan com.Reply, pe
 
 	encoder := gob.NewEncoder(conn)
 	decoder := gob.NewDecoder(conn)
-
-	for i := 0; i < 5; i++ {
-		request := <-req
-		err = encoder.Encode(request)
-		fmt.Println("Peticion enviada", request)
-		checkError(err)
-	}
-
-	var replay com.Reply
-
-	//for request, ok := <-req; ok == true; {
-	//for cap(req) > 0 {
+	go receiveReply(decoder, repl)
 	for {
 		request, ok := <-req
-		//request := <-req
 		if ok == false {
 			break
 		} else {
 			err = encoder.Encode(request)
-			fmt.Println("Peticion enviada", request)
 			checkError(err)
-			err = decoder.Decode(&replay)
-			fmt.Println("Respuesta recibida ")
-			checkError(err)
-			repl <- replay
 		}
 	}
-	for i := 0; i < 5; i++ {
-		err = decoder.Decode(&replay)
-		fmt.Println("Respuesta recibida ")
-		checkError(err)
-		repl <- replay
-	}
-
 }
 
 func main() {

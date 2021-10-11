@@ -15,7 +15,7 @@ import (
 	"os"
 	"time"
 
-	"practica1/com"
+	"practica1mal/com"
 )
 
 func checkError(err error) {
@@ -32,21 +32,12 @@ func checkError(err error) {
 // temporal. Para evitar condiciones de carrera, la estructura de datos compartida se almacena en una Goroutine
 // (handleRequests) y que controla los accesos a través de canales síncronos. En este caso, se añade una nueva
 // petición a la estructura de datos mediante el canal addChan
-func sendRequest(endpoint string, id int, interval com.TPInterval, addChan chan com.TimeRequest, delChan chan com.TimeReply) {
-	tcpAddr, err := net.ResolveTCPAddr("tcp", endpoint)
-	checkError(err)
-
-	conn, err := net.DialTCP("tcp", nil, tcpAddr)
-	checkError(err)
-
-	encoder := gob.NewEncoder(conn)
-	decoder := gob.NewDecoder(conn)
+func sendRequest(id int, interval com.TPInterval, encoder *gob.Encoder, addChan chan com.TimeRequest) {
 	request := com.Request{id, interval}
 	timeReq := com.TimeRequest{id, time.Now()}
-	err = encoder.Encode(request)
+	err := encoder.Encode(request)
 	checkError(err)
 	addChan <- timeReq
-	go receiveReply(decoder, delChan, conn)
 }
 
 // handleRequests es una Goroutine que garantiza el acceso en exclusión mutua a la tabla de peticiones. La tabla de peticiones
@@ -75,31 +66,43 @@ func handleRequests(addChan chan com.TimeRequest, delChan chan com.TimeReply) {
 // temporal. Para evitar condiciones de carrera, la estructura de datos compartida se almacena en una Goroutine
 // (handleRequests) y que controla los accesos a través de canales síncronos. En este caso, se añade una nueva
 // petición a la estructura de datos mediante el canal addChan
-func receiveReply(decoder *gob.Decoder, delChan chan com.TimeReply, conn net.Conn) {
-	var reply com.Reply
-	err := decoder.Decode(&reply)
-	checkError(err)
-	timeReply := com.TimeReply{reply.Id, time.Now()}
-	delChan <- timeReply
-	conn.Close()
+func receiveReply(decoder *gob.Decoder, delChan chan com.TimeReply) {
+	for {
+		var reply com.Reply
+		err := decoder.Decode(&reply)
+		checkError(err)
+		timeReply := com.TimeReply{reply.Id, time.Now()}
+		delChan <- timeReply
+	}
 }
 
 func main() {
-	endpoint := "155.210.154.205:30017"
+	endpoint := "155.210.154.205:30010"
 	numIt := 10
-	requestTmp := 11
+	requestTmp := 18
 	interval := com.TPInterval{1000, 70000}
 	tts := 3000 // time to sleep between consecutive requests
+
+	tcpAddr, err := net.ResolveTCPAddr("tcp", endpoint)
+	checkError(err)
+
+	conn, err := net.DialTCP("tcp", nil, tcpAddr)
+	checkError(err)
+
+	encoder := gob.NewEncoder(conn)
+	decoder := gob.NewDecoder(conn)
 
 	addChan := make(chan com.TimeRequest)
 	delChan := make(chan com.TimeReply)
 
+	go receiveReply(decoder, delChan)
 	go handleRequests(addChan, delChan)
 
 	for i := 0; i < numIt; i++ {
 		for t := 1; t <= requestTmp; t++ {
-			sendRequest(endpoint, i*requestTmp+t, interval, addChan, delChan)
+			sendRequest(i*requestTmp+t, interval, encoder, addChan)
 		}
 		time.Sleep(time.Duration(tts) * time.Millisecond)
 	}
+	time.Sleep(time.Duration(tts*5) * time.Millisecond)
 }
