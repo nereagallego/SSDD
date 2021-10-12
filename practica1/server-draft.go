@@ -95,6 +95,4 @@ func main() {
 		clients <- conn
 		checkError(err)
 	}
-
-	// TO DO
 }
