@@ -144,24 +144,11 @@ func parsePemBlock(block *pem.Block) (interface{}, error) {
 	}
 }
 
-func rutineServer(ssh *SshClient, err error) {
-	fmt.Println("Lanzando servidor...")
-	if err != nil {
-		log.Printf("SSH init error %v", err)
-	} else {
-		output, err := ssh.RunCommand("cd SSDD/trabajo-1 && go run server.go")
-		fmt.Println(output)
-		if err != nil {
-			log.Printf("SSH run command error %v", err)
-		}
-	}
-}
-
 func main() {
 
 	ssh, err := NewSshClient(
 		"a801950",
-		"155.210.154.200",
+		"155.210.154.205",
 		22,
 		"/home/nereagallego/.ssh/id_rsa",
 		"")

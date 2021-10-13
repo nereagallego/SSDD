@@ -1,5 +1,6 @@
 /*
 * AUTOR: Rafael Tolosana Calasanz
+* ALUMNOS: Cesar Borja Moreno, Nerea Gallego Sánchez
 * ASIGNATURA: 30221 Sistemas Distribuidos del Grado en Ingeniería Informática
 *			Escuela de Ingeniería y Arquitectura - Universidad de Zaragoza
 * FECHA: septiembre de 2021
@@ -45,6 +46,8 @@ func FindPrimes(interval com.TPInterval) (primes []int) {
 	return primes
 }
 
+// PRE: v es un vector de bytes con 8 componentes de manera que representa 2 enteros
+// POST: devuelve el intervalo de los enteros contenidos en el vector de bytes
 func desconvertirServ(v []byte) com.TPInterval {
 	var intv com.TPInterval
 	intv.A = 0
@@ -59,6 +62,9 @@ func desconvertirServ(v []byte) com.TPInterval {
 	return intv
 }
 
+// PRE: primes contiene enteros
+// POST: devuelve en el vector de bytes los enteros contenidos en el anterior vector
+//		 cada entero ocupa 4 componentes
 func convertirServ(primes []int) []byte {
 	var v []byte
 	for i := 0; i < len(primes); i = i + 1 {
@@ -73,8 +79,8 @@ func convertirServ(primes []int) []byte {
 func main() {
 
 	CONN_TYPE := "tcp"
-	CONN_HOST := "155.210.154.200"
-	CONN_PORT := "30000"
+	CONN_HOST := "155.210.154.205"
+	CONN_PORT := "30010"
 
 	fmt.Println("Esperando clientes...")
 
@@ -85,7 +91,6 @@ func main() {
 	defer conn.Close()
 	checkError(err)
 
-	//var v [8]byte
 	v := make([]byte, 8)
 	_, err = conn.Read(v)
 	checkError(err)
@@ -93,9 +98,14 @@ func main() {
 	fmt.Println("Deserializando los datos...")
 	fmt.Println("Buscando los primos...")
 	fmt.Println("Enviado los primos...")
-
-	_, err = conn.Write(convertirServ(FindPrimes(desconvertirServ(v))))
-	checkError(err)
+	i := desconvertirServ(v)
+	if i.A < i.B {
+		_, err = conn.Write(convertirServ(FindPrimes(i)))
+		checkError(err)
+	} else {
+		_, err = conn.Write(convertirServ([]int{}))
+		checkError(err)
+	}
 
 	conn.Close()
 

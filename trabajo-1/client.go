@@ -1,5 +1,6 @@
 /*
 * AUTOR: Rafael Tolosana Calasanz
+* ALUMNOS: Cesar Borja Moreno, Nerea Gallego Sánchez
 * ASIGNATURA: 30221 Sistemas Distribuidos del Grado en Ingeniería Informática
 *			Escuela de Ingeniería y Arquitectura - Universidad de Zaragoza
 * FECHA: septiembre de 2021
@@ -24,6 +25,12 @@ func checkError(err error) {
 	}
 }
 
+/*
+ * convertirCli convierte el intervalo de tipo com.TPInterval a un vector de bytes
+ * sean los enteros a y b un intervalo. a0 a1 a2 a3 sería el número a en un vector de 4 bytes
+ * y b0 b1 b2 b3 b en un vector de 4 bytes
+ * la función devuelve como resultado a0 b0 a1 b1 a2 b2 a3 b3
+ */
 func convertirCli(intv com.TPInterval) []byte {
 	var v []byte
 	for i := 0; i < 4; i = i + 1 {
@@ -35,6 +42,12 @@ func convertirCli(intv com.TPInterval) []byte {
 	return v
 }
 
+/*
+ * dado un vector de bytes, interpreta el contenido del vector como enteros y devuelve un vector de
+ * enteros con el contenido del primero
+ * se asume que las componentes del número en bytes estarán en cuatro componentes consecutivas del
+ * vector pasado por parámetro
+ */
 func desconvertirCli(v []byte) []int {
 	var primes []int
 	for i := 0; i < len(v); i = i + 4 {
@@ -51,7 +64,7 @@ func desconvertirCli(v []byte) []int {
 }
 
 func main() {
-	endpoint := "155.210.154.200:30000"
+	endpoint := "155.210.154.205:30010"
 
 	fmt.Println("Introduce un intervalo de enteros: ")
 

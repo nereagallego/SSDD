@@ -87,7 +87,7 @@ func handleClients(clients chan net.Conn) {
 func main() {
 	CONN_TYPE := "tcp"
 	CONN_HOST := "155.210.154.205"
-	CONN_PORT := "30017"
+	CONN_PORT := "30014"
 
 	listener, err := net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
 	checkError(err)
