@@ -190,36 +190,36 @@ func FindPrimes(interval com.TPInterval) (primes []int) {
 	return primes
 }
 
-func lanzaWorker(ip string, puerto string, N_POOL string) {
+func lanzaWorker(id int, maquinas []maquina, N_POOL int) {
 	ssh, err := NewSshClient(
 		"a801950",
-		ip,
+		maquinas[id].ip,
 		22,
 		"/home/a801950/.ssh/id_rsa",
 		"")
-	fmt.Println("Lanzando worker... ")
+	fmt.Println("Lanzando worker... ", id, maquinas[id].ip)
 	if err != nil {
 		log.Printf("SSH init error %v", err)
-	} else {
-		output, err := ssh.RunCommand("cd SSDD/practica1 && go run worker.go " + ip + " " + puerto + " " + N_POOL)
-		fmt.Println(output)
-		if err != nil {
-			log.Printf("SSH run command error %v", err)
-		}
-	}
-	/*for i := 30000; i < 50000; i++ {
+	} /*else {
+		 output, err := ssh.RunCommand("cd SSDD/practica1 && go run worker.go " + ip + " " + puerto)
+		 fmt.Println(output)
+		 if err != nil {
+			 log.Printf("SSH run command error %v", err)
+		 }
+	 }*/
+	for i := 30000; i < 50000; i++ {
 		maquinas[id].puerto = i
 
 		output, _ := ssh.RunCommand("cd SSDD/practica1 && go run worker.go " + maquinas[id].ip + " " + strconv.Itoa(maquinas[id].puerto) + " " + strconv.Itoa(N_POOL))
 		fmt.Println(output)
 
-	}*/
+	}
 }
 
-func handleClients(clients chan net.Conn, ip string, puerto string) {
-	time.Sleep(time.Duration(60000) * time.Millisecond)
-	fmt.Println("conectando a " + ip + ":" + puerto)
-	tcpAddr, err := net.ResolveTCPAddr("tcp", ip+":"+puerto)
+func handleClients(clients chan net.Conn, id int, maq []maquina) {
+
+	fmt.Println("conectando a " + maq[id].ip + ":" + strconv.Itoa(maq[id].puerto))
+	tcpAddr, err := net.ResolveTCPAddr("tcp", maq[id].ip+":"+strconv.Itoa(maq[id].puerto))
 	checkError(err)
 
 	worker, err := net.DialTCP("tcp", nil, tcpAddr)
@@ -277,30 +277,30 @@ func main() {
 	}
 
 	fileScanner := bufio.NewScanner(file)
-	//	nMaquinas := 0
-	//	var maq []maquina
+	nMaquinas := 0
+	var maq []maquina
 	clients := make(chan net.Conn)
-	//	var m maquina
+	var m maquina
 	// read line by line
 	for fileScanner.Scan() {
 		ip := fileScanner.Text()
 		fmt.Println(ip)
-		fileScanner.Scan()
-		puerto := fileScanner.Text()
-		go lanzaWorker(ip, puerto, strconv.Itoa(N_POOL))
-		go handleClients(clients, ip, puerto)
-		//	nMaquinas++
+		m.ip = ip
+		m.puerto = 30150
+		maq = append(maq, m)
+		//	go lanzaWorker(nMaquinas, maq, N_POOL)
+		nMaquinas++
 
 	}
-	//	for i := 0; i < nMaquinas; i++ {
-	//		go lanzaWorker(i, maq, N_POOL)
-	//	}
+	for i := 0; i < nMaquinas; i++ {
+		go lanzaWorker(i, maq, N_POOL)
+	}
 	time.Sleep(time.Duration(60000) * time.Millisecond)
-	//	for i := 0; i < nMaquinas; i++ {
-	//	for j := 0; j < N_POOL; j++ {
-	//		go handleClients(clients, i, maq)
-	//	}
-	//	}
+	for i := 0; i < nMaquinas; i++ {
+		//	for j := 0; j < N_POOL; j++ {
+		go handleClients(clients, i, maq)
+		//	}
+	}
 	// handle first encountered error while reading
 	if err := fileScanner.Err(); err != nil {
 		log.Fatalf("Error while reading file: %s", err)
@@ -308,10 +308,10 @@ func main() {
 	file.Close()
 
 	/*	for i := 0; i < nMaquinas; i++ {
-		fmt.Println("permiso concedido")
-		_ = <-permiso
-		go handleClients(clients, )
-	}*/
+		 fmt.Println("permiso concedido")
+		 _ = <-permiso
+		 go handleClients(clients, )
+	 }*/
 
 	for {
 		conn, err := listener.Accept()

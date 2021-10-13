@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"strconv"
 
 	"practica1/com"
 )
@@ -61,21 +62,17 @@ func sendReply(id int, primes []int, encoder *gob.Encoder) {
 	checkError(err)
 }
 
-func handleClients(clients chan net.Conn) {
+func receiveRequest(conn net.Conn) {
+	encoder := gob.NewEncoder(conn)
+	decoder := gob.NewDecoder(conn)
 	for {
-		conn, ok := <-clients
-		if ok == false {
-			break
-		} else {
-			encoder := gob.NewEncoder(conn)
-			decoder := gob.NewDecoder(conn)
-			var request com.Request
-			err := decoder.Decode(&request)
 
-			checkError(err)
-			sendReply(request.Id, FindPrimes(request.Interval), encoder)
-			conn.Close()
-		}
+		var request com.Request
+		err := decoder.Decode(&request)
+
+		checkError(err)
+		sendReply(request.Id, FindPrimes(request.Interval), encoder)
+
 	}
 
 }
@@ -84,18 +81,18 @@ func main() {
 	args := os.Args
 	ip := args[1]
 	puerto := args[2]
+	N_POOL, _ := strconv.Atoi(args[3])
 	CONN_TYPE := "tcp"
 	CONN_HOST := ip
 	CONN_PORT := puerto
 
 	listener, err := net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
 	checkError(err)
-	clients := make(chan net.Conn)
-	go handleClients(clients)
+	for i := 0; i < N_POOL; i++ {
 
-	for {
 		conn, err := listener.Accept()
-		clients <- conn
 		checkError(err)
+		go receiveRequest(conn)
 	}
+
 }
