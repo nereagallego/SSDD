@@ -87,7 +87,7 @@ func receiveReply(decoder *gob.Decoder, delChan chan com.TimeReply, conn net.Con
 func main() {
 	endpoint := "155.210.154.205:30014"
 	numIt := 10
-	requestTmp := 10
+	requestTmp := 12
 	interval := com.TPInterval{1000, 70000}
 	tts := 3000 // time to sleep between consecutive requests
 

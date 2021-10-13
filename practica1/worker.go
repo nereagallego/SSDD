@@ -62,18 +62,23 @@ func sendReply(id int, primes []int, encoder *gob.Encoder) {
 	checkError(err)
 }
 
-func receiveRequest(conn net.Conn) {
+func receiveRequest(conn net.Conn, close chan string) {
 	encoder := gob.NewEncoder(conn)
 	decoder := gob.NewDecoder(conn)
+	var request com.Request
+	err := decoder.Decode(&request)
 	for {
-
-		var request com.Request
-		err := decoder.Decode(&request)
-
-		checkError(err)
-		sendReply(request.Id, FindPrimes(request.Interval), encoder)
+		if err != nil {
+			break
+		} else {
+			checkError(err)
+			sendReply(request.Id, FindPrimes(request.Interval), encoder)
+			err = decoder.Decode((&request))
+		}
 
 	}
+	close <- "OK"
+	conn.Close()
 
 }
 
@@ -85,6 +90,7 @@ func main() {
 	CONN_TYPE := "tcp"
 	CONN_HOST := ip
 	CONN_PORT := puerto
+	close := make(chan string)
 
 	listener, err := net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
 	checkError(err)
@@ -92,7 +98,11 @@ func main() {
 
 		conn, err := listener.Accept()
 		checkError(err)
-		go receiveRequest(conn)
+		go receiveRequest(conn, close)
 	}
+	for i := 0; i < N_POOL; i++ {
+		_ = <-close
+	}
+	listener.Close()
 
 }
