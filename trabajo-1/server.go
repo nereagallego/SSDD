@@ -80,7 +80,7 @@ func main() {
 
 	CONN_TYPE := "tcp"
 	CONN_HOST := "155.210.154.205"
-	CONN_PORT := "30010"
+	CONN_PORT := "30015"
 
 	fmt.Println("Esperando clientes...")
 
@@ -108,5 +108,6 @@ func main() {
 	}
 
 	conn.Close()
+	listener.Close()
 
 }

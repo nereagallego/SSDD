@@ -64,7 +64,7 @@ func desconvertirCli(v []byte) []int {
 }
 
 func main() {
-	endpoint := "155.210.154.205:30010"
+	endpoint := "155.210.154.205:30015"
 
 	fmt.Println("Introduce un intervalo de enteros: ")
 
