@@ -252,7 +252,7 @@ func main() {
 	file, err := os.Open(fileMaquinas)
 
 	CONN_TYPE := "tcp"
-	CONN_HOST := "155.210.154.205"
+	CONN_HOST := "155.210.154.192"
 	CONN_PORT := "30014"
 
 	listener, err := net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)

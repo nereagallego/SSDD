@@ -80,17 +80,18 @@ func receiveRequest(clients chan net.Conn) {
 }
 
 func main() {
+	args := os.Args
 	CONN_TYPE := "tcp"
-	CONN_HOST := "155.210.154.205"
-	CONN_PORT := "30014"
+	CONN_HOST := args[1]
+	CONN_PORT := args[2]
 
 	listener, err := net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
 	checkError(err)
 	clients := make(chan net.Conn)
-	for i := 0; i < 15; i++ {
+	for i := 0; i < 10; i++ {
 		go receiveRequest(clients)
 	}
-
+	fmt.Println("Esperando clientes...")
 	for {
 		conn, err := listener.Accept()
 		clients <- conn
