@@ -5,7 +5,7 @@
 * FECHA: septiembre de 2021
 * FICHERO: ms.go
 * DESCRIPCIÓN: Implementación de un sistema de mensajería asíncrono, insipirado en el Modelo Actor
-*/
+ */
 package ms
 
 import (
@@ -48,10 +48,22 @@ func parsePeers(path string) (lines []string) {
 	return lines
 }
 
+// Pre:
+// Post: devuelve el número de peers
+func (ms *MessageSystem) NumberOfPeers() int {
+	return len(ms.peers)
+}
+
+// Pre: true
+// Post: Devuelve el id del proceso
+func (ms *MessageSystem) Me() int {
+	return ms.me
+}
+
 // Pre: pid en {1..n}, el conjunto de procesos del SD
 // Post: envía el mensaje msg a pid
 func (ms *MessageSystem) Send(pid int, msg Message) {
-	conn, err := net.Dial("tcp", ms.peers[pid - 1])
+	conn, err := net.Dial("tcp", ms.peers[pid-1])
 	checkError(err)
 	encoder := gob.NewEncoder(conn)
 	err = encoder.Encode(&msg)
@@ -66,7 +78,7 @@ func (ms *MessageSystem) Receive() (msg Message) {
 	return msg
 }
 
-func register(messageTypes []Message){
+func register(messageTypes []Message) {
 	for _, msgTp := range messageTypes {
 		gob.Register(msgTp)
 	}
