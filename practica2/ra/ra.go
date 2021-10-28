@@ -14,9 +14,9 @@ import (
 )
 
 type Request struct {
-	Clock         int
-	Pid           int
-	OperationType int
+	SequenceNumber int
+	Pid            int
+	OperationType  int
 }
 
 type Reply struct{}
@@ -65,7 +65,7 @@ func (ra *RASharedDB) PreProtocol() {
 		}
 	}
 	for ra.OutRepCnt > 0 { //recibir todas las replys
-		_ = ra.ms.Receive()
+		_ = <-ra.chrep
 		ra.OutRepCnt = ra.OutRepCnt - 1
 	}
 }
@@ -75,32 +75,54 @@ func (ra *RASharedDB) PreProtocol() {
 //      Ricart-Agrawala Generalizado
 func (ra *RASharedDB) PostProtocol() {
 	// TODO completar
+	ra.Mutex.Lock()
 	ra.ReqCS = false
+
 	for j := 1; j <= ra.N; j++ {
 		if ra.RepDefd[j] {
 			ra.RepDefd[j] = false
 			ra.ms.Send(j, Reply{})
 		}
 	}
+	ra.Mutex.Unlock()
 }
 
-func (ra *RASharedDB) Receive(){
+func (ra *RASharedDB) permision() {
+	ra.chrep <- true
+}
+
+func (ra *RASharedDB) Receive() {
 	for {
 		mensaje := ra.ms.Receive()
-		if mensaje == Reply{} {
+		if _, ok := mensaje.(Reply); ok {
 			ra.permision()
 		} else {
-			ra.Request(mensaje)
+			ra.Request(mensaje.(Request))
 		}
-		
+
 	}
 }
 
-func (ra *RASharedDB) Request(menmensaje ms.Message){
-	for {
-		
-
+func Max(x, y int) int {
+	if x > y {
+		return x
 	}
+	return y
+}
+
+func (ra *RASharedDB) Request(mensaje Request) {
+	ra.Mutex.Lock()
+	ra.HigSeqNum = Max(ra.HigSeqNum, mensaje.SequenceNumber)
+	defer_p := ra.ReqCS && (ra.OurSeqNum < mensaje.SequenceNumber || (ra.OurSeqNum == mensaje.SequenceNumber && mensaje.Pid > ra.ms.Me()))
+	ra.Mutex.Unlock()
+	if defer_p && exclude[ra.typeOfProcess][mensaje.OperationType] {
+		ra.Mutex.Lock()
+		ra.RepDefd[mensaje.Pid] = true
+		ra.Mutex.Unlock()
+	} else {
+		ra.ms.Send(mensaje.Pid, Reply{})
+	}
+
 }
 
 func (ra *RASharedDB) Stop() {
