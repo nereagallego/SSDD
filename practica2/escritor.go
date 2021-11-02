@@ -10,11 +10,21 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"practica2/gestorfichero"
 	"practica2/ra"
 	"strconv"
+
+	"github.com/DistributedClocks/GoVector/govec"
 )
+
+func checkError(err error) {
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())
+		os.Exit(1)
+	}
+}
 
 func main() {
 	args := os.Args
@@ -24,14 +34,22 @@ func main() {
 	}
 	usersFile := args[2]
 	file := args[3]
+	gestores := args[4]
 	typeOfProcess := 1 //escritor
-	ra := ra.New(pid, usersFile, typeOfProcess)
-	ra.PreProtocol()
 
-	//SC
-	gestor := gestorfichero.NewGestor("../"+file, pid, "../ms/"+usersFile)
-	fragmento := "escritura" + args[1] + "\n"
-	gestor.EscribirFichero(fragmento)
+	logger := govec.InitGoVector("escritor"+strconv.Itoa(pid), "Logfile", govec.GetDefaultConfig())
 
-	ra.PostProtocol()
+	ra := ra.New(pid, usersFile, typeOfProcess, logger)
+	for i := 0; i < 50; i++ {
+		ra.PreProtocol()
+
+		//SC
+
+		gestor := gestorfichero.NewGestor("../"+file, pid, gestores)
+		fragmento := "escritura" + args[1] + "\n"
+		logger.LogLocalEvent("escribe "+fragmento, govec.GetDefaultLogOptions())
+		gestor.EscribirFichero(fragmento)
+
+		ra.PostProtocol()
+	}
 }

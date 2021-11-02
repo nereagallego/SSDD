@@ -1,2 +1,2 @@
-localhost:2222
-localhost:2223
+localhost:30000
+localhost:30001

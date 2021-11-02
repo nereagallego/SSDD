@@ -11,6 +11,8 @@ package ra
 import (
 	"practica2/ms"
 	"sync"
+
+	"github.com/DistributedClocks/GoVector/govec"
 )
 
 type Request struct {
@@ -33,6 +35,7 @@ type RASharedDB struct {
 	Mutex         sync.Mutex // mutex para proteger concurrencia sobre las variables
 	N             int        // número de procesos
 	typeOfProcess int        // 0 si es lector y 1 si el proceso es escritor
+	logger        *govec.GoLog
 	// TODO: completar
 }
 
@@ -40,11 +43,12 @@ var exclude = [2][2]bool{
 	{false, true},
 	{true, true}}
 
-func New(me int, usersFile string, typeOfProcess int) *RASharedDB {
+func New(me int, usersFile string, typeOfProcess int, logger *govec.GoLog) *RASharedDB {
 
-	messageTypes := []ms.Message{Request{}, Reply{}}
+	//messageTypes := []ms.Message{Request{}, Reply{}}
+	messageTypes := []ms.Message{[]byte{}}
 	msgs := ms.New(me, usersFile, messageTypes)
-	ra := RASharedDB{0, 0, 0, false, []bool{}, &msgs, make(chan bool), make(chan bool), sync.Mutex{}, msgs.NumberOfPeers(), typeOfProcess}
+	ra := RASharedDB{0, 0, 0, false, []bool{}, &msgs, make(chan bool), make(chan bool), sync.Mutex{}, msgs.NumberOfPeers(), typeOfProcess, logger}
 	// TODO completar
 	return &ra
 }
@@ -61,7 +65,9 @@ func (ra *RASharedDB) PreProtocol() {
 	ra.OutRepCnt = ra.N - 1
 	for j := 1; j <= ra.N; j++ { //enviar request a todos menos a ti mismo
 		if j != ra.ms.Me() {
-			ra.ms.Send(j, Request{ra.OurSeqNum, ra.ms.Me(), ra.typeOfProcess})
+			vectorClockMessage := ra.logger.PrepareSend("Sending Message", Request{ra.OurSeqNum, ra.ms.Me(), ra.typeOfProcess}, govec.GetDefaultLogOptions())
+			ra.ms.Send(j, vectorClockMessage)
+			//ra.ms.Send(j, Request{ra.OurSeqNum, ra.ms.Me(), ra.typeOfProcess})
 		}
 	}
 	for ra.OutRepCnt > 0 { //recibir todas las replys
@@ -81,7 +87,8 @@ func (ra *RASharedDB) PostProtocol() {
 	for j := 1; j <= ra.N; j++ {
 		if ra.RepDefd[j] {
 			ra.RepDefd[j] = false
-			ra.ms.Send(j, Reply{})
+			vectorClockMessage := ra.logger.PrepareSend("Sending Message", Reply{}, govec.GetDefaultLogOptions())
+			ra.ms.Send(j, vectorClockMessage)
 		}
 	}
 	ra.Mutex.Unlock()
@@ -94,6 +101,8 @@ func (ra *RASharedDB) permision() {
 func (ra *RASharedDB) Receive() {
 	for {
 		mensaje := ra.ms.Receive()
+		var vectorClockMessage []byte
+		ra.logger.UnpackReceive("Receiving Message", vectorClockMessage, &mensaje, govec.GetDefaultLogOptions())
 		if _, ok := mensaje.(Reply); ok {
 			ra.permision()
 		} else {
@@ -120,7 +129,8 @@ func (ra *RASharedDB) Request(mensaje Request) {
 		ra.RepDefd[mensaje.Pid] = true
 		ra.Mutex.Unlock()
 	} else {
-		ra.ms.Send(mensaje.Pid, Reply{})
+		vectorClockMessage := ra.logger.PrepareSend("Sending Message", Reply{}, govec.GetDefaultLogOptions())
+		ra.ms.Send(mensaje.Pid, vectorClockMessage)
 	}
 
 }

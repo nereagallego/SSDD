@@ -14,6 +14,9 @@ import (
 	"practica2/gestorfichero"
 	"practica2/ra"
 	"strconv"
+	"time"
+
+	"github.com/DistributedClocks/GoVector/govec"
 )
 
 func checkError(err error) {
@@ -31,14 +34,22 @@ func main() {
 	}
 	usersFile := args[2]
 	file := args[3]
+	gestores := args[4]
+
+	logger := govec.InitGoVector("lector"+strconv.Itoa(pid), "Logfile", govec.GetDefaultConfig())
+
 	typeOfProcess := 0 //lector
-	ra := ra.New(pid, usersFile, typeOfProcess)
-	gestorfichero := gestorfichero.NewGestor("../"+file, pid, "../ms/"+usersFile)
-	ra.PreProtocol()
+	ra := ra.New(pid, usersFile, typeOfProcess, logger)
+	gestorfichero := gestorfichero.NewGestor("../"+file, pid, gestores)
+	for i := 0; i < 50; i++ {
+		ra.PreProtocol()
 
-	//SC
-	texto := gestorfichero.LeerFichero()
-	fmt.Println(texto)
+		//SC
+		logger.LogLocalEvent("leer fichero ", govec.GetDefaultLogOptions())
+		texto := gestorfichero.LeerFichero()
+		fmt.Println(texto)
 
-	ra.PostProtocol()
+		ra.PostProtocol()
+		time.Sleep(2000 * time.Millisecond)
+	}
 }
