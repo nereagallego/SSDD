@@ -1,4 +1,6 @@
-lector1 {"lector1":1}
+lector2 {"lector2":1}
 Initialization Complete
 lector1 {"lector1":2}
-INFO Sending Message
+INFO Sending Request
+lector2 {"lector2":2}
+INFO Sending Request

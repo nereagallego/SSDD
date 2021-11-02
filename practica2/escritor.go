@@ -15,6 +15,7 @@ import (
 	"practica2/gestorfichero"
 	"practica2/ra"
 	"strconv"
+	"time"
 
 	"github.com/DistributedClocks/GoVector/govec"
 )
@@ -40,16 +41,18 @@ func main() {
 	logger := govec.InitGoVector("escritor"+strconv.Itoa(pid), "Logfile", govec.GetDefaultConfig())
 
 	ra := ra.New(pid, usersFile, typeOfProcess, logger)
+	time.Sleep(5000 * time.Millisecond)
 	for i := 0; i < 50; i++ {
 		ra.PreProtocol()
 
 		//SC
 
-		gestor := gestorfichero.NewGestor("../"+file, pid, gestores)
-		fragmento := "escritura" + args[1] + "\n"
+		gestor := gestorfichero.NewGestor(file, pid, gestores)
+		fragmento := args[5] + "\n"
 		logger.LogLocalEvent("escribe "+fragmento, govec.GetDefaultLogOptions())
 		gestor.EscribirFichero(fragmento)
 
 		ra.PostProtocol()
+		time.Sleep(2000 * time.Millisecond)
 	}
 }

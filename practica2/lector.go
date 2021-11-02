@@ -40,7 +40,8 @@ func main() {
 
 	typeOfProcess := 0 //lector
 	ra := ra.New(pid, usersFile, typeOfProcess, logger)
-	gestorfichero := gestorfichero.NewGestor("../"+file, pid, gestores)
+	gestorfichero := gestorfichero.NewGestor(file, pid, gestores)
+	time.Sleep(5000 * time.Millisecond)
 	for i := 0; i < 50; i++ {
 		ra.PreProtocol()
 

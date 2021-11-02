@@ -9,6 +9,7 @@
 package ra
 
 import (
+	"fmt"
 	"practica2/ms"
 	"sync"
 
@@ -49,7 +50,11 @@ func New(me int, usersFile string, typeOfProcess int, logger *govec.GoLog) *RASh
 	messageTypes := []ms.Message{[]byte{}}
 	msgs := ms.New(me, usersFile, messageTypes)
 	ra := RASharedDB{0, 0, 0, false, []bool{}, &msgs, make(chan bool), make(chan bool), sync.Mutex{}, msgs.NumberOfPeers(), typeOfProcess, logger}
-	// TODO completar
+	go ra.Receive()
+	for i := 0; i < ra.N; i++ {
+		ra.RepDefd = append(ra.RepDefd, false)
+	}
+	fmt.Println(ra.N)
 	return &ra
 }
 
@@ -65,7 +70,7 @@ func (ra *RASharedDB) PreProtocol() {
 	ra.OutRepCnt = ra.N - 1
 	for j := 1; j <= ra.N; j++ { //enviar request a todos menos a ti mismo
 		if j != ra.ms.Me() {
-			vectorClockMessage := ra.logger.PrepareSend("Sending Message", Request{ra.OurSeqNum, ra.ms.Me(), ra.typeOfProcess}, govec.GetDefaultLogOptions())
+			vectorClockMessage := ra.logger.PrepareSend("Sending Request", Request{ra.OurSeqNum, ra.ms.Me(), ra.typeOfProcess}, govec.GetDefaultLogOptions())
 			ra.ms.Send(j, vectorClockMessage)
 			//ra.ms.Send(j, Request{ra.OurSeqNum, ra.ms.Me(), ra.typeOfProcess})
 		}
@@ -85,8 +90,8 @@ func (ra *RASharedDB) PostProtocol() {
 	ra.ReqCS = false
 
 	for j := 1; j <= ra.N; j++ {
-		if ra.RepDefd[j] {
-			ra.RepDefd[j] = false
+		if ra.RepDefd[j-1] {
+			ra.RepDefd[j-1] = false
 			vectorClockMessage := ra.logger.PrepareSend("Sending Message", Reply{}, govec.GetDefaultLogOptions())
 			ra.ms.Send(j, vectorClockMessage)
 		}
@@ -102,11 +107,14 @@ func (ra *RASharedDB) Receive() {
 	for {
 		mensaje := ra.ms.Receive()
 		var vectorClockMessage []byte
-		ra.logger.UnpackReceive("Receiving Message", vectorClockMessage, &mensaje, govec.GetDefaultLogOptions())
 		if _, ok := mensaje.(Reply); ok {
+			ra.logger.UnpackReceive("Receiving Reply", vectorClockMessage, &mensaje, govec.GetDefaultLogOptions())
 			ra.permision()
+		} else if m, ok := mensaje.(Request); ok {
+			ra.logger.UnpackReceive("Receiving Request", vectorClockMessage, &mensaje, govec.GetDefaultLogOptions())
+			ra.Request(m)
 		} else {
-			ra.Request(mensaje.(Request))
+			break
 		}
 
 	}
@@ -125,11 +133,12 @@ func (ra *RASharedDB) Request(mensaje Request) {
 	defer_p := ra.ReqCS && (ra.OurSeqNum < mensaje.SequenceNumber || (ra.OurSeqNum == mensaje.SequenceNumber && mensaje.Pid > ra.ms.Me()))
 	ra.Mutex.Unlock()
 	if defer_p && exclude[ra.typeOfProcess][mensaje.OperationType] {
+		ra.logger.LogLocalEvent("defer ", govec.GetDefaultLogOptions())
 		ra.Mutex.Lock()
-		ra.RepDefd[mensaje.Pid] = true
+		ra.RepDefd[mensaje.Pid-1] = true
 		ra.Mutex.Unlock()
 	} else {
-		vectorClockMessage := ra.logger.PrepareSend("Sending Message", Reply{}, govec.GetDefaultLogOptions())
+		vectorClockMessage := ra.logger.PrepareSend("Sending Reply", Reply{}, govec.GetDefaultLogOptions())
 		ra.ms.Send(mensaje.Pid, vectorClockMessage)
 	}
 
