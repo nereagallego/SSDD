@@ -1,0 +1,504 @@
+lector2 {"lector2":1}
+Initialization Complete
+lector2 {"lector2":2}
+INFO receiver active 
+lector2 {"lector2":3}
+INFO Sending Request
+lector2 {"lector2":4}
+INFO Receive reply
+lector2 {"lector2":5}
+INFO leer fichero 
+lector2 {"lector2":6}
+INFO Receiving Request
+lector2 {"lector2":7}
+INFO Sending Reply
+lector2 {"lector2":8}
+INFO Sending Request
+lector2 {"lector2":9}
+INFO Receive reply
+lector2 {"lector2":10}
+INFO leer fichero 
+lector2 {"lector2":11}
+INFO Receiving Request
+lector2 {"lector2":12}
+INFO Sending Reply
+lector2 {"lector2":13}
+INFO Sending Request
+lector2 {"lector2":14}
+INFO Receive reply
+lector2 {"lector2":15}
+INFO leer fichero 
+lector2 {"lector2":16}
+INFO Receiving Request
+lector2 {"lector2":17}
+INFO Sending Reply
+lector2 {"lector2":18}
+INFO Sending Request
+lector2 {"lector2":19}
+INFO Receive reply
+lector2 {"lector2":20}
+INFO leer fichero 
+lector2 {"lector2":21}
+INFO Receiving Request
+lector2 {"lector2":22}
+INFO Sending Reply
+lector2 {"lector2":23}
+INFO Sending Request
+lector2 {"lector2":24}
+INFO Receive reply
+lector2 {"lector2":25}
+INFO leer fichero 
+lector2 {"lector2":26}
+INFO Receiving Request
+lector2 {"lector2":27}
+INFO Sending Reply
+lector2 {"lector2":28}
+INFO Sending Request
+lector2 {"lector2":29}
+INFO Receive reply
+lector2 {"lector2":30}
+INFO leer fichero 
+lector2 {"lector2":31}
+INFO Receiving Request
+lector2 {"lector2":32}
+INFO Sending Reply
+lector2 {"lector2":33}
+INFO Sending Request
+lector2 {"lector2":34}
+INFO Receive reply
+lector2 {"lector2":35}
+INFO leer fichero 
+lector2 {"lector2":36}
+INFO Receiving Request
+lector2 {"lector2":37}
+INFO Sending Reply
+lector2 {"lector2":38}
+INFO Sending Request
+lector2 {"lector2":39}
+INFO Receive reply
+lector2 {"lector2":40}
+INFO leer fichero 
+lector2 {"lector2":41}
+INFO Receiving Request
+lector2 {"lector2":42}
+INFO Sending Reply
+lector2 {"lector2":43}
+INFO Sending Request
+lector2 {"lector2":44}
+INFO Receive reply
+lector2 {"lector2":45}
+INFO leer fichero 
+lector2 {"lector2":46}
+INFO Receiving Request
+lector2 {"lector2":47}
+INFO Sending Reply
+lector2 {"lector2":48}
+INFO Sending Request
+lector2 {"lector2":49}
+INFO Receive reply
+lector2 {"lector2":50}
+INFO leer fichero 
+lector2 {"lector2":51}
+INFO Receiving Request
+lector2 {"lector2":52}
+INFO Sending Reply
+lector2 {"lector2":53}
+INFO Sending Request
+lector2 {"lector2":54}
+INFO Receive reply
+lector2 {"lector2":55}
+INFO leer fichero 
+lector2 {"lector2":56}
+INFO Receiving Request
+lector2 {"lector2":57}
+INFO Sending Reply
+lector2 {"lector2":58}
+INFO Sending Request
+lector2 {"lector2":59}
+INFO Receive reply
+lector2 {"lector2":60}
+INFO leer fichero 
+lector2 {"lector2":61}
+INFO Receiving Request
+lector2 {"lector2":62}
+INFO Sending Reply
+lector2 {"lector2":63}
+INFO Sending Request
+lector2 {"lector2":64}
+INFO Receive reply
+lector2 {"lector2":65}
+INFO leer fichero 
+lector2 {"lector2":66}
+INFO Receiving Request
+lector2 {"lector2":67}
+INFO Sending Reply
+lector2 {"lector2":68}
+INFO Sending Request
+lector2 {"lector2":69}
+INFO Receive reply
+lector2 {"lector2":70}
+INFO leer fichero 
+lector2 {"lector2":71}
+INFO Receiving Request
+lector2 {"lector2":72}
+INFO Sending Reply
+lector2 {"lector2":73}
+INFO Sending Request
+lector2 {"lector2":74}
+INFO Receive reply
+lector2 {"lector2":75}
+INFO leer fichero 
+lector2 {"lector2":76}
+INFO Receiving Request
+lector2 {"lector2":77}
+INFO Sending Reply
+lector2 {"lector2":78}
+INFO Sending Request
+lector2 {"lector2":79}
+INFO Receive reply
+lector2 {"lector2":80}
+INFO leer fichero 
+lector2 {"lector2":81}
+INFO Receiving Request
+lector2 {"lector2":82}
+INFO Sending Reply
+lector2 {"lector2":83}
+INFO Sending Request
+lector2 {"lector2":84}
+INFO Receive reply
+lector2 {"lector2":85}
+INFO leer fichero 
+lector2 {"lector2":86}
+INFO Receiving Request
+lector2 {"lector2":87}
+INFO Sending Reply
+lector2 {"lector2":88}
+INFO Sending Request
+lector2 {"lector2":89}
+INFO Receive reply
+lector2 {"lector2":90}
+INFO leer fichero 
+lector2 {"lector2":91}
+INFO Receiving Request
+lector2 {"lector2":92}
+INFO Sending Reply
+lector2 {"lector2":93}
+INFO Sending Request
+lector2 {"lector2":94}
+INFO Receive reply
+lector2 {"lector2":95}
+INFO leer fichero 
+lector2 {"lector2":96}
+INFO Receiving Request
+lector2 {"lector2":97}
+INFO Sending Reply
+lector2 {"lector2":98}
+INFO Sending Request
+lector2 {"lector2":99}
+INFO Receive reply
+lector2 {"lector2":100}
+INFO leer fichero 
+lector2 {"lector2":101}
+INFO Receiving Request
+lector2 {"lector2":102}
+INFO Sending Reply
+lector2 {"lector2":103}
+INFO Sending Request
+lector2 {"lector2":104}
+INFO Receive reply
+lector2 {"lector2":105}
+INFO leer fichero 
+lector2 {"lector2":106}
+INFO Receiving Request
+lector2 {"lector2":107}
+INFO Sending Reply
+lector2 {"lector2":108}
+INFO Sending Request
+lector2 {"lector2":109}
+INFO Receive reply
+lector2 {"lector2":110}
+INFO leer fichero 
+lector2 {"lector2":111}
+INFO Receiving Request
+lector2 {"lector2":112}
+INFO Sending Reply
+lector2 {"lector2":113}
+INFO Sending Request
+lector2 {"lector2":114}
+INFO Receive reply
+lector2 {"lector2":115}
+INFO leer fichero 
+lector2 {"lector2":116}
+INFO Receiving Request
+lector2 {"lector2":117}
+INFO Sending Reply
+lector2 {"lector2":118}
+INFO Sending Request
+lector2 {"lector2":119}
+INFO Receive reply
+lector2 {"lector2":120}
+INFO leer fichero 
+lector2 {"lector2":121}
+INFO Receiving Request
+lector2 {"lector2":122}
+INFO Sending Reply
+lector2 {"lector2":123}
+INFO Sending Request
+lector2 {"lector2":124}
+INFO Receive reply
+lector2 {"lector2":125}
+INFO leer fichero 
+lector2 {"lector2":126}
+INFO Receiving Request
+lector2 {"lector2":127}
+INFO Sending Reply
+lector2 {"lector2":128}
+INFO Sending Request
+lector2 {"lector2":129}
+INFO Receive reply
+lector2 {"lector2":130}
+INFO leer fichero 
+lector2 {"lector2":131}
+INFO Receiving Request
+lector2 {"lector2":132}
+INFO Sending Reply
+lector2 {"lector2":133}
+INFO Sending Request
+lector2 {"lector2":134}
+INFO Receive reply
+lector2 {"lector2":135}
+INFO leer fichero 
+lector2 {"lector2":136}
+INFO Receiving Request
+lector2 {"lector2":137}
+INFO Sending Reply
+lector2 {"lector2":138}
+INFO Sending Request
+lector2 {"lector2":139}
+INFO Receive reply
+lector2 {"lector2":140}
+INFO leer fichero 
+lector2 {"lector2":141}
+INFO Receiving Request
+lector2 {"lector2":142}
+INFO Sending Reply
+lector2 {"lector2":143}
+INFO Sending Request
+lector2 {"lector2":144}
+INFO Receive reply
+lector2 {"lector2":145}
+INFO leer fichero 
+lector2 {"lector2":146}
+INFO Receiving Request
+lector2 {"lector2":147}
+INFO Sending Reply
+lector2 {"lector2":148}
+INFO Sending Request
+lector2 {"lector2":149}
+INFO Receive reply
+lector2 {"lector2":150}
+INFO leer fichero 
+lector2 {"lector2":151}
+INFO Receiving Request
+lector2 {"lector2":152}
+INFO Sending Reply
+lector2 {"lector2":153}
+INFO Sending Request
+lector2 {"lector2":154}
+INFO Receive reply
+lector2 {"lector2":155}
+INFO leer fichero 
+lector2 {"lector2":156}
+INFO Receiving Request
+lector2 {"lector2":157}
+INFO Sending Reply
+lector2 {"lector2":158}
+INFO Sending Request
+lector2 {"lector2":159}
+INFO Receive reply
+lector2 {"lector2":160}
+INFO leer fichero 
+lector2 {"lector2":161}
+INFO Receiving Request
+lector2 {"lector2":162}
+INFO Sending Reply
+lector2 {"lector2":163}
+INFO Sending Request
+lector2 {"lector2":164}
+INFO Receive reply
+lector2 {"lector2":165}
+INFO leer fichero 
+lector2 {"lector2":166}
+INFO Receiving Request
+lector2 {"lector2":167}
+INFO Sending Reply
+lector2 {"lector2":168}
+INFO Sending Request
+lector2 {"lector2":169}
+INFO Receive reply
+lector2 {"lector2":170}
+INFO leer fichero 
+lector2 {"lector2":171}
+INFO Receiving Request
+lector2 {"lector2":172}
+INFO Sending Reply
+lector2 {"lector2":173}
+INFO Sending Request
+lector2 {"lector2":174}
+INFO Receive reply
+lector2 {"lector2":175}
+INFO leer fichero 
+lector2 {"lector2":176}
+INFO Receiving Request
+lector2 {"lector2":177}
+INFO Sending Reply
+lector2 {"lector2":178}
+INFO Sending Request
+lector2 {"lector2":179}
+INFO Receive reply
+lector2 {"lector2":180}
+INFO leer fichero 
+lector2 {"lector2":181}
+INFO Receiving Request
+lector2 {"lector2":182}
+INFO Sending Reply
+lector2 {"lector2":183}
+INFO Sending Request
+lector2 {"lector2":184}
+INFO Receive reply
+lector2 {"lector2":185}
+INFO leer fichero 
+lector2 {"lector2":186}
+INFO Receiving Request
+lector2 {"lector2":187}
+INFO Sending Reply
+lector2 {"lector2":188}
+INFO Sending Request
+lector2 {"lector2":189}
+INFO Receive reply
+lector2 {"lector2":190}
+INFO leer fichero 
+lector2 {"lector2":191}
+INFO Receiving Request
+lector2 {"lector2":192}
+INFO Sending Reply
+lector2 {"lector2":193}
+INFO Sending Request
+lector2 {"lector2":194}
+INFO Receive reply
+lector2 {"lector2":195}
+INFO leer fichero 
+lector2 {"lector2":196}
+INFO Receiving Request
+lector2 {"lector2":197}
+INFO Sending Reply
+lector2 {"lector2":198}
+INFO Sending Request
+lector2 {"lector2":199}
+INFO Receive reply
+lector2 {"lector2":200}
+INFO leer fichero 
+lector2 {"lector2":201}
+INFO Receiving Request
+lector2 {"lector2":202}
+INFO Sending Reply
+lector2 {"lector2":203}
+INFO Sending Request
+lector2 {"lector2":204}
+INFO Receive reply
+lector2 {"lector2":205}
+INFO leer fichero 
+lector2 {"lector2":206}
+INFO Receiving Request
+lector2 {"lector2":207}
+INFO Sending Reply
+lector2 {"lector2":208}
+INFO Sending Request
+lector2 {"lector2":209}
+INFO Receive reply
+lector2 {"lector2":210}
+INFO leer fichero 
+lector2 {"lector2":211}
+INFO Receiving Request
+lector2 {"lector2":212}
+INFO Sending Reply
+lector2 {"lector2":213}
+INFO Sending Request
+lector2 {"lector2":214}
+INFO Receive reply
+lector2 {"lector2":215}
+INFO leer fichero 
+lector2 {"lector2":216}
+INFO Receiving Request
+lector2 {"lector2":217}
+INFO Sending Reply
+lector2 {"lector2":218}
+INFO Sending Request
+lector2 {"lector2":219}
+INFO Receive reply
+lector2 {"lector2":220}
+INFO leer fichero 
+lector2 {"lector2":221}
+INFO Receiving Request
+lector2 {"lector2":222}
+INFO Sending Reply
+lector2 {"lector2":223}
+INFO Sending Request
+lector2 {"lector2":224}
+INFO Receive reply
+lector2 {"lector2":225}
+INFO leer fichero 
+lector2 {"lector2":226}
+INFO Receiving Request
+lector2 {"lector2":227}
+INFO Sending Reply
+lector2 {"lector2":228}
+INFO Sending Request
+lector2 {"lector2":229}
+INFO Receive reply
+lector2 {"lector2":230}
+INFO leer fichero 
+lector2 {"lector2":231}
+INFO Receiving Request
+lector2 {"lector2":232}
+INFO Sending Reply
+lector2 {"lector2":233}
+INFO Sending Request
+lector2 {"lector2":234}
+INFO Receive reply
+lector2 {"lector2":235}
+INFO leer fichero 
+lector2 {"lector2":236}
+INFO Receiving Request
+lector2 {"lector2":237}
+INFO Sending Reply
+lector2 {"lector2":238}
+INFO Sending Request
+lector2 {"lector2":239}
+INFO Receive reply
+lector2 {"lector2":240}
+INFO leer fichero 
+lector2 {"lector2":241}
+INFO Receiving Request
+lector2 {"lector2":242}
+INFO Sending Reply
+lector2 {"lector2":243}
+INFO Sending Request
+lector2 {"lector2":244}
+INFO Receive reply
+lector2 {"lector2":245}
+INFO leer fichero 
+lector2 {"lector2":246}
+INFO Receiving Request
+lector2 {"lector2":247}
+INFO Sending Reply
+lector2 {"lector2":248}
+INFO Sending Request
+lector2 {"lector2":249}
+INFO Receive reply
+lector2 {"lector2":250}
+INFO leer fichero 
+lector2 {"lector2":251}
+INFO Receiving Request
+lector2 {"lector2":252}
+INFO Sending Reply

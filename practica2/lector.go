@@ -34,15 +34,17 @@ func main() {
 	}
 	usersFile := args[2]
 	file := args[3]
-	gestores := args[4]
+	//	gestores := args[4]
 
-	logger := govec.InitGoVector("lector"+strconv.Itoa(pid), "Logfile", govec.GetDefaultConfig())
+	logger := govec.InitGoVector("lector"+strconv.Itoa(pid), "Lector"+strconv.Itoa(pid)+"File", govec.GetDefaultConfig())
 
 	typeOfProcess := 0 //lector
-	ra := ra.New(pid, usersFile, typeOfProcess, logger)
-	gestorfichero := gestorfichero.NewGestor(file, pid, gestores)
+
+	gestorfichero := gestorfichero.NewGestor(file)
+	//	ms := ms.New(pid, usersFile, []ms.Message{ra.Request{}, ra.Reply{}, ra.Escribir{}})
+	ra := ra.New(pid, usersFile, typeOfProcess, logger, gestorfichero)
 	time.Sleep(5000 * time.Millisecond)
-	for i := 0; i < 50; i++ {
+	for i := 0; i < 10; i++ {
 		ra.PreProtocol()
 
 		//SC
@@ -53,4 +55,5 @@ func main() {
 		ra.PostProtocol()
 		time.Sleep(2000 * time.Millisecond)
 	}
+	time.Sleep(5000 * time.Millisecond)
 }

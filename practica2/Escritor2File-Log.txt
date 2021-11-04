@@ -1,0 +1,144 @@
+escritor2 {"escritor2":1}
+Initialization Complete
+escritor2 {"escritor2":2}
+INFO receiver active 
+escritor2 {"escritor2":3}
+INFO Sending Request
+escritor2 {"escritor2":4}
+INFO Receive reply
+escritor2 {"escritor2":5}
+INFO escribe holita
+escritor2 {"escritor2":6}
+INFO Indicar a resto de procesos que deben escribir
+escritor2 {"escritor2":7}
+INFO Sending Escribir
+escritor2 {"escritor2":8}
+INFO Receiving Request
+escritor2 {"escritor2":9}
+INFO Sending Reply
+escritor2 {"escritor2":10}
+INFO Sending Request
+escritor2 {"escritor2":11}
+INFO Receive reply
+escritor2 {"escritor2":12}
+INFO escribe holita
+escritor2 {"escritor2":13}
+INFO Indicar a resto de procesos que deben escribir
+escritor2 {"escritor2":14}
+INFO Sending Escribir
+escritor2 {"escritor2":15}
+INFO Receiving Request
+escritor2 {"escritor2":16}
+INFO Sending Reply
+escritor2 {"escritor2":17}
+INFO Sending Request
+escritor2 {"escritor2":18}
+INFO Receive reply
+escritor2 {"escritor2":19}
+INFO escribe holita
+escritor2 {"escritor2":20}
+INFO Indicar a resto de procesos que deben escribir
+escritor2 {"escritor2":21}
+INFO Sending Escribir
+escritor2 {"escritor2":22}
+INFO Receiving Request
+escritor2 {"escritor2":23}
+INFO Sending Reply
+escritor2 {"escritor2":24}
+INFO Sending Request
+escritor2 {"escritor2":25}
+INFO Receive reply
+escritor2 {"escritor2":26}
+INFO escribe holita
+escritor2 {"escritor2":27}
+INFO Indicar a resto de procesos que deben escribir
+escritor2 {"escritor2":28}
+INFO Sending Escribir
+escritor2 {"escritor2":29}
+INFO Receiving Request
+escritor2 {"escritor2":30}
+INFO Sending Reply
+escritor2 {"escritor2":31}
+INFO Sending Request
+escritor2 {"escritor2":32}
+INFO Receive reply
+escritor2 {"escritor2":33}
+INFO escribe holita
+escritor2 {"escritor2":34}
+INFO Indicar a resto de procesos que deben escribir
+escritor2 {"escritor2":35}
+INFO Sending Escribir
+escritor2 {"escritor2":36}
+INFO Receiving Request
+escritor2 {"escritor2":37}
+INFO Sending Reply
+escritor2 {"escritor2":38}
+INFO Sending Request
+escritor2 {"escritor2":39}
+INFO Receive reply
+escritor2 {"escritor2":40}
+INFO escribe holita
+escritor2 {"escritor2":41}
+INFO Indicar a resto de procesos que deben escribir
+escritor2 {"escritor2":42}
+INFO Sending Escribir
+escritor2 {"escritor2":43}
+INFO Receiving Request
+escritor2 {"escritor2":44}
+INFO Sending Reply
+escritor2 {"escritor2":45}
+INFO Sending Request
+escritor2 {"escritor2":46}
+INFO Receive reply
+escritor2 {"escritor2":47}
+INFO escribe holita
+escritor2 {"escritor2":48}
+INFO Indicar a resto de procesos que deben escribir
+escritor2 {"escritor2":49}
+INFO Sending Escribir
+escritor2 {"escritor2":50}
+INFO Receiving Request
+escritor2 {"escritor2":51}
+INFO Sending Reply
+escritor2 {"escritor2":52}
+INFO Sending Request
+escritor2 {"escritor2":53}
+INFO Receive reply
+escritor2 {"escritor2":54}
+INFO escribe holita
+escritor2 {"escritor2":55}
+INFO Indicar a resto de procesos que deben escribir
+escritor2 {"escritor2":56}
+INFO Sending Escribir
+escritor2 {"escritor2":57}
+INFO Receiving Request
+escritor2 {"escritor2":58}
+INFO Sending Reply
+escritor2 {"escritor2":59}
+INFO Sending Request
+escritor2 {"escritor2":60}
+INFO Receive reply
+escritor2 {"escritor2":61}
+INFO escribe holita
+escritor2 {"escritor2":62}
+INFO Indicar a resto de procesos que deben escribir
+escritor2 {"escritor2":63}
+INFO Sending Escribir
+escritor2 {"escritor2":64}
+INFO Receiving Request
+escritor2 {"escritor2":65}
+INFO Sending Reply
+escritor2 {"escritor2":66}
+INFO Sending Request
+escritor2 {"escritor2":67}
+INFO Receive reply
+escritor2 {"escritor2":68}
+INFO escribe holita
+escritor2 {"escritor2":69}
+INFO Indicar a resto de procesos que deben escribir
+escritor2 {"escritor2":70}
+INFO Sending Escribir
+escritor2 {"escritor2":71}
+INFO Receiving Request
+escritor2 {"escritor2":72}
+INFO Sending Reply

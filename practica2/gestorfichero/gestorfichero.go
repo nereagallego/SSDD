@@ -12,17 +12,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"practica2/ms"
 )
 
-type mensaje struct {
-	m string
-}
-
-type gestorfichero struct {
+type Gestor struct {
 	file string
-	ms   ms.MessageSystem
-	N    int
 }
 
 func checkError(err error) {
@@ -32,37 +25,21 @@ func checkError(err error) {
 	}
 }
 
-func (g *gestorfichero) LeerFichero() string {
+func (g *Gestor) LeerFichero() string {
 	datosComoB, err := ioutil.ReadFile(g.file)
 	checkError(err)
 
 	return string(datosComoB)
 }
 
-func (g *gestorfichero) EscribirFichero(fragmento string) {
+func (g *Gestor) EscribirFichero(fragmento string) {
 	texto := g.LeerFichero()
-	texto = texto + fragmento
+	texto = texto + fragmento + "\n"
 	err := ioutil.WriteFile(g.file, []byte(texto), 0644)
 	checkError(err)
-	for i := 1; i <= g.N; i++ {
-		if i != g.ms.Me() {
-			g.ms.Send(i, mensaje{fragmento})
-		}
-	}
 }
 
-func NewGestor(filename string, whoIam int, usersFile string) (g gestorfichero) {
+func NewGestor(filename string) (g Gestor) {
 	g.file = filename
-	messageTypes := []ms.Message{mensaje{}}
-	g.ms = ms.New(whoIam, usersFile, messageTypes)
-	g.N = g.ms.NumberOfPeers()
-	go g.Receive()
 	return g
-}
-
-func (g *gestorfichero) Receive() {
-	for {
-		mensaje := g.ms.Receive()
-		g.EscribirFichero(mensaje.(string))
-	}
 }

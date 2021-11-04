@@ -34,25 +34,28 @@ func main() {
 		checkError(err)
 	}
 	usersFile := args[2]
-	file := args[3]
-	gestores := args[4]
+	file := args[4]
+
 	typeOfProcess := 1 //escritor
 
-	logger := govec.InitGoVector("escritor"+strconv.Itoa(pid), "Logfile", govec.GetDefaultConfig())
+	logger := govec.InitGoVector("escritor"+strconv.Itoa(pid), "Escritor"+strconv.Itoa(pid)+"File", govec.GetDefaultConfig())
 
-	ra := ra.New(pid, usersFile, typeOfProcess, logger)
+	fragmento := args[3]
+
+	gestorfichero := gestorfichero.NewGestor(file)
+	//ms := ms.New(pid, usersFile, []ms.Message{ra.Request{}, ra.Reply{}, ra.Escribir{}})
+	ra := ra.New(pid, usersFile, typeOfProcess, logger, gestorfichero)
 	time.Sleep(5000 * time.Millisecond)
-	for i := 0; i < 50; i++ {
+	for i := 0; i < 10; i++ {
 		ra.PreProtocol()
 
 		//SC
 
-		gestor := gestorfichero.NewGestor(file, pid, gestores)
-		fragmento := args[5] + "\n"
 		logger.LogLocalEvent("escribe "+fragmento, govec.GetDefaultLogOptions())
-		gestor.EscribirFichero(fragmento)
-
+		gestorfichero.EscribirFichero(fragmento)
+		ra.SendEscribir(fragmento)
 		ra.PostProtocol()
 		time.Sleep(2000 * time.Millisecond)
 	}
+	time.Sleep(5000 * time.Millisecond)
 }
