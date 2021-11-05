@@ -1,0 +1,366 @@
+escritor3 {"escritor3":1}
+Initialization Complete
+escritor3 {"escritor3":2}
+INFO Receiver active 
+escritor3 {"escritor3":3, "escritor4":5}
+INFO Received Request
+escritor3 {"escritor3":4, "escritor4":5}
+INFO Sending Reply
+escritor3 {"escritor3":5, "escritor4":13, "lector2":4, "lector1":4}
+INFO Received escribir en el fichero holita
+escritor3 {"escritor3":6, "escritor4":13, "lector2":4, "lector1":7}
+INFO Received Request
+escritor3 {"escritor3":7, "escritor4":13, "lector2":4, "lector1":7}
+INFO Sending Reply
+escritor3 {"escritor3":8, "escritor4":13, "lector2":4, "lector1":7}
+INFO Sending Request
+escritor3 {"lector1":7, "escritor3":9, "escritor4":13, "lector2":4}
+INFO Sending Request
+escritor3 {"escritor3":10, "escritor4":13, "lector2":4, "lector1":7}
+INFO Sending Request
+escritor3 {"escritor3":11, "escritor4":15, "lector2":7, "lector1":14}
+INFO Received reply
+escritor3 {"lector1":14, "escritor3":12, "escritor4":15, "lector2":9}
+INFO Received reply
+escritor3 {"escritor3":13, "escritor4":17, "lector2":9, "lector1":14}
+INFO Received reply
+escritor3 {"lector1":14, "escritor3":14, "escritor4":17, "lector2":9}
+INFO escribe holita
+escritor3 {"lector1":14, "escritor3":15, "escritor4":17, "lector2":9}
+INFO Indicar a resto de procesos que deben escribir
+escritor3 {"escritor3":16, "escritor4":17, "lector2":9, "lector1":14}
+INFO Sending Escribir
+escritor3 {"escritor3":17, "escritor4":17, "lector2":9, "lector1":14}
+INFO Sending Escribir
+escritor3 {"escritor3":18, "escritor4":17, "lector2":9, "lector1":14}
+INFO Sending Escribir
+escritor3 {"escritor3":19, "escritor4":17, "lector2":12, "lector1":14}
+INFO Received Request
+escritor3 {"lector1":14, "escritor3":20, "escritor4":17, "lector2":12}
+INFO Sending Reply
+escritor3 {"escritor4":24, "lector2":13, "lector1":19, "escritor3":21}
+INFO Received Request
+escritor3 {"lector1":19, "escritor3":22, "escritor4":24, "lector2":13}
+INFO Sending Reply
+escritor3 {"escritor3":23, "escritor4":31, "lector2":19, "lector1":19}
+INFO Received escribir en el fichero holita
+escritor3 {"escritor4":31, "lector2":19, "lector1":22, "escritor3":24}
+INFO Received Request
+escritor3 {"escritor3":25, "escritor4":31, "lector2":19, "lector1":22}
+INFO Sending Reply
+escritor3 {"escritor3":26, "escritor4":31, "lector2":19, "lector1":22}
+INFO Sending Request
+escritor3 {"escritor3":27, "escritor4":31, "lector2":19, "lector1":22}
+INFO Sending Request
+escritor3 {"escritor3":28, "escritor4":31, "lector2":19, "lector1":22}
+INFO Sending Request
+escritor3 {"escritor3":29, "escritor4":33, "lector2":22, "lector1":29}
+INFO Received reply
+escritor3 {"escritor3":30, "escritor4":33, "lector2":24, "lector1":29}
+INFO Received reply
+escritor3 {"escritor3":31, "escritor4":35, "lector2":24, "lector1":29}
+INFO Received reply
+escritor3 {"escritor3":32, "escritor4":35, "lector2":24, "lector1":29}
+INFO escribe holita
+escritor3 {"escritor4":35, "lector2":24, "lector1":29, "escritor3":33}
+INFO Indicar a resto de procesos que deben escribir
+escritor3 {"escritor4":35, "lector2":24, "lector1":29, "escritor3":34}
+INFO Sending Escribir
+escritor3 {"escritor3":35, "escritor4":35, "lector2":24, "lector1":29}
+INFO Sending Escribir
+escritor3 {"lector2":24, "lector1":29, "escritor3":36, "escritor4":35}
+INFO Sending Escribir
+escritor3 {"escritor4":35, "lector2":27, "lector1":29, "escritor3":37}
+INFO Received Request
+escritor3 {"lector2":27, "lector1":29, "escritor3":38, "escritor4":35}
+INFO Sending Reply
+escritor3 {"escritor3":39, "escritor4":41, "lector2":28, "lector1":29}
+INFO Received Request
+escritor3 {"escritor3":40, "escritor4":41, "lector2":28, "lector1":29}
+INFO Sending Reply
+escritor3 {"escritor3":41, "escritor4":49, "lector2":34, "lector1":34}
+INFO Received escribir en el fichero holita
+escritor3 {"escritor3":42, "escritor4":49, "lector2":34, "lector1":37}
+INFO Received Request
+escritor3 {"escritor3":43, "escritor4":49, "lector2":34, "lector1":37}
+INFO Sending Reply
+escritor3 {"lector2":34, "lector1":37, "escritor3":44, "escritor4":49}
+INFO Sending Request
+escritor3 {"escritor4":49, "lector2":34, "lector1":37, "escritor3":45}
+INFO Sending Request
+escritor3 {"escritor3":46, "escritor4":49, "lector2":34, "lector1":37}
+INFO Sending Request
+escritor3 {"escritor4":51, "lector2":34, "lector1":37, "escritor3":47}
+INFO Received reply
+escritor3 {"escritor3":48, "escritor4":51, "lector2":41, "lector1":37}
+INFO Received Request
+escritor3 {"escritor3":49, "escritor4":51, "lector2":41, "lector1":37}
+INFO defer
+escritor3 {"escritor3":50, "escritor4":51, "lector2":41, "lector1":37}
+INFO Received reply
+escritor3 {"escritor3":51, "escritor4":53, "lector2":41, "lector1":47}
+INFO Received reply
+escritor3 {"escritor3":52, "escritor4":53, "lector2":41, "lector1":47}
+INFO escribe holita
+escritor3 {"escritor3":53, "escritor4":53, "lector2":41, "lector1":47}
+INFO Indicar a resto de procesos que deben escribir
+escritor3 {"lector1":47, "escritor3":54, "escritor4":53, "lector2":41}
+INFO Sending Escribir
+escritor3 {"escritor3":55, "escritor4":53, "lector2":41, "lector1":47}
+INFO Sending Escribir
+escritor3 {"escritor3":56, "escritor4":53, "lector2":41, "lector1":47}
+INFO Sending Escribir
+escritor3 {"lector2":41, "lector1":47, "escritor3":57, "escritor4":53}
+INFO Sending Reply
+escritor3 {"escritor4":60, "lector2":49, "lector1":47, "escritor3":58}
+INFO Received Request
+escritor3 {"escritor3":59, "escritor4":60, "lector2":49, "lector1":47}
+INFO Sending Reply
+escritor3 {"escritor3":60, "escritor4":67, "lector2":49, "lector1":50}
+INFO Received escribir en el fichero holita
+escritor3 {"escritor3":61, "escritor4":67, "lector2":49, "lector1":53}
+INFO Received Request
+escritor3 {"escritor3":62, "escritor4":67, "lector2":49, "lector1":53}
+INFO Sending Reply
+escritor3 {"escritor3":63, "escritor4":67, "lector2":49, "lector1":53}
+INFO Sending Request
+escritor3 {"lector1":53, "escritor3":64, "escritor4":67, "lector2":49}
+INFO Sending Request
+escritor3 {"lector2":52, "lector1":60, "escritor3":65, "escritor4":69}
+INFO Received reply
+escritor3 {"escritor3":66, "escritor4":69, "lector2":52, "lector1":60}
+INFO Sending Request
+escritor3 {"escritor3":67, "escritor4":71, "lector2":52, "lector1":60}
+INFO Received reply
+escritor3 {"escritor3":68, "escritor4":71, "lector2":56, "lector1":60}
+INFO Received Request
+escritor3 {"lector2":56, "lector1":60, "escritor3":69, "escritor4":71}
+INFO Sending Reply
+escritor3 {"escritor3":70, "escritor4":73, "lector2":62, "lector1":62}
+INFO Received reply
+escritor3 {"escritor3":71, "escritor4":73, "lector2":62, "lector1":62}
+INFO escribe holita
+escritor3 {"lector1":62, "escritor3":72, "escritor4":73, "lector2":62}
+INFO Indicar a resto de procesos que deben escribir
+escritor3 {"lector1":62, "escritor3":73, "escritor4":73, "lector2":62}
+INFO Sending Escribir
+escritor3 {"escritor3":74, "escritor4":73, "lector2":62, "lector1":62}
+INFO Sending Escribir
+escritor3 {"escritor3":75, "escritor4":73, "lector2":62, "lector1":62}
+INFO Sending Escribir
+escritor3 {"escritor3":76, "escritor4":77, "lector2":62, "lector1":62}
+INFO Received Request
+escritor3 {"escritor3":77, "escritor4":77, "lector2":62, "lector1":62}
+INFO Sending Reply
+escritor3 {"lector1":65, "escritor3":78, "escritor4":85, "lector2":65}
+INFO Received escribir en el fichero holita
+escritor3 {"escritor3":79, "escritor4":85, "lector2":65, "lector1":68}
+INFO Received Request
+escritor3 {"escritor3":80, "escritor4":85, "lector2":65, "lector1":68}
+INFO Sending Reply
+escritor3 {"escritor3":81, "escritor4":85, "lector2":70, "lector1":68}
+INFO Received Request
+escritor3 {"escritor3":82, "escritor4":85, "lector2":70, "lector1":68}
+INFO Sending Reply
+escritor3 {"lector1":68, "escritor3":83, "escritor4":85, "lector2":70}
+INFO Sending Request
+escritor3 {"escritor3":84, "escritor4":85, "lector2":70, "lector1":68}
+INFO Sending Request
+escritor3 {"escritor3":85, "escritor4":85, "lector2":70, "lector1":68}
+INFO Sending Request
+escritor3 {"escritor3":86, "escritor4":89, "lector2":77, "lector1":75}
+INFO Received reply
+escritor3 {"escritor3":87, "escritor4":89, "lector2":77, "lector1":77}
+INFO Received reply
+escritor3 {"lector2":77, "lector1":77, "escritor3":88, "escritor4":91}
+INFO Received reply
+escritor3 {"escritor3":89, "escritor4":91, "lector2":77, "lector1":77}
+INFO escribe holita
+escritor3 {"escritor3":90, "escritor4":91, "lector2":77, "lector1":77}
+INFO Indicar a resto de procesos que deben escribir
+escritor3 {"escritor3":91, "escritor4":91, "lector2":77, "lector1":77}
+INFO Sending Escribir
+escritor3 {"lector1":77, "escritor3":92, "escritor4":91, "lector2":77}
+INFO Sending Escribir
+escritor3 {"escritor3":93, "escritor4":91, "lector2":77, "lector1":77}
+INFO Sending Escribir
+escritor3 {"escritor3":94, "escritor4":96, "lector2":77, "lector1":80}
+INFO Received Request
+escritor3 {"escritor3":95, "escritor4":96, "lector2":77, "lector1":80}
+INFO Sending Reply
+escritor3 {"lector2":80, "lector1":80, "escritor3":96, "escritor4":103}
+INFO Received escribir en el fichero holita
+escritor3 {"lector1":83, "escritor3":97, "escritor4":103, "lector2":80}
+INFO Received Request
+escritor3 {"lector2":80, "lector1":83, "escritor3":98, "escritor4":103}
+INFO Sending Reply
+escritor3 {"lector2":85, "lector1":83, "escritor3":99, "escritor4":103}
+INFO Received Request
+escritor3 {"escritor3":100, "escritor4":103, "lector2":85, "lector1":83}
+INFO Sending Reply
+escritor3 {"lector2":85, "lector1":83, "escritor3":101, "escritor4":103}
+INFO Sending Request
+escritor3 {"lector2":85, "lector1":83, "escritor3":102, "escritor4":103}
+INFO Sending Request
+escritor3 {"lector1":92, "escritor3":103, "escritor4":105, "lector2":85}
+INFO Received reply
+escritor3 {"escritor3":104, "escritor4":105, "lector2":85, "lector1":92}
+INFO Sending Request
+escritor3 {"escritor3":105, "escritor4":107, "lector2":92, "lector1":92}
+INFO Received reply
+escritor3 {"lector1":92, "escritor3":106, "escritor4":109, "lector2":92}
+INFO Received reply
+escritor3 {"escritor3":107, "escritor4":109, "lector2":92, "lector1":92}
+INFO escribe holita
+escritor3 {"lector2":92, "lector1":92, "escritor3":108, "escritor4":109}
+INFO Indicar a resto de procesos que deben escribir
+escritor3 {"escritor3":109, "escritor4":109, "lector2":92, "lector1":92}
+INFO Sending Escribir
+escritor3 {"escritor3":110, "escritor4":109, "lector2":92, "lector1":92}
+INFO Sending Escribir
+escritor3 {"escritor3":111, "escritor4":109, "lector2":92, "lector1":92}
+INFO Sending Escribir
+escritor3 {"escritor4":114, "lector2":92, "lector1":95, "escritor3":112}
+INFO Received Request
+escritor3 {"lector1":95, "escritor3":113, "escritor4":114, "lector2":92}
+INFO Sending Reply
+escritor3 {"escritor3":114, "escritor4":121, "lector2":95, "lector1":95}
+INFO Received escribir en el fichero holita
+escritor3 {"lector1":98, "escritor3":115, "escritor4":121, "lector2":95}
+INFO Received Request
+escritor3 {"escritor4":121, "lector2":95, "lector1":98, "escritor3":116}
+INFO Sending Reply
+escritor3 {"escritor3":117, "escritor4":121, "lector2":100, "lector1":98}
+INFO Received Request
+escritor3 {"lector2":100, "lector1":98, "escritor3":118, "escritor4":121}
+INFO Sending Reply
+escritor3 {"escritor3":119, "escritor4":121, "lector2":100, "lector1":98}
+INFO Sending Request
+escritor3 {"lector2":100, "lector1":98, "escritor3":120, "escritor4":121}
+INFO Sending Request
+escritor3 {"escritor3":121, "escritor4":121, "lector2":100, "lector1":98}
+INFO Sending Request
+escritor3 {"escritor3":122, "escritor4":123, "lector2":100, "lector1":107}
+INFO Received reply
+escritor3 {"escritor3":123, "escritor4":125, "lector2":107, "lector1":107}
+INFO Received reply
+escritor3 {"escritor3":124, "escritor4":127, "lector2":107, "lector1":107}
+INFO Received reply
+escritor3 {"escritor3":125, "escritor4":127, "lector2":107, "lector1":107}
+INFO escribe holita
+escritor3 {"lector1":107, "escritor3":126, "escritor4":127, "lector2":107}
+INFO Indicar a resto de procesos que deben escribir
+escritor3 {"escritor3":127, "escritor4":127, "lector2":107, "lector1":107}
+INFO Sending Escribir
+escritor3 {"escritor3":128, "escritor4":127, "lector2":107, "lector1":107}
+INFO Sending Escribir
+escritor3 {"escritor3":129, "escritor4":127, "lector2":107, "lector1":107}
+INFO Sending Escribir
+escritor3 {"escritor3":130, "escritor4":131, "lector2":107, "lector1":107}
+INFO Received Request
+escritor3 {"lector1":107, "escritor3":131, "escritor4":131, "lector2":107}
+INFO Sending Reply
+escritor3 {"escritor4":139, "lector2":110, "lector1":110, "escritor3":132}
+INFO Received escribir en el fichero holita
+escritor3 {"escritor3":133, "escritor4":139, "lector2":110, "lector1":113}
+INFO Received Request
+escritor3 {"escritor4":139, "lector2":110, "lector1":113, "escritor3":134}
+INFO Sending Reply
+escritor3 {"escritor3":135, "escritor4":139, "lector2":115, "lector1":113}
+INFO Received Request
+escritor3 {"escritor4":139, "lector2":115, "lector1":113, "escritor3":136}
+INFO Sending Reply
+escritor3 {"escritor3":137, "escritor4":139, "lector2":115, "lector1":113}
+INFO Sending Request
+escritor3 {"escritor3":138, "escritor4":139, "lector2":115, "lector1":113}
+INFO Sending Request
+escritor3 {"lector1":113, "escritor3":139, "escritor4":139, "lector2":115}
+INFO Sending Request
+escritor3 {"escritor3":140, "escritor4":143, "lector2":122, "lector1":120}
+INFO Received reply
+escritor3 {"escritor3":141, "escritor4":145, "lector2":122, "lector1":120}
+INFO Received reply
+escritor3 {"escritor3":142, "escritor4":145, "lector2":122, "lector1":122}
+INFO Received reply
+escritor3 {"lector2":122, "lector1":122, "escritor3":143, "escritor4":145}
+INFO escribe holita
+escritor3 {"escritor3":144, "escritor4":145, "lector2":122, "lector1":122}
+INFO Indicar a resto de procesos que deben escribir
+escritor3 {"escritor3":145, "escritor4":145, "lector2":122, "lector1":122}
+INFO Sending Escribir
+escritor3 {"escritor3":146, "escritor4":145, "lector2":122, "lector1":122}
+INFO Sending Escribir
+escritor3 {"escritor3":147, "escritor4":145, "lector2":122, "lector1":122}
+INFO Sending Escribir
+escritor3 {"lector1":122, "escritor3":148, "escritor4":149, "lector2":122}
+INFO Received Request
+escritor3 {"escritor3":149, "escritor4":149, "lector2":122, "lector1":122}
+INFO Sending Reply
+escritor3 {"escritor3":150, "escritor4":157, "lector2":125, "lector1":125}
+INFO Received escribir en el fichero holita
+escritor3 {"escritor3":151, "escritor4":157, "lector2":125, "lector1":128}
+INFO Received Request
+escritor3 {"escritor4":157, "lector2":125, "lector1":128, "escritor3":152}
+INFO Sending Reply
+escritor3 {"escritor3":153, "escritor4":157, "lector2":130, "lector1":128}
+INFO Received Request
+escritor3 {"escritor4":157, "lector2":130, "lector1":128, "escritor3":154}
+INFO Sending Reply
+escritor3 {"escritor4":157, "lector2":130, "lector1":128, "escritor3":155}
+INFO Sending Request
+escritor3 {"escritor3":156, "escritor4":157, "lector2":130, "lector1":128}
+INFO Sending Request
+escritor3 {"escritor3":157, "escritor4":159, "lector2":130, "lector1":137}
+INFO Received reply
+escritor3 {"escritor3":158, "escritor4":159, "lector2":130, "lector1":137}
+INFO Sending Request
+escritor3 {"lector1":137, "escritor3":159, "escritor4":161, "lector2":137}
+INFO Received reply
+escritor3 {"escritor3":160, "escritor4":163, "lector2":137, "lector1":137}
+INFO Received reply
+escritor3 {"lector1":137, "escritor3":161, "escritor4":163, "lector2":137}
+INFO escribe holita
+escritor3 {"escritor3":162, "escritor4":163, "lector2":137, "lector1":137}
+INFO Indicar a resto de procesos que deben escribir
+escritor3 {"lector2":137, "lector1":137, "escritor3":163, "escritor4":163}
+INFO Sending Escribir
+escritor3 {"lector2":137, "lector1":137, "escritor3":164, "escritor4":163}
+INFO Sending Escribir
+escritor3 {"escritor4":163, "lector2":137, "lector1":137, "escritor3":165}
+INFO Sending Escribir
+escritor3 {"escritor3":166, "escritor4":168, "lector2":137, "lector1":140}
+INFO Received Request
+escritor3 {"escritor3":167, "escritor4":168, "lector2":137, "lector1":140}
+INFO Sending Reply
+escritor3 {"escritor3":168, "escritor4":175, "lector2":140, "lector1":140}
+INFO Received escribir en el fichero holita
+escritor3 {"escritor4":175, "lector2":140, "lector1":143, "escritor3":169}
+INFO Received Request
+escritor3 {"escritor3":170, "escritor4":175, "lector2":140, "lector1":143}
+INFO Sending Reply
+escritor3 {"lector2":145, "lector1":143, "escritor3":171, "escritor4":175}
+INFO Received Request
+escritor3 {"escritor3":172, "escritor4":175, "lector2":145, "lector1":143}
+INFO Sending Reply
+escritor3 {"escritor3":173, "escritor4":175, "lector2":145, "lector1":143}
+INFO Sending Request
+escritor3 {"escritor3":174, "escritor4":175, "lector2":145, "lector1":143}
+INFO Sending Request
+escritor3 {"escritor3":175, "escritor4":175, "lector2":145, "lector1":143}
+INFO Sending Request
+escritor3 {"escritor3":176, "escritor4":181, "lector2":146, "lector1":145}
+INFO Received reply
+escritor3 {"escritor3":177, "escritor4":181, "lector2":152, "lector1":150}
+INFO Received reply
+escritor3 {"lector2":152, "lector1":152, "escritor3":178, "escritor4":181}
+INFO Received reply
+escritor3 {"escritor3":179, "escritor4":181, "lector2":152, "lector1":152}
+INFO escribe holita
+escritor3 {"lector1":152, "escritor3":180, "escritor4":181, "lector2":152}
+INFO Indicar a resto de procesos que deben escribir
+escritor3 {"escritor3":181, "escritor4":181, "lector2":152, "lector1":152}
+INFO Sending Escribir
+escritor3 {"escritor3":182, "escritor4":181, "lector2":152, "lector1":152}
+INFO Sending Escribir
+escritor3 {"lector2":152, "lector1":152, "escritor3":183, "escritor4":181}
+INFO Sending Escribir

@@ -1,0 +1,306 @@
+lector1 {"lector1":1}
+Initialization Complete
+lector1 {"lector1":2}
+INFO Receiver active 
+lector1 {"lector1":3, "escritor4":3}
+INFO Received Request
+lector1 {"lector1":4, "escritor4":3}
+INFO Sending Reply
+lector1 {"escritor3":4, "lector2":4, "lector1":5, "escritor4":11}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":6, "escritor4":11, "escritor3":4, "lector2":4}
+INFO Sending Request
+lector1 {"lector1":7, "escritor4":11, "escritor3":4, "lector2":4}
+INFO Sending Request
+lector1 {"lector1":8, "escritor4":11, "escritor3":4, "lector2":4}
+INFO Sending Request
+lector1 {"escritor4":13, "escritor3":7, "lector2":4, "lector1":9}
+INFO Received reply
+lector1 {"lector1":10, "escritor4":13, "escritor3":7, "lector2":7}
+INFO Received reply
+lector1 {"lector1":11, "escritor4":15, "escritor3":7, "lector2":7}
+INFO Received reply
+lector1 {"lector1":12, "escritor4":15, "escritor3":7, "lector2":7}
+INFO leer fichero 
+lector1 {"lector1":13, "escritor4":15, "escritor3":8, "lector2":7}
+INFO Received Request
+lector1 {"lector1":14, "escritor4":15, "escritor3":8, "lector2":7}
+INFO Sending Reply
+lector1 {"escritor4":17, "escritor3":16, "lector2":9, "lector1":15}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":16, "escritor4":17, "escritor3":17, "lector2":11}
+INFO Received Request
+lector1 {"lector1":17, "escritor4":17, "escritor3":17, "lector2":11}
+INFO Sending Reply
+lector1 {"lector1":18, "escritor4":21, "escritor3":18, "lector2":13}
+INFO Received Request
+lector1 {"escritor3":18, "lector2":13, "lector1":19, "escritor4":21}
+INFO Sending Reply
+lector1 {"lector1":20, "escritor4":29, "escritor3":22, "lector2":19}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":21, "escritor4":29, "escritor3":22, "lector2":19}
+INFO Sending Request
+lector1 {"lector1":22, "escritor4":29, "escritor3":22, "lector2":19}
+INFO Sending Request
+lector1 {"lector1":23, "escritor4":29, "escritor3":22, "lector2":19}
+INFO Sending Request
+lector1 {"lector1":24, "escritor4":31, "escritor3":25, "lector2":19}
+INFO Received reply
+lector1 {"lector1":25, "escritor4":31, "escritor3":25, "lector2":22}
+INFO Received reply
+lector1 {"lector1":26, "escritor4":33, "escritor3":25, "lector2":22}
+INFO Received reply
+lector1 {"escritor3":25, "lector2":22, "lector1":27, "escritor4":33}
+INFO leer fichero 
+lector1 {"escritor4":33, "escritor3":26, "lector2":22, "lector1":28}
+INFO Received Request
+lector1 {"lector1":29, "escritor4":33, "escritor3":26, "lector2":22}
+INFO Sending Reply
+lector1 {"lector1":30, "escritor4":35, "escritor3":34, "lector2":24}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":31, "escritor4":35, "escritor3":35, "lector2":26}
+INFO Received Request
+lector1 {"lector1":32, "escritor4":35, "escritor3":35, "lector2":26}
+INFO Sending Reply
+lector1 {"lector1":33, "escritor4":39, "escritor3":36, "lector2":28}
+INFO Received Request
+lector1 {"lector2":28, "lector1":34, "escritor4":39, "escritor3":36}
+INFO Sending Reply
+lector1 {"lector2":34, "lector1":35, "escritor4":47, "escritor3":40}
+INFO Received escribir en el fichero holita
+lector1 {"escritor3":40, "lector2":34, "lector1":36, "escritor4":47}
+INFO Sending Request
+lector1 {"lector2":34, "lector1":37, "escritor4":47, "escritor3":40}
+INFO Sending Request
+lector1 {"escritor3":40, "lector2":37, "lector1":38, "escritor4":48}
+INFO Received reply
+lector1 {"lector1":39, "escritor4":48, "escritor3":40, "lector2":37}
+INFO Sending Request
+lector1 {"lector1":40, "escritor4":49, "escritor3":43, "lector2":37}
+INFO Received reply
+lector1 {"lector1":41, "escritor4":49, "escritor3":44, "lector2":37}
+INFO Received Request
+lector1 {"escritor3":44, "lector2":37, "lector1":42, "escritor4":49}
+INFO defer
+lector1 {"escritor3":45, "lector2":40, "lector1":43, "escritor4":49}
+INFO Received Request
+lector1 {"lector2":40, "lector1":44, "escritor4":49, "escritor3":45}
+INFO Sending Reply
+lector1 {"lector1":45, "escritor4":53, "escritor3":46, "lector2":40}
+INFO Received reply
+lector1 {"escritor4":53, "escritor3":46, "lector2":40, "lector1":46}
+INFO leer fichero 
+lector1 {"lector1":47, "escritor4":53, "escritor3":46, "lector2":40}
+INFO Sending Reply
+lector1 {"lector1":48, "escritor4":53, "escritor3":54, "lector2":41}
+INFO Received escribir en el fichero holita
+lector1 {"escritor3":56, "lector2":42, "lector1":49, "escritor4":57}
+INFO Received Request
+lector1 {"lector1":50, "escritor4":57, "escritor3":56, "lector2":42}
+INFO Sending Reply
+lector1 {"escritor3":59, "lector2":49, "lector1":51, "escritor4":65}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":52, "escritor4":65, "escritor3":59, "lector2":49}
+INFO Sending Request
+lector1 {"escritor4":65, "escritor3":59, "lector2":49, "lector1":53}
+INFO Sending Request
+lector1 {"lector1":54, "escritor4":65, "escritor3":59, "lector2":49}
+INFO Sending Request
+lector1 {"lector2":52, "lector1":55, "escritor4":66, "escritor3":59}
+INFO Received reply
+lector1 {"escritor4":67, "escritor3":62, "lector2":52, "lector1":56}
+INFO Received reply
+lector1 {"lector1":57, "escritor4":69, "escritor3":62, "lector2":52}
+INFO Received reply
+lector1 {"lector1":58, "escritor4":69, "escritor3":62, "lector2":52}
+INFO leer fichero 
+lector1 {"lector1":59, "escritor4":69, "escritor3":63, "lector2":52}
+INFO Received Request
+lector1 {"lector1":60, "escritor4":69, "escritor3":63, "lector2":52}
+INFO Sending Reply
+lector1 {"escritor4":69, "escritor3":63, "lector2":53, "lector1":61}
+INFO Received Request
+lector1 {"lector1":62, "escritor4":69, "escritor3":63, "lector2":53}
+INFO Sending Reply
+lector1 {"lector1":63, "escritor4":73, "escritor3":73, "lector2":62}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":64, "escritor4":75, "escritor3":75, "lector2":62}
+INFO Received Request
+lector1 {"lector1":65, "escritor4":75, "escritor3":75, "lector2":62}
+INFO Sending Reply
+lector1 {"lector1":66, "escritor4":83, "escritor3":77, "lector2":65}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":67, "escritor4":83, "escritor3":77, "lector2":65}
+INFO Sending Request
+lector1 {"escritor4":83, "escritor3":77, "lector2":65, "lector1":68}
+INFO Sending Request
+lector1 {"lector1":69, "escritor4":83, "escritor3":77, "lector2":65}
+INFO Sending Request
+lector1 {"escritor3":77, "lector2":65, "lector1":70, "escritor4":87}
+INFO Received reply
+lector1 {"escritor4":87, "escritor3":80, "lector2":65, "lector1":71}
+INFO Received reply
+lector1 {"lector2":68, "lector1":72, "escritor4":87, "escritor3":80}
+INFO Received reply
+lector1 {"lector1":73, "escritor4":87, "escritor3":80, "lector2":68}
+INFO leer fichero 
+lector1 {"escritor3":80, "lector2":69, "lector1":74, "escritor4":87}
+INFO Received Request
+lector1 {"escritor4":87, "escritor3":80, "lector2":69, "lector1":75}
+INFO Sending Reply
+lector1 {"lector1":76, "escritor4":87, "escritor3":83, "lector2":70}
+INFO Received Request
+lector1 {"lector1":77, "escritor4":87, "escritor3":83, "lector2":70}
+INFO Sending Reply
+lector1 {"escritor4":91, "escritor3":91, "lector2":77, "lector1":78}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":79, "escritor4":93, "escritor3":93, "lector2":77}
+INFO Received Request
+lector1 {"escritor3":93, "lector2":77, "lector1":80, "escritor4":93}
+INFO Sending Reply
+lector1 {"lector2":80, "lector1":81, "escritor4":101, "escritor3":95}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":82, "escritor4":101, "escritor3":95, "lector2":80}
+INFO Sending Request
+lector1 {"lector1":83, "escritor4":101, "escritor3":95, "lector2":80}
+INFO Sending Request
+lector1 {"lector1":84, "escritor4":101, "escritor3":95, "lector2":80}
+INFO Sending Request
+lector1 {"lector1":85, "escritor4":102, "escritor3":95, "lector2":83}
+INFO Received reply
+lector1 {"escritor3":98, "lector2":83, "lector1":86, "escritor4":103}
+INFO Received reply
+lector1 {"escritor4":105, "escritor3":98, "lector2":83, "lector1":87}
+INFO Received reply
+lector1 {"escritor3":98, "lector2":83, "lector1":88, "escritor4":105}
+INFO leer fichero 
+lector1 {"lector1":89, "escritor4":105, "escritor3":98, "lector2":84}
+INFO Received Request
+lector1 {"lector1":90, "escritor4":105, "escritor3":98, "lector2":84}
+INFO Sending Reply
+lector1 {"lector1":91, "escritor4":105, "escritor3":101, "lector2":85}
+INFO Received Request
+lector1 {"lector1":92, "escritor4":105, "escritor3":101, "lector2":85}
+INFO Sending Reply
+lector1 {"lector1":93, "escritor4":109, "escritor3":109, "lector2":92}
+INFO Received escribir en el fichero holita
+lector1 {"escritor3":111, "lector2":92, "lector1":94, "escritor4":111}
+INFO Received Request
+lector1 {"escritor4":111, "escritor3":111, "lector2":92, "lector1":95}
+INFO Sending Reply
+lector1 {"lector1":96, "escritor4":119, "escritor3":113, "lector2":95}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":97, "escritor4":119, "escritor3":113, "lector2":95}
+INFO Sending Request
+lector1 {"lector1":98, "escritor4":119, "escritor3":113, "lector2":95}
+INFO Sending Request
+lector1 {"lector1":99, "escritor4":119, "escritor3":113, "lector2":95}
+INFO Sending Request
+lector1 {"lector1":100, "escritor4":120, "escritor3":113, "lector2":98}
+INFO Received reply
+lector1 {"escritor3":113, "lector2":98, "lector1":101, "escritor4":123}
+INFO Received reply
+lector1 {"lector1":102, "escritor4":123, "escritor3":116, "lector2":98}
+INFO Received reply
+lector1 {"lector1":103, "escritor4":123, "escritor3":116, "lector2":98}
+INFO leer fichero 
+lector1 {"lector2":99, "lector1":104, "escritor4":123, "escritor3":116}
+INFO Received Request
+lector1 {"lector1":105, "escritor4":123, "escritor3":116, "lector2":99}
+INFO Sending Reply
+lector1 {"escritor3":119, "lector2":100, "lector1":106, "escritor4":123}
+INFO Received Request
+lector1 {"lector1":107, "escritor4":123, "escritor3":119, "lector2":100}
+INFO Sending Reply
+lector1 {"escritor3":127, "lector2":107, "lector1":108, "escritor4":127}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":109, "escritor4":129, "escritor3":129, "lector2":107}
+INFO Received Request
+lector1 {"lector2":107, "lector1":110, "escritor4":129, "escritor3":129}
+INFO Sending Reply
+lector1 {"lector1":111, "escritor4":137, "escritor3":131, "lector2":110}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":112, "escritor4":137, "escritor3":131, "lector2":110}
+INFO Sending Request
+lector1 {"lector2":110, "lector1":113, "escritor4":137, "escritor3":131}
+INFO Sending Request
+lector1 {"escritor4":137, "escritor3":131, "lector2":110, "lector1":114}
+INFO Sending Request
+lector1 {"escritor3":131, "lector2":113, "lector1":115, "escritor4":138}
+INFO Received reply
+lector1 {"escritor4":139, "escritor3":134, "lector2":113, "lector1":116}
+INFO Received reply
+lector1 {"lector1":117, "escritor4":141, "escritor3":134, "lector2":113}
+INFO Received reply
+lector1 {"escritor4":141, "escritor3":134, "lector2":113, "lector1":118}
+INFO leer fichero 
+lector1 {"lector1":119, "escritor4":141, "escritor3":134, "lector2":114}
+INFO Received Request
+lector1 {"lector1":120, "escritor4":141, "escritor3":134, "lector2":114}
+INFO Sending Reply
+lector1 {"lector2":115, "lector1":121, "escritor4":141, "escritor3":137}
+INFO Received Request
+lector1 {"escritor4":141, "escritor3":137, "lector2":115, "lector1":122}
+INFO Sending Reply
+lector1 {"lector1":123, "escritor4":145, "escritor3":145, "lector2":122}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":124, "escritor4":147, "escritor3":147, "lector2":122}
+INFO Received Request
+lector1 {"escritor3":147, "lector2":122, "lector1":125, "escritor4":147}
+INFO Sending Reply
+lector1 {"lector1":126, "escritor4":155, "escritor3":149, "lector2":125}
+INFO Received escribir en el fichero holita
+lector1 {"escritor3":149, "lector2":125, "lector1":127, "escritor4":155}
+INFO Sending Request
+lector1 {"lector1":128, "escritor4":155, "escritor3":149, "lector2":125}
+INFO Sending Request
+lector1 {"lector1":129, "escritor4":156, "escritor3":149, "lector2":128}
+INFO Received reply
+lector1 {"escritor3":149, "lector2":128, "lector1":130, "escritor4":156}
+INFO Sending Request
+lector1 {"lector1":131, "escritor4":157, "escritor3":152, "lector2":128}
+INFO Received reply
+lector1 {"escritor3":152, "lector2":128, "lector1":132, "escritor4":159}
+INFO Received reply
+lector1 {"lector2":128, "lector1":133, "escritor4":159, "escritor3":152}
+INFO leer fichero 
+lector1 {"lector1":134, "escritor4":159, "escritor3":152, "lector2":129}
+INFO Received Request
+lector1 {"lector1":135, "escritor4":159, "escritor3":152, "lector2":129}
+INFO Sending Reply
+lector1 {"escritor3":155, "lector2":130, "lector1":136, "escritor4":159}
+INFO Received Request
+lector1 {"lector1":137, "escritor4":159, "escritor3":155, "lector2":130}
+INFO Sending Reply
+lector1 {"lector1":138, "escritor4":163, "escritor3":163, "lector2":137}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":139, "escritor4":165, "escritor3":165, "lector2":137}
+INFO Received Request
+lector1 {"lector1":140, "escritor4":165, "escritor3":165, "lector2":137}
+INFO Sending Reply
+lector1 {"lector1":141, "escritor4":173, "escritor3":167, "lector2":140}
+INFO Received escribir en el fichero holita
+lector1 {"lector1":142, "escritor4":173, "escritor3":167, "lector2":140}
+INFO Sending Request
+lector1 {"lector1":143, "escritor4":173, "escritor3":167, "lector2":140}
+INFO Sending Request
+lector1 {"lector1":144, "escritor4":174, "escritor3":167, "lector2":143}
+INFO Received reply
+lector1 {"escritor4":174, "escritor3":167, "lector2":143, "lector1":145}
+INFO Sending Request
+lector1 {"lector1":146, "escritor4":175, "escritor3":170, "lector2":143}
+INFO Received reply
+lector1 {"lector1":147, "escritor4":177, "escritor3":170, "lector2":143}
+INFO Received reply
+lector1 {"lector2":143, "lector1":148, "escritor4":177, "escritor3":170}
+INFO leer fichero 
+lector1 {"lector1":149, "escritor4":177, "escritor3":170, "lector2":144}
+INFO Received Request
+lector1 {"lector1":150, "escritor4":177, "escritor3":170, "lector2":144}
+INFO Sending Reply
+lector1 {"escritor4":177, "escritor3":173, "lector2":145, "lector1":151}
+INFO Received Request
+lector1 {"lector1":152, "escritor4":177, "escritor3":173, "lector2":145}
+INFO Sending Reply
+lector1 {"escritor3":181, "lector2":152, "lector1":153, "escritor4":181}
+INFO Received escribir en el fichero holita
