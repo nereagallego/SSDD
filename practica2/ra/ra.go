@@ -47,7 +47,6 @@ type RASharedDB struct {
 	TypeOfProcess int        // 0 si es lector y 1 si el proceso es escritor
 	logger        *govec.GoLog
 	gestor        *gestorfichero.Gestor
-	// TODO: completar
 }
 
 var exclude = [2][2]bool{
@@ -57,7 +56,6 @@ var exclude = [2][2]bool{
 func New(me int, usersFile string, typeOfProcess int, logger *govec.GoLog, gestor gestorfichero.Gestor) *RASharedDB {
 
 	messageTypes := []ms.Message{Escribir{}, Request{}, Reply{}}
-	//messageTypes := []ms.Message{[]byte{}}
 	msgs := ms.New(me, usersFile, messageTypes)
 	ra := RASharedDB{0, 0, 0, false, []bool{}, &msgs, make(chan bool), make(chan bool), sync.Mutex{}, msgs.NumberOfPeers(), typeOfProcess, logger, &gestor}
 	go ra.Receive()
@@ -82,7 +80,6 @@ func (ra *RASharedDB) PreProtocol() {
 			VectorClockMessage := ra.logger.PrepareSend("Sending Request", "request", govec.GetDefaultLogOptions())
 
 			ra.ms.Send(j, Request{ra.OurSeqNum, ra.ms.Me(), ra.TypeOfProcess, VectorClockMessage})
-			//	fmt.Println(Request{ra.OurSeqNum, ra.ms.Me(), ra.TypeOfProcess, VectorClockMessage})
 		}
 	}
 	for ra.OutRepCnt > 0 { //recibir todas las replys
@@ -104,7 +101,6 @@ func (ra *RASharedDB) PostProtocol() {
 			VectorClockMessage := ra.logger.PrepareSend("Sending Reply", "reply", govec.GetDefaultLogOptions())
 
 			ra.ms.Send(j, Reply{VectorClockMessage})
-			//	fmt.Println(Reply{VectorClockMessage})
 		}
 	}
 	ra.Mutex.Unlock()
@@ -114,8 +110,6 @@ func (ra *RASharedDB) Receive() {
 	ra.logger.LogLocalEvent("Receiver active ", govec.GetDefaultLogOptions())
 	for {
 		mensaje := ra.ms.Receive()
-		//	fmt.Println(mensaje)
-		//	var VectorClockMessage [512]byte
 		var incomming string
 
 		switch v := mensaje.(type) {
@@ -130,9 +124,7 @@ func (ra *RASharedDB) Receive() {
 			ra.logger.UnpackReceive("Received escribir en el fichero "+v.Fragmento, v.VectorClockMessage, &incomming, govec.GetDefaultLogOptions())
 			ra.gestor.EscribirFichero(v.Fragmento)
 		default:
-			//	ra.logger.UnpackReceive("Receiving incorrect type ", VectorClockMessage, &mensaje, govec.GetDefaultLogOptions())
 			fmt.Println("ERROR!!!!")
-			//	fmt.Println(v)
 		}
 	}
 }
@@ -151,7 +143,6 @@ func (ra *RASharedDB) Request(mensaje Request) {
 		VectorClockMessage := ra.logger.PrepareSend("Sending Reply", "send reply", govec.GetDefaultLogOptions())
 
 		ra.ms.Send(mensaje.Pid, Reply{VectorClockMessage})
-		//fmt.Println(Reply{VectorClockMessage})
 	}
 
 }
@@ -167,7 +158,6 @@ func (ra *RASharedDB) SendEscribir(f string) {
 			VectorClockMessage := ra.logger.PrepareSend("Sending Escribir", "escribe "+f, govec.GetDefaultLogOptions())
 
 			ra.ms.Send(j, Escribir{f, VectorClockMessage})
-			//	fmt.Println(Escribir{f, VectorClockMessage})
 		}
 	}
 }

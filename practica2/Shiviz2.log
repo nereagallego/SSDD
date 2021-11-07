@@ -1,0 +1,1059 @@
+(?<host>\S*) (?<clock>{.*})\n(?<event>.*)
+
+
+lector1 {"lector1":1}
+Initialization Complete
+lector1 {"lector1":2}
+INFO Receiver active 
+lector1 {"lector1":3, "lector4":3}
+INFO Received Request
+lector1 {"lector1":4, "lector4":3}
+INFO Sending Reply
+lector1 {"lector1":5, "lector4":4, "lector2":5}
+INFO Received Request
+lector1 {"lector1":6, "lector4":4, "lector2":5}
+INFO Sending Reply
+lector1 {"lector2":5, "lector1":7, "lector4":4}
+INFO Sending Request
+lector1 {"lector1":8, "lector4":4, "lector2":5}
+INFO Sending Request
+lector1 {"lector1":9, "lector4":4, "lector2":5}
+INFO Sending Request
+lector1 {"lector1":10, "lector4":11, "lector2":12, "lector3":6}
+INFO Received reply
+lector1 {"lector4":11, "lector2":12, "lector3":8, "lector1":11}
+INFO Received reply
+lector1 {"lector4":13, "lector2":12, "lector3":8, "lector1":12}
+INFO Received reply
+lector1 {"lector1":13, "lector4":13, "lector2":12, "lector3":8}
+INFO leer fichero 
+lector1 {"lector1":14, "lector4":13, "lector2":12, "lector3":9}
+INFO Received Request
+lector1 {"lector3":9, "lector1":15, "lector4":13, "lector2":12}
+INFO Sending Reply
+lector1 {"lector1":16, "lector4":13, "lector2":16, "lector3":10}
+INFO Received Request
+lector1 {"lector1":17, "lector4":13, "lector2":16, "lector3":10}
+INFO Sending Reply
+lector1 {"lector3":12, "lector1":18, "lector4":18, "lector2":18}
+INFO Received Request
+lector1 {"lector4":18, "lector2":18, "lector3":12, "lector1":19}
+INFO Sending Reply
+lector1 {"lector1":20, "lector4":18, "lector2":18, "lector3":12}
+INFO Sending Request
+lector1 {"lector3":12, "lector1":21, "lector4":18, "lector2":18}
+INFO Sending Request
+lector1 {"lector2":18, "lector3":20, "lector1":22, "lector4":20}
+INFO Received Request
+lector1 {"lector1":23, "lector4":20, "lector2":18, "lector3":20}
+INFO Sending Reply
+lector1 {"lector1":24, "lector4":20, "lector2":18, "lector3":20}
+INFO Sending Request
+lector1 {"lector2":26, "lector3":20, "lector1":25, "lector4":20}
+INFO Received reply
+lector1 {"lector1":26, "lector4":26, "lector2":26, "lector3":25}
+INFO Received reply
+lector1 {"lector1":27, "lector4":28, "lector2":26, "lector3":25}
+INFO Received reply
+lector1 {"lector2":26, "lector3":25, "lector1":28, "lector4":28}
+INFO leer fichero 
+lector1 {"lector2":29, "lector3":25, "lector1":29, "lector4":28}
+INFO Received Request
+lector1 {"lector1":30, "lector4":28, "lector2":29, "lector3":25}
+INFO Sending Reply
+lector1 {"lector1":31, "lector4":31, "lector2":31, "lector3":25}
+INFO Received Request
+lector1 {"lector1":32, "lector4":31, "lector2":31, "lector3":25}
+INFO Sending Reply
+lector1 {"lector1":33, "lector4":33, "lector2":31, "lector3":33}
+INFO Received Request
+lector1 {"lector1":34, "lector4":33, "lector2":31, "lector3":33}
+INFO Sending Reply
+lector1 {"lector3":33, "lector1":35, "lector4":33, "lector2":31}
+INFO Sending Request
+lector1 {"lector1":36, "lector4":33, "lector2":31, "lector3":33}
+INFO Sending Request
+lector1 {"lector1":37, "lector4":33, "lector2":31, "lector3":33}
+INFO Sending Request
+lector1 {"lector3":35, "lector1":38, "lector4":41, "lector2":36}
+INFO Received reply
+lector1 {"lector3":38, "lector1":39, "lector4":41, "lector2":36}
+INFO Received reply
+lector1 {"lector4":41, "lector2":41, "lector3":38, "lector1":40}
+INFO Received reply
+lector1 {"lector3":38, "lector1":41, "lector4":41, "lector2":41}
+INFO leer fichero 
+lector1 {"lector2":42, "lector3":38, "lector1":42, "lector4":41}
+INFO Received Request
+lector1 {"lector1":43, "lector4":41, "lector2":42, "lector3":38}
+INFO Sending Reply
+lector1 {"lector1":44, "lector4":44, "lector2":44, "lector3":38}
+INFO Received Request
+lector1 {"lector1":45, "lector4":44, "lector2":44, "lector3":38}
+INFO Sending Reply
+lector1 {"lector1":46, "lector4":44, "lector2":44, "lector3":38}
+INFO Sending Request
+lector1 {"lector1":47, "lector4":44, "lector2":44, "lector3":38}
+INFO Sending Request
+lector1 {"lector2":44, "lector3":46, "lector1":48, "lector4":46}
+INFO Received Request
+lector1 {"lector1":49, "lector4":46, "lector2":44, "lector3":46}
+INFO Sending Reply
+lector1 {"lector1":50, "lector4":46, "lector2":52, "lector3":46}
+INFO Received reply
+lector1 {"lector1":51, "lector4":46, "lector2":52, "lector3":46}
+INFO Sending Request
+lector1 {"lector1":52, "lector4":46, "lector2":52, "lector3":50}
+INFO Received reply
+lector1 {"lector1":53, "lector4":52, "lector2":52, "lector3":50}
+INFO Received reply
+lector1 {"lector3":50, "lector1":54, "lector4":52, "lector2":52}
+INFO leer fichero 
+lector1 {"lector1":55, "lector4":52, "lector2":55, "lector3":50}
+INFO Received Request
+lector1 {"lector1":56, "lector4":52, "lector2":55, "lector3":50}
+INFO Sending Reply
+lector1 {"lector1":57, "lector4":55, "lector2":55, "lector3":50}
+INFO Received Request
+lector1 {"lector3":50, "lector1":58, "lector4":55, "lector2":55}
+INFO Sending Reply
+lector1 {"lector1":59, "lector4":55, "lector2":55, "lector3":50}
+INFO Sending Request
+lector1 {"lector4":55, "lector2":55, "lector3":50, "lector1":60}
+INFO Sending Request
+lector1 {"lector1":61, "lector4":55, "lector2":55, "lector3":50}
+INFO Sending Request
+lector1 {"lector1":62, "lector4":58, "lector2":65, "lector3":56}
+INFO Received reply
+lector1 {"lector1":63, "lector4":65, "lector2":65, "lector3":58}
+INFO Received reply
+lector1 {"lector2":65, "lector3":60, "lector1":64, "lector4":65}
+INFO Received reply
+lector1 {"lector1":65, "lector4":65, "lector2":65, "lector3":60}
+INFO leer fichero 
+lector1 {"lector2":65, "lector3":61, "lector1":66, "lector4":65}
+INFO Received Request
+lector1 {"lector1":67, "lector4":65, "lector2":65, "lector3":61}
+INFO Sending Reply
+lector1 {"lector1":68, "lector4":65, "lector2":68, "lector3":62}
+INFO Received Request
+lector1 {"lector1":69, "lector4":65, "lector2":68, "lector3":62}
+INFO Sending Reply
+lector1 {"lector1":70, "lector4":70, "lector2":70, "lector3":63}
+INFO Received Request
+lector1 {"lector2":70, "lector3":63, "lector1":71, "lector4":70}
+INFO Sending Reply
+lector1 {"lector1":72, "lector4":70, "lector2":70, "lector3":63}
+INFO Sending Request
+lector1 {"lector1":73, "lector4":70, "lector2":70, "lector3":63}
+INFO Sending Request
+lector1 {"lector1":74, "lector4":70, "lector2":70, "lector3":63}
+INFO Sending Request
+lector1 {"lector1":75, "lector4":71, "lector2":78, "lector3":69}
+INFO Received reply
+lector1 {"lector1":76, "lector4":73, "lector2":78, "lector3":73}
+INFO Received reply
+lector1 {"lector1":77, "lector4":78, "lector2":78, "lector3":73}
+INFO Received reply
+lector1 {"lector4":78, "lector2":78, "lector3":73, "lector1":78}
+INFO leer fichero 
+lector1 {"lector1":79, "lector4":78, "lector2":78, "lector3":74}
+INFO Received Request
+lector1 {"lector3":74, "lector1":80, "lector4":78, "lector2":78}
+INFO Sending Reply
+lector1 {"lector1":81, "lector4":78, "lector2":81, "lector3":75}
+INFO Received Request
+lector1 {"lector4":78, "lector2":81, "lector3":75, "lector1":82}
+INFO Sending Reply
+lector1 {"lector1":83, "lector4":83, "lector2":83, "lector3":76}
+INFO Received Request
+lector1 {"lector1":84, "lector4":83, "lector2":83, "lector3":76}
+INFO Sending Reply
+lector1 {"lector1":85, "lector4":83, "lector2":83, "lector3":76}
+INFO Sending Request
+lector1 {"lector3":76, "lector1":86, "lector4":83, "lector2":83}
+INFO Sending Request
+lector1 {"lector4":83, "lector2":83, "lector3":76, "lector1":87}
+INFO Sending Request
+lector1 {"lector1":88, "lector4":86, "lector2":83, "lector3":86}
+INFO Received reply
+lector1 {"lector1":89, "lector4":91, "lector2":89, "lector3":86}
+INFO Received reply
+lector1 {"lector1":90, "lector4":91, "lector2":91, "lector3":86}
+INFO Received reply
+lector1 {"lector1":91, "lector4":91, "lector2":91, "lector3":86}
+INFO leer fichero 
+lector1 {"lector1":92, "lector4":91, "lector2":91, "lector3":87}
+INFO Received Request
+lector1 {"lector1":93, "lector4":91, "lector2":91, "lector3":87}
+INFO Sending Reply
+lector1 {"lector2":94, "lector3":88, "lector1":94, "lector4":91}
+INFO Received Request
+lector1 {"lector1":95, "lector4":91, "lector2":94, "lector3":88}
+INFO Sending Reply
+lector1 {"lector3":89, "lector1":96, "lector4":96, "lector2":96}
+INFO Received Request
+lector1 {"lector3":89, "lector1":97, "lector4":96, "lector2":96}
+INFO Sending Reply
+lector1 {"lector3":89, "lector1":98, "lector4":96, "lector2":96}
+INFO Sending Request
+lector1 {"lector3":89, "lector1":99, "lector4":96, "lector2":96}
+INFO Sending Request
+lector1 {"lector1":100, "lector4":97, "lector2":104, "lector3":95}
+INFO Received reply
+lector1 {"lector1":101, "lector4":97, "lector2":104, "lector3":95}
+INFO Sending Request
+lector1 {"lector2":104, "lector3":99, "lector1":102, "lector4":98}
+INFO Received reply
+lector1 {"lector2":104, "lector3":99, "lector1":103, "lector4":104}
+INFO Received reply
+lector1 {"lector1":104, "lector4":104, "lector2":104, "lector3":99}
+INFO leer fichero 
+lector1 {"lector1":105, "lector4":104, "lector2":104, "lector3":100}
+INFO Received Request
+lector1 {"lector1":106, "lector4":104, "lector2":104, "lector3":100}
+INFO Sending Reply
+lector1 {"lector1":107, "lector4":104, "lector2":107, "lector3":101}
+INFO Received Request
+lector1 {"lector4":104, "lector2":107, "lector3":101, "lector1":108}
+INFO Sending Reply
+lector1 {"lector1":109, "lector4":109, "lector2":109, "lector3":102}
+INFO Received Request
+lector1 {"lector4":109, "lector2":109, "lector3":102, "lector1":110}
+INFO Sending Reply
+lector1 {"lector1":111, "lector4":109, "lector2":109, "lector3":102}
+INFO Sending Request
+lector1 {"lector3":102, "lector1":112, "lector4":109, "lector2":109}
+INFO Sending Request
+lector1 {"lector1":113, "lector4":109, "lector2":109, "lector3":102}
+INFO Sending Request
+lector1 {"lector4":111, "lector2":109, "lector3":112, "lector1":114}
+INFO Received reply
+lector1 {"lector1":115, "lector4":111, "lector2":117, "lector3":112}
+INFO Received reply
+lector1 {"lector1":116, "lector4":117, "lector2":117, "lector3":112}
+INFO Received reply
+lector1 {"lector1":117, "lector4":117, "lector2":117, "lector3":112}
+INFO leer fichero 
+lector1 {"lector3":113, "lector1":118, "lector4":117, "lector2":117}
+INFO Received Request
+lector1 {"lector4":117, "lector2":117, "lector3":113, "lector1":119}
+INFO Sending Reply
+lector1 {"lector1":120, "lector4":117, "lector2":120, "lector3":114}
+INFO Received Request
+lector1 {"lector1":121, "lector4":117, "lector2":120, "lector3":114}
+INFO Sending Reply
+lector1 {"lector1":122, "lector4":122, "lector2":122, "lector3":115}
+INFO Received Request
+lector1 {"lector3":115, "lector1":123, "lector4":122, "lector2":122}
+INFO Sending Reply
+lector1 {"lector1":124, "lector4":122, "lector2":122, "lector3":115}
+INFO Sending Request
+lector1 {"lector1":125, "lector4":122, "lector2":122, "lector3":115}
+INFO Sending Request
+lector1 {"lector1":126, "lector4":123, "lector2":130, "lector3":121}
+INFO Received reply
+lector1 {"lector1":127, "lector4":123, "lector2":130, "lector3":121}
+INFO Sending Request
+lector1 {"lector1":128, "lector4":130, "lector2":130, "lector3":123}
+INFO Received reply
+lector1 {"lector1":129, "lector4":130, "lector2":130, "lector3":125}
+INFO Received reply
+lector1 {"lector2":130, "lector3":125, "lector1":130, "lector4":130}
+INFO leer fichero 
+lector1 {"lector4":130, "lector2":130, "lector3":126, "lector1":131}
+INFO Received Request
+lector1 {"lector1":132, "lector4":130, "lector2":130, "lector3":126}
+INFO Sending Reply
+lector2 {"lector2":1}
+Initialization Complete
+lector2 {"lector2":2}
+INFO Receiver active 
+lector2 {"lector2":3, "lector4":4}
+INFO Received Request
+lector2 {"lector2":4, "lector4":4}
+INFO Sending Reply
+lector2 {"lector2":5, "lector4":4}
+INFO Sending Request
+lector2 {"lector2":6, "lector4":4}
+INFO Sending Request
+lector2 {"lector2":7, "lector4":4, "lector1":6}
+INFO Received reply
+lector2 {"lector1":6, "lector2":8, "lector4":4}
+INFO Sending Request
+lector2 {"lector1":6, "lector3":6, "lector2":9, "lector4":5}
+INFO Received reply
+lector2 {"lector2":10, "lector4":11, "lector1":6, "lector3":6}
+INFO Received reply
+lector2 {"lector4":11, "lector1":7, "lector3":6, "lector2":11}
+INFO Received Request
+lector2 {"lector2":12, "lector4":11, "lector1":7, "lector3":6}
+INFO Sending Reply
+lector2 {"lector3":6, "lector2":13, "lector4":11, "lector1":7}
+INFO leer fichero 
+lector2 {"lector2":14, "lector4":11, "lector1":8, "lector3":10}
+INFO Received Request
+lector2 {"lector2":15, "lector4":11, "lector1":8, "lector3":10}
+INFO Sending Reply
+lector2 {"lector3":10, "lector2":16, "lector4":11, "lector1":8}
+INFO Sending Request
+lector2 {"lector3":10, "lector2":17, "lector4":11, "lector1":8}
+INFO Sending Request
+lector2 {"lector3":10, "lector2":18, "lector4":11, "lector1":8}
+INFO Sending Request
+lector2 {"lector2":19, "lector4":13, "lector1":17, "lector3":10}
+INFO Received reply
+lector2 {"lector4":17, "lector1":17, "lector3":12, "lector2":20}
+INFO Received reply
+lector2 {"lector2":21, "lector4":17, "lector1":17, "lector3":17}
+INFO Received reply
+lector2 {"lector2":22, "lector4":19, "lector1":17, "lector3":17}
+INFO Received Request
+lector2 {"lector2":23, "lector4":19, "lector1":17, "lector3":17}
+INFO Sending Reply
+lector2 {"lector2":24, "lector4":19, "lector1":17, "lector3":17}
+INFO leer fichero 
+lector2 {"lector1":20, "lector3":17, "lector2":25, "lector4":19}
+INFO Received Request
+lector2 {"lector2":26, "lector4":19, "lector1":20, "lector3":17}
+INFO Sending Reply
+lector2 {"lector2":27, "lector4":20, "lector1":20, "lector3":21}
+INFO Received Request
+lector2 {"lector4":20, "lector1":20, "lector3":21, "lector2":28}
+INFO Sending Reply
+lector2 {"lector2":29, "lector4":20, "lector1":20, "lector3":21}
+INFO Sending Request
+lector2 {"lector2":30, "lector4":20, "lector1":20, "lector3":21}
+INFO Sending Request
+lector2 {"lector2":31, "lector4":20, "lector1":20, "lector3":21}
+INFO Sending Request
+lector2 {"lector1":30, "lector3":25, "lector2":32, "lector4":28}
+INFO Received reply
+lector2 {"lector2":33, "lector4":28, "lector1":30, "lector3":30}
+INFO Received reply
+lector2 {"lector3":30, "lector2":34, "lector4":30, "lector1":30}
+INFO Received reply
+lector2 {"lector2":35, "lector4":32, "lector1":30, "lector3":30}
+INFO Received Request
+lector2 {"lector2":36, "lector4":32, "lector1":30, "lector3":30}
+INFO Sending Reply
+lector2 {"lector1":30, "lector3":30, "lector2":37, "lector4":32}
+INFO leer fichero 
+lector2 {"lector2":38, "lector4":33, "lector1":30, "lector3":34}
+INFO Received Request
+lector2 {"lector2":39, "lector4":33, "lector1":30, "lector3":34}
+INFO Sending Reply
+lector2 {"lector2":40, "lector4":33, "lector1":35, "lector3":34}
+INFO Received Request
+lector2 {"lector1":35, "lector3":34, "lector2":41, "lector4":33}
+INFO Sending Reply
+lector2 {"lector4":33, "lector1":35, "lector3":34, "lector2":42}
+INFO Sending Request
+lector2 {"lector2":43, "lector4":33, "lector1":35, "lector3":34}
+INFO Sending Request
+lector2 {"lector4":33, "lector1":35, "lector3":34, "lector2":44}
+INFO Sending Request
+lector2 {"lector2":45, "lector4":39, "lector1":36, "lector3":43}
+INFO Received reply
+lector2 {"lector4":43, "lector1":37, "lector3":43, "lector2":46}
+INFO Received reply
+lector2 {"lector4":43, "lector1":43, "lector3":43, "lector2":47}
+INFO Received reply
+lector2 {"lector2":48, "lector4":43, "lector1":43, "lector3":43}
+INFO leer fichero 
+lector2 {"lector2":49, "lector4":45, "lector1":43, "lector3":43}
+INFO Received Request
+lector2 {"lector4":45, "lector1":43, "lector3":43, "lector2":50}
+INFO Sending Reply
+lector2 {"lector2":51, "lector4":45, "lector1":46, "lector3":43}
+INFO Received Request
+lector2 {"lector2":52, "lector4":45, "lector1":46, "lector3":43}
+INFO Sending Reply
+lector2 {"lector1":46, "lector3":47, "lector2":53, "lector4":46}
+INFO Received Request
+lector2 {"lector2":54, "lector4":46, "lector1":46, "lector3":47}
+INFO Sending Reply
+lector2 {"lector4":46, "lector1":46, "lector3":47, "lector2":55}
+INFO Sending Request
+lector2 {"lector2":56, "lector4":46, "lector1":46, "lector3":47}
+INFO Sending Request
+lector2 {"lector2":57, "lector4":46, "lector1":46, "lector3":47}
+INFO Sending Request
+lector2 {"lector1":56, "lector3":50, "lector2":58, "lector4":52}
+INFO Received reply
+lector2 {"lector4":54, "lector1":56, "lector3":56, "lector2":59}
+INFO Received reply
+lector2 {"lector3":56, "lector2":60, "lector4":57, "lector1":56}
+INFO Received reply
+lector2 {"lector2":61, "lector4":57, "lector1":56, "lector3":56}
+INFO leer fichero 
+lector2 {"lector1":56, "lector3":56, "lector2":62, "lector4":58}
+INFO Received Request
+lector2 {"lector4":58, "lector1":56, "lector3":56, "lector2":63}
+INFO Sending Reply
+lector2 {"lector2":64, "lector4":58, "lector1":59, "lector3":56}
+INFO Received Request
+lector2 {"lector2":65, "lector4":58, "lector1":59, "lector3":56}
+INFO Sending Reply
+lector2 {"lector1":60, "lector3":62, "lector2":66, "lector4":60}
+INFO Received Request
+lector2 {"lector2":67, "lector4":60, "lector1":60, "lector3":62}
+INFO Sending Reply
+lector2 {"lector2":68, "lector4":60, "lector1":60, "lector3":62}
+INFO Sending Request
+lector2 {"lector2":69, "lector4":60, "lector1":60, "lector3":62}
+INFO Sending Request
+lector2 {"lector4":60, "lector1":60, "lector3":62, "lector2":70}
+INFO Sending Request
+lector2 {"lector3":69, "lector2":71, "lector4":67, "lector1":67}
+INFO Received reply
+lector2 {"lector1":69, "lector3":69, "lector2":72, "lector4":67}
+INFO Received reply
+lector2 {"lector4":69, "lector1":69, "lector3":69, "lector2":73}
+INFO Received reply
+lector2 {"lector3":69, "lector2":74, "lector4":69, "lector1":69}
+INFO leer fichero 
+lector2 {"lector2":75, "lector4":71, "lector1":69, "lector3":69}
+INFO Received Request
+lector2 {"lector2":76, "lector4":71, "lector1":69, "lector3":69}
+INFO Sending Reply
+lector2 {"lector2":77, "lector4":71, "lector1":72, "lector3":69}
+INFO Received Request
+lector2 {"lector2":78, "lector4":71, "lector1":72, "lector3":69}
+INFO Sending Reply
+lector2 {"lector1":73, "lector3":75, "lector2":79, "lector4":73}
+INFO Received Request
+lector2 {"lector2":80, "lector4":73, "lector1":73, "lector3":75}
+INFO Sending Reply
+lector2 {"lector2":81, "lector4":73, "lector1":73, "lector3":75}
+INFO Sending Request
+lector2 {"lector4":73, "lector1":73, "lector3":75, "lector2":82}
+INFO Sending Request
+lector2 {"lector2":83, "lector4":73, "lector1":73, "lector3":75}
+INFO Sending Request
+lector2 {"lector2":84, "lector4":78, "lector1":82, "lector3":75}
+INFO Received reply
+lector2 {"lector2":85, "lector4":80, "lector1":82, "lector3":82}
+INFO Received reply
+lector2 {"lector1":82, "lector3":82, "lector2":86, "lector4":82}
+INFO Received reply
+lector2 {"lector4":82, "lector1":82, "lector3":82, "lector2":87}
+INFO leer fichero 
+lector2 {"lector2":88, "lector4":84, "lector1":82, "lector3":82}
+INFO Received Request
+lector2 {"lector2":89, "lector4":84, "lector1":82, "lector3":82}
+INFO Sending Reply
+lector2 {"lector4":84, "lector1":85, "lector3":82, "lector2":90}
+INFO Received Request
+lector2 {"lector3":82, "lector2":91, "lector4":84, "lector1":85}
+INFO Sending Reply
+lector2 {"lector3":88, "lector2":92, "lector4":86, "lector1":86}
+INFO Received Request
+lector2 {"lector2":93, "lector4":86, "lector1":86, "lector3":88}
+INFO Sending Reply
+lector2 {"lector4":86, "lector1":86, "lector3":88, "lector2":94}
+INFO Sending Request
+lector2 {"lector2":95, "lector4":86, "lector1":86, "lector3":88}
+INFO Sending Request
+lector2 {"lector2":96, "lector4":86, "lector1":86, "lector3":88}
+INFO Sending Request
+lector2 {"lector2":97, "lector4":91, "lector1":95, "lector3":88}
+INFO Received reply
+lector2 {"lector3":95, "lector2":98, "lector4":93, "lector1":95}
+INFO Received reply
+lector2 {"lector3":95, "lector2":99, "lector4":95, "lector1":95}
+INFO Received reply
+lector2 {"lector3":95, "lector2":100, "lector4":95, "lector1":95}
+INFO leer fichero 
+lector2 {"lector2":101, "lector4":97, "lector1":95, "lector3":95}
+INFO Received Request
+lector2 {"lector2":102, "lector4":97, "lector1":95, "lector3":95}
+INFO Sending Reply
+lector2 {"lector2":103, "lector4":97, "lector1":98, "lector3":95}
+INFO Received Request
+lector2 {"lector2":104, "lector4":97, "lector1":98, "lector3":95}
+INFO Sending Reply
+lector2 {"lector4":98, "lector1":99, "lector3":101, "lector2":105}
+INFO Received Request
+lector2 {"lector3":101, "lector2":106, "lector4":98, "lector1":99}
+INFO Sending Reply
+lector2 {"lector2":107, "lector4":98, "lector1":99, "lector3":101}
+INFO Sending Request
+lector2 {"lector3":101, "lector2":108, "lector4":98, "lector1":99}
+INFO Sending Request
+lector2 {"lector4":98, "lector1":99, "lector3":101, "lector2":109}
+INFO Sending Request
+lector2 {"lector4":104, "lector1":108, "lector3":101, "lector2":110}
+INFO Received reply
+lector2 {"lector2":111, "lector4":106, "lector1":108, "lector3":108}
+INFO Received reply
+lector2 {"lector4":108, "lector1":108, "lector3":108, "lector2":112}
+INFO Received reply
+lector2 {"lector2":113, "lector4":108, "lector1":108, "lector3":108}
+INFO leer fichero 
+lector2 {"lector2":114, "lector4":110, "lector1":108, "lector3":108}
+INFO Received Request
+lector2 {"lector2":115, "lector4":110, "lector1":108, "lector3":108}
+INFO Sending Reply
+lector2 {"lector2":116, "lector4":110, "lector1":111, "lector3":108}
+INFO Received Request
+lector2 {"lector2":117, "lector4":110, "lector1":111, "lector3":108}
+INFO Sending Reply
+lector2 {"lector2":118, "lector4":111, "lector1":112, "lector3":114}
+INFO Received Request
+lector2 {"lector2":119, "lector4":111, "lector1":112, "lector3":114}
+INFO Sending Reply
+lector2 {"lector2":120, "lector4":111, "lector1":112, "lector3":114}
+INFO Sending Request
+lector2 {"lector2":121, "lector4":111, "lector1":112, "lector3":114}
+INFO Sending Request
+lector2 {"lector2":122, "lector4":111, "lector1":112, "lector3":114}
+INFO Sending Request
+lector2 {"lector3":114, "lector2":123, "lector4":117, "lector1":121}
+INFO Received reply
+lector2 {"lector3":115, "lector2":124, "lector4":121, "lector1":121}
+INFO Received reply
+lector2 {"lector3":121, "lector2":125, "lector4":121, "lector1":121}
+INFO Received reply
+lector2 {"lector2":126, "lector4":121, "lector1":121, "lector3":121}
+INFO leer fichero 
+lector2 {"lector2":127, "lector4":123, "lector1":121, "lector3":121}
+INFO Received Request
+lector2 {"lector2":128, "lector4":123, "lector1":121, "lector3":121}
+INFO Sending Reply
+lector2 {"lector2":129, "lector4":123, "lector1":124, "lector3":121}
+INFO Received Request
+lector2 {"lector2":130, "lector4":123, "lector1":124, "lector3":121}
+INFO Sending Reply
+lector2 {"lector2":131, "lector4":124, "lector1":125, "lector3":127}
+INFO Received Request
+lector2 {"lector2":132, "lector4":124, "lector1":125, "lector3":127}
+INFO Sending Reply
+lector3 {"lector3":1}
+Initialization Complete
+lector3 {"lector3":2}
+INFO Receiver active 
+lector3 {"lector3":3, "lector4":5}
+INFO Received Request
+lector3 {"lector3":4, "lector4":5}
+INFO Sending Reply
+lector3 {"lector3":5, "lector4":5, "lector2":6}
+INFO Received Request
+lector3 {"lector2":6, "lector3":6, "lector4":5}
+INFO Sending Reply
+lector3 {"lector3":7, "lector4":5, "lector2":6, "lector1":8}
+INFO Received Request
+lector3 {"lector1":8, "lector3":8, "lector4":5, "lector2":6}
+INFO Sending Reply
+lector3 {"lector3":9, "lector4":5, "lector2":6, "lector1":8}
+INFO Sending Request
+lector3 {"lector3":10, "lector4":5, "lector2":6, "lector1":8}
+INFO Sending Request
+lector3 {"lector3":11, "lector4":13, "lector2":12, "lector1":15}
+INFO Received reply
+lector3 {"lector3":12, "lector4":13, "lector2":12, "lector1":15}
+INFO Sending Request
+lector3 {"lector1":15, "lector3":13, "lector4":15, "lector2":12}
+INFO Received reply
+lector3 {"lector2":15, "lector1":15, "lector3":14, "lector4":15}
+INFO Received reply
+lector3 {"lector3":15, "lector4":15, "lector2":15, "lector1":15}
+INFO leer fichero 
+lector3 {"lector3":16, "lector4":15, "lector2":17, "lector1":15}
+INFO Received Request
+lector3 {"lector3":17, "lector4":15, "lector2":17, "lector1":15}
+INFO Sending Reply
+lector3 {"lector1":15, "lector3":18, "lector4":20, "lector2":18}
+INFO Received Request
+lector3 {"lector2":18, "lector1":15, "lector3":19, "lector4":20}
+INFO Sending Reply
+lector3 {"lector3":20, "lector4":20, "lector2":18, "lector1":15}
+INFO Sending Request
+lector3 {"lector3":21, "lector4":20, "lector2":18, "lector1":15}
+INFO Sending Request
+lector3 {"lector1":15, "lector3":22, "lector4":20, "lector2":18}
+INFO Sending Request
+lector3 {"lector1":19, "lector3":23, "lector4":26, "lector2":23}
+INFO Received reply
+lector3 {"lector4":26, "lector2":23, "lector1":21, "lector3":24}
+INFO Received Request
+lector3 {"lector3":25, "lector4":26, "lector2":23, "lector1":21}
+INFO Sending Reply
+lector3 {"lector3":26, "lector4":26, "lector2":23, "lector1":23}
+INFO Received reply
+lector3 {"lector2":28, "lector1":23, "lector3":27, "lector4":26}
+INFO Received reply
+lector3 {"lector3":28, "lector4":26, "lector2":28, "lector1":23}
+INFO leer fichero 
+lector3 {"lector3":29, "lector4":26, "lector2":30, "lector1":23}
+INFO Received Request
+lector3 {"lector2":30, "lector1":23, "lector3":30, "lector4":26}
+INFO Sending Reply
+lector3 {"lector4":33, "lector2":31, "lector1":24, "lector3":31}
+INFO Received Request
+lector3 {"lector3":32, "lector4":33, "lector2":31, "lector1":24}
+INFO Sending Reply
+lector3 {"lector1":24, "lector3":33, "lector4":33, "lector2":31}
+INFO Sending Request
+lector3 {"lector3":34, "lector4":33, "lector2":31, "lector1":24}
+INFO Sending Request
+lector3 {"lector2":31, "lector1":24, "lector3":35, "lector4":33}
+INFO Sending Request
+lector3 {"lector3":36, "lector4":33, "lector2":31, "lector1":34}
+INFO Received reply
+lector3 {"lector3":37, "lector4":33, "lector2":31, "lector1":36}
+INFO Received Request
+lector3 {"lector3":38, "lector4":33, "lector2":31, "lector1":36}
+INFO Sending Reply
+lector3 {"lector3":39, "lector4":39, "lector2":36, "lector1":36}
+INFO Received reply
+lector3 {"lector3":40, "lector4":39, "lector2":39, "lector1":36}
+INFO Received reply
+lector3 {"lector3":41, "lector4":39, "lector2":39, "lector1":36}
+INFO leer fichero 
+lector3 {"lector1":36, "lector3":42, "lector4":39, "lector2":43}
+INFO Received Request
+lector3 {"lector1":36, "lector3":43, "lector4":39, "lector2":43}
+INFO Sending Reply
+lector3 {"lector3":44, "lector4":46, "lector2":44, "lector1":37}
+INFO Received Request
+lector3 {"lector3":45, "lector4":46, "lector2":44, "lector1":37}
+INFO Sending Reply
+lector3 {"lector1":37, "lector3":46, "lector4":46, "lector2":44}
+INFO Sending Request
+lector3 {"lector3":47, "lector4":46, "lector2":44, "lector1":37}
+INFO Sending Request
+lector3 {"lector3":48, "lector4":46, "lector2":44, "lector1":37}
+INFO Sending Request
+lector3 {"lector3":49, "lector4":46, "lector2":44, "lector1":47}
+INFO Received Request
+lector3 {"lector1":47, "lector3":50, "lector4":46, "lector2":44}
+INFO Sending Reply
+lector3 {"lector3":51, "lector4":46, "lector2":44, "lector1":49}
+INFO Received reply
+lector3 {"lector3":52, "lector4":46, "lector2":54, "lector1":49}
+INFO Received reply
+lector3 {"lector4":54, "lector2":54, "lector1":51, "lector3":53}
+INFO Received reply
+lector3 {"lector3":54, "lector4":54, "lector2":54, "lector1":51}
+INFO leer fichero 
+lector3 {"lector2":56, "lector1":51, "lector3":55, "lector4":54}
+INFO Received Request
+lector3 {"lector3":56, "lector4":54, "lector2":56, "lector1":51}
+INFO Sending Reply
+lector3 {"lector3":57, "lector4":60, "lector2":57, "lector1":58}
+INFO Received Request
+lector3 {"lector3":58, "lector4":60, "lector2":57, "lector1":58}
+INFO Sending Reply
+lector3 {"lector2":57, "lector1":60, "lector3":59, "lector4":60}
+INFO Received Request
+lector3 {"lector4":60, "lector2":57, "lector1":60, "lector3":60}
+INFO Sending Reply
+lector3 {"lector3":61, "lector4":60, "lector2":57, "lector1":60}
+INFO Sending Request
+lector3 {"lector3":62, "lector4":60, "lector2":57, "lector1":60}
+INFO Sending Request
+lector3 {"lector3":63, "lector4":60, "lector2":57, "lector1":60}
+INFO Sending Request
+lector3 {"lector3":64, "lector4":65, "lector2":65, "lector1":67}
+INFO Received reply
+lector3 {"lector3":65, "lector4":65, "lector2":67, "lector1":67}
+INFO Received reply
+lector3 {"lector1":67, "lector3":66, "lector4":67, "lector2":67}
+INFO Received reply
+lector3 {"lector1":67, "lector3":67, "lector4":67, "lector2":67}
+INFO leer fichero 
+lector3 {"lector3":68, "lector4":67, "lector2":69, "lector1":67}
+INFO Received Request
+lector3 {"lector3":69, "lector4":67, "lector2":69, "lector1":67}
+INFO Sending Reply
+lector3 {"lector3":70, "lector4":73, "lector2":70, "lector1":71}
+INFO Received Request
+lector3 {"lector3":71, "lector4":73, "lector2":70, "lector1":71}
+INFO Sending Reply
+lector3 {"lector3":72, "lector4":73, "lector2":70, "lector1":73}
+INFO Received Request
+lector3 {"lector3":73, "lector4":73, "lector2":70, "lector1":73}
+INFO Sending Reply
+lector3 {"lector2":70, "lector1":73, "lector3":74, "lector4":73}
+INFO Sending Request
+lector3 {"lector3":75, "lector4":73, "lector2":70, "lector1":73}
+INFO Sending Request
+lector3 {"lector2":70, "lector1":73, "lector3":76, "lector4":73}
+INFO Sending Request
+lector3 {"lector3":77, "lector4":73, "lector2":80, "lector1":73}
+INFO Received reply
+lector3 {"lector3":78, "lector4":78, "lector2":80, "lector1":80}
+INFO Received reply
+lector3 {"lector3":79, "lector4":80, "lector2":80, "lector1":80}
+INFO Received reply
+lector3 {"lector3":80, "lector4":80, "lector2":80, "lector1":80}
+INFO leer fichero 
+lector3 {"lector3":81, "lector4":80, "lector2":82, "lector1":80}
+INFO Received Request
+lector3 {"lector4":80, "lector2":82, "lector1":80, "lector3":82}
+INFO Sending Reply
+lector3 {"lector3":83, "lector4":86, "lector2":83, "lector1":84}
+INFO Received Request
+lector3 {"lector4":86, "lector2":83, "lector1":84, "lector3":84}
+INFO Sending Reply
+lector3 {"lector3":85, "lector4":86, "lector2":83, "lector1":86}
+INFO Received Request
+lector3 {"lector3":86, "lector4":86, "lector2":83, "lector1":86}
+INFO Sending Reply
+lector3 {"lector3":87, "lector4":86, "lector2":83, "lector1":86}
+INFO Sending Request
+lector3 {"lector2":83, "lector1":86, "lector3":88, "lector4":86}
+INFO Sending Request
+lector3 {"lector2":83, "lector1":86, "lector3":89, "lector4":86}
+INFO Sending Request
+lector3 {"lector1":93, "lector3":90, "lector4":91, "lector2":91}
+INFO Received reply
+lector3 {"lector1":93, "lector3":91, "lector4":91, "lector2":93}
+INFO Received reply
+lector3 {"lector3":92, "lector4":93, "lector2":93, "lector1":93}
+INFO Received reply
+lector3 {"lector3":93, "lector4":93, "lector2":93, "lector1":93}
+INFO leer fichero 
+lector3 {"lector3":94, "lector4":93, "lector2":95, "lector1":93}
+INFO Received Request
+lector3 {"lector3":95, "lector4":93, "lector2":95, "lector1":93}
+INFO Sending Reply
+lector3 {"lector3":96, "lector4":98, "lector2":96, "lector1":93}
+INFO Received Request
+lector3 {"lector1":93, "lector3":97, "lector4":98, "lector2":96}
+INFO Sending Reply
+lector3 {"lector3":98, "lector4":98, "lector2":96, "lector1":99}
+INFO Received Request
+lector3 {"lector4":98, "lector2":96, "lector1":99, "lector3":99}
+INFO Sending Reply
+lector3 {"lector2":96, "lector1":99, "lector3":100, "lector4":98}
+INFO Sending Request
+lector3 {"lector3":101, "lector4":98, "lector2":96, "lector1":99}
+INFO Sending Request
+lector3 {"lector3":102, "lector4":98, "lector2":96, "lector1":99}
+INFO Sending Request
+lector3 {"lector3":103, "lector4":106, "lector2":104, "lector1":101}
+INFO Received reply
+lector3 {"lector3":104, "lector4":106, "lector2":106, "lector1":101}
+INFO Received reply
+lector3 {"lector1":106, "lector3":105, "lector4":106, "lector2":106}
+INFO Received reply
+lector3 {"lector3":106, "lector4":106, "lector2":106, "lector1":106}
+INFO leer fichero 
+lector3 {"lector3":107, "lector4":106, "lector2":108, "lector1":106}
+INFO Received Request
+lector3 {"lector3":108, "lector4":106, "lector2":108, "lector1":106}
+INFO Sending Reply
+lector3 {"lector3":109, "lector4":111, "lector2":109, "lector1":106}
+INFO Received Request
+lector3 {"lector3":110, "lector4":111, "lector2":109, "lector1":106}
+INFO Sending Reply
+lector3 {"lector1":112, "lector3":111, "lector4":111, "lector2":109}
+INFO Received Request
+lector3 {"lector3":112, "lector4":111, "lector2":109, "lector1":112}
+INFO Sending Reply
+lector3 {"lector3":113, "lector4":111, "lector2":109, "lector1":112}
+INFO Sending Request
+lector3 {"lector2":109, "lector1":112, "lector3":114, "lector4":111}
+INFO Sending Request
+lector3 {"lector1":112, "lector3":115, "lector4":111, "lector2":109}
+INFO Sending Request
+lector3 {"lector3":116, "lector4":117, "lector2":117, "lector1":119}
+INFO Received reply
+lector3 {"lector3":117, "lector4":119, "lector2":117, "lector1":119}
+INFO Received reply
+lector3 {"lector3":118, "lector4":119, "lector2":119, "lector1":119}
+INFO Received reply
+lector3 {"lector4":119, "lector2":119, "lector1":119, "lector3":119}
+INFO leer fichero 
+lector3 {"lector3":120, "lector4":119, "lector2":121, "lector1":119}
+INFO Received Request
+lector3 {"lector2":121, "lector1":119, "lector3":121, "lector4":119}
+INFO Sending Reply
+lector3 {"lector3":122, "lector4":124, "lector2":122, "lector1":119}
+INFO Received Request
+lector3 {"lector4":124, "lector2":122, "lector1":119, "lector3":123}
+INFO Sending Reply
+lector3 {"lector3":124, "lector4":124, "lector2":122, "lector1":125}
+INFO Received Request
+lector3 {"lector3":125, "lector4":124, "lector2":122, "lector1":125}
+INFO Sending Reply
+lector3 {"lector3":126, "lector4":124, "lector2":122, "lector1":125}
+INFO Sending Request
+lector3 {"lector3":127, "lector4":124, "lector2":122, "lector1":125}
+INFO Sending Request
+lector3 {"lector4":124, "lector2":122, "lector1":125, "lector3":128}
+INFO Sending Request
+lector3 {"lector3":129, "lector4":130, "lector2":130, "lector1":132}
+INFO Received reply
+lector3 {"lector4":130, "lector2":132, "lector1":132, "lector3":130}
+INFO Received reply
+lector3 {"lector3":131, "lector4":132, "lector2":132, "lector1":132}
+INFO Received reply
+lector3 {"lector3":132, "lector4":132, "lector2":132, "lector1":132}
+INFO leer fichero 
+lector4 {"lector4":1}
+Initialization Complete
+lector4 {"lector4":2}
+INFO Receiver active 
+lector4 {"lector4":3}
+INFO Sending Request
+lector4 {"lector4":4}
+INFO Sending Request
+lector4 {"lector4":5}
+INFO Sending Request
+lector4 {"lector4":6, "lector2":4}
+INFO Received reply
+lector4 {"lector2":4, "lector3":4, "lector4":7}
+INFO Received reply
+lector4 {"lector1":4, "lector4":8, "lector2":4, "lector3":4}
+INFO Received reply
+lector4 {"lector4":9, "lector2":4, "lector3":4, "lector1":4}
+INFO leer fichero 
+lector4 {"lector4":10, "lector2":8, "lector3":4, "lector1":6}
+INFO Received Request
+lector4 {"lector4":11, "lector2":8, "lector3":4, "lector1":6}
+INFO Sending Reply
+lector4 {"lector4":12, "lector2":8, "lector3":4, "lector1":9}
+INFO Received Request
+lector4 {"lector2":8, "lector3":4, "lector1":9, "lector4":13}
+INFO Sending Reply
+lector4 {"lector4":14, "lector2":12, "lector3":12, "lector1":15}
+INFO Received Request
+lector4 {"lector3":12, "lector1":15, "lector4":15, "lector2":12}
+INFO Sending Reply
+lector4 {"lector4":16, "lector2":18, "lector3":12, "lector1":15}
+INFO Received Request
+lector4 {"lector4":17, "lector2":18, "lector3":12, "lector1":15}
+INFO Sending Reply
+lector4 {"lector4":18, "lector2":18, "lector3":12, "lector1":15}
+INFO Sending Request
+lector4 {"lector2":18, "lector3":12, "lector1":15, "lector4":19}
+INFO Sending Request
+lector4 {"lector3":12, "lector1":15, "lector4":20, "lector2":18}
+INFO Sending Request
+lector4 {"lector4":21, "lector2":18, "lector3":12, "lector1":19}
+INFO Received reply
+lector4 {"lector4":22, "lector2":18, "lector3":19, "lector1":19}
+INFO Received reply
+lector4 {"lector4":23, "lector2":23, "lector3":19, "lector1":19}
+INFO Received reply
+lector4 {"lector1":19, "lector4":24, "lector2":23, "lector3":19}
+INFO leer fichero 
+lector4 {"lector4":25, "lector2":23, "lector3":22, "lector1":19}
+INFO Received Request
+lector4 {"lector2":23, "lector3":22, "lector1":19, "lector4":26}
+INFO Sending Reply
+lector4 {"lector4":27, "lector2":23, "lector3":22, "lector1":24}
+INFO Received Request
+lector4 {"lector4":28, "lector2":23, "lector3":22, "lector1":24}
+INFO Sending Reply
+lector4 {"lector1":24, "lector4":29, "lector2":31, "lector3":22}
+INFO Received Request
+lector4 {"lector4":30, "lector2":31, "lector3":22, "lector1":24}
+INFO Sending Reply
+lector4 {"lector4":31, "lector2":31, "lector3":22, "lector1":24}
+INFO Sending Request
+lector4 {"lector4":32, "lector2":31, "lector3":22, "lector1":24}
+INFO Sending Request
+lector4 {"lector2":31, "lector3":22, "lector1":24, "lector4":33}
+INFO Sending Request
+lector4 {"lector2":31, "lector3":32, "lector1":24, "lector4":34}
+INFO Received reply
+lector4 {"lector4":35, "lector2":31, "lector3":32, "lector1":32}
+INFO Received reply
+lector4 {"lector4":36, "lector2":36, "lector3":32, "lector1":32}
+INFO Received reply
+lector4 {"lector4":37, "lector2":36, "lector3":32, "lector1":32}
+INFO leer fichero 
+lector4 {"lector4":38, "lector2":36, "lector3":35, "lector1":32}
+INFO Received Request
+lector4 {"lector1":32, "lector4":39, "lector2":36, "lector3":35}
+INFO Sending Reply
+lector4 {"lector3":35, "lector1":37, "lector4":40, "lector2":36}
+INFO Received Request
+lector4 {"lector4":41, "lector2":36, "lector3":35, "lector1":37}
+INFO Sending Reply
+lector4 {"lector4":42, "lector2":44, "lector3":35, "lector1":37}
+INFO Received Request
+lector4 {"lector4":43, "lector2":44, "lector3":35, "lector1":37}
+INFO Sending Reply
+lector4 {"lector4":44, "lector2":44, "lector3":35, "lector1":37}
+INFO Sending Request
+lector4 {"lector4":45, "lector2":44, "lector3":35, "lector1":37}
+INFO Sending Request
+lector4 {"lector4":46, "lector2":44, "lector3":35, "lector1":37}
+INFO Sending Request
+lector4 {"lector4":47, "lector2":44, "lector3":38, "lector1":45}
+INFO Received reply
+lector4 {"lector2":44, "lector3":45, "lector1":45, "lector4":48}
+INFO Received reply
+lector4 {"lector4":49, "lector2":50, "lector3":45, "lector1":45}
+INFO Received reply
+lector4 {"lector4":50, "lector2":50, "lector3":45, "lector1":45}
+INFO leer fichero 
+lector4 {"lector3":46, "lector1":51, "lector4":51, "lector2":52}
+INFO Received Request
+lector4 {"lector4":52, "lector2":52, "lector3":46, "lector1":51}
+INFO Sending Reply
+lector4 {"lector4":53, "lector2":52, "lector3":48, "lector1":51}
+INFO Received Request
+lector4 {"lector4":54, "lector2":52, "lector3":48, "lector1":51}
+INFO Sending Reply
+lector4 {"lector4":55, "lector2":52, "lector3":48, "lector1":51}
+INFO Sending Request
+lector4 {"lector4":56, "lector2":57, "lector3":48, "lector1":51}
+INFO Received Request
+lector4 {"lector3":48, "lector1":51, "lector4":57, "lector2":57}
+INFO Sending Reply
+lector4 {"lector4":58, "lector2":57, "lector3":48, "lector1":51}
+INFO Sending Request
+lector4 {"lector4":59, "lector2":57, "lector3":50, "lector1":58}
+INFO Received reply
+lector4 {"lector4":60, "lector2":57, "lector3":50, "lector1":58}
+INFO Sending Request
+lector4 {"lector2":63, "lector3":56, "lector1":58, "lector4":61}
+INFO Received reply
+lector4 {"lector3":58, "lector1":58, "lector4":62, "lector2":63}
+INFO Received reply
+lector4 {"lector4":63, "lector2":63, "lector3":58, "lector1":58}
+INFO leer fichero 
+lector4 {"lector4":64, "lector2":63, "lector3":58, "lector1":61}
+INFO Received Request
+lector4 {"lector1":61, "lector4":65, "lector2":63, "lector3":58}
+INFO Sending Reply
+lector4 {"lector4":66, "lector2":63, "lector3":63, "lector1":61}
+INFO Received Request
+lector4 {"lector4":67, "lector2":63, "lector3":63, "lector1":61}
+INFO Sending Reply
+lector4 {"lector4":68, "lector2":70, "lector3":63, "lector1":61}
+INFO Received Request
+lector4 {"lector4":69, "lector2":70, "lector3":63, "lector1":61}
+INFO Sending Reply
+lector4 {"lector4":70, "lector2":70, "lector3":63, "lector1":61}
+INFO Sending Request
+lector4 {"lector4":71, "lector2":70, "lector3":63, "lector1":61}
+INFO Sending Request
+lector4 {"lector4":72, "lector2":70, "lector3":63, "lector1":71}
+INFO Received reply
+lector4 {"lector4":73, "lector2":70, "lector3":63, "lector1":71}
+INFO Sending Request
+lector4 {"lector3":69, "lector1":71, "lector4":74, "lector2":76}
+INFO Received reply
+lector4 {"lector4":75, "lector2":76, "lector3":71, "lector1":71}
+INFO Received reply
+lector4 {"lector4":76, "lector2":76, "lector3":71, "lector1":71}
+INFO leer fichero 
+lector4 {"lector2":76, "lector3":71, "lector1":74, "lector4":77}
+INFO Received Request
+lector4 {"lector4":78, "lector2":76, "lector3":71, "lector1":74}
+INFO Sending Reply
+lector4 {"lector4":79, "lector2":76, "lector3":76, "lector1":74}
+INFO Received Request
+lector4 {"lector4":80, "lector2":76, "lector3":76, "lector1":74}
+INFO Sending Reply
+lector4 {"lector4":81, "lector2":83, "lector3":76, "lector1":74}
+INFO Received Request
+lector4 {"lector4":82, "lector2":83, "lector3":76, "lector1":74}
+INFO Sending Reply
+lector4 {"lector4":83, "lector2":83, "lector3":76, "lector1":74}
+INFO Sending Request
+lector4 {"lector1":74, "lector4":84, "lector2":83, "lector3":76}
+INFO Sending Request
+lector4 {"lector4":85, "lector2":83, "lector3":76, "lector1":84}
+INFO Received reply
+lector4 {"lector4":86, "lector2":83, "lector3":76, "lector1":84}
+INFO Sending Request
+lector4 {"lector2":89, "lector3":82, "lector1":84, "lector4":87}
+INFO Received reply
+lector4 {"lector3":84, "lector1":84, "lector4":88, "lector2":89}
+INFO Received reply
+lector4 {"lector4":89, "lector2":89, "lector3":84, "lector1":84}
+INFO leer fichero 
+lector4 {"lector4":90, "lector2":89, "lector3":84, "lector1":87}
+INFO Received Request
+lector4 {"lector4":91, "lector2":89, "lector3":84, "lector1":87}
+INFO Sending Reply
+lector4 {"lector4":92, "lector2":89, "lector3":89, "lector1":87}
+INFO Received Request
+lector4 {"lector2":89, "lector3":89, "lector1":87, "lector4":93}
+INFO Sending Reply
+lector4 {"lector2":96, "lector3":89, "lector1":87, "lector4":94}
+INFO Received Request
+lector4 {"lector4":95, "lector2":96, "lector3":89, "lector1":87}
+INFO Sending Reply
+lector4 {"lector4":96, "lector2":96, "lector3":89, "lector1":87}
+INFO Sending Request
+lector4 {"lector2":96, "lector3":89, "lector1":87, "lector4":97}
+INFO Sending Request
+lector4 {"lector4":98, "lector2":96, "lector3":89, "lector1":87}
+INFO Sending Request
+lector4 {"lector4":99, "lector2":96, "lector3":89, "lector1":97}
+INFO Received reply
+lector4 {"lector3":95, "lector1":97, "lector4":100, "lector2":102}
+INFO Received reply
+lector4 {"lector4":101, "lector2":102, "lector3":97, "lector1":97}
+INFO Received reply
+lector4 {"lector2":102, "lector3":97, "lector1":97, "lector4":102}
+INFO leer fichero 
+lector4 {"lector1":101, "lector4":103, "lector2":104, "lector3":97}
+INFO Received Request
+lector4 {"lector3":97, "lector1":101, "lector4":104, "lector2":104}
+INFO Sending Reply
+lector4 {"lector2":104, "lector3":102, "lector1":101, "lector4":105}
+INFO Received Request
+lector4 {"lector4":106, "lector2":104, "lector3":102, "lector1":101}
+INFO Sending Reply
+lector4 {"lector4":107, "lector2":109, "lector3":102, "lector1":101}
+INFO Received Request
+lector4 {"lector4":108, "lector2":109, "lector3":102, "lector1":101}
+INFO Sending Reply
+lector4 {"lector1":101, "lector4":109, "lector2":109, "lector3":102}
+INFO Sending Request
+lector4 {"lector4":110, "lector2":109, "lector3":102, "lector1":101}
+INFO Sending Request
+lector4 {"lector4":111, "lector2":109, "lector3":102, "lector1":101}
+INFO Sending Request
+lector4 {"lector4":112, "lector2":115, "lector3":108, "lector1":108}
+INFO Received reply
+lector4 {"lector4":113, "lector2":115, "lector3":110, "lector1":108}
+INFO Received reply
+lector4 {"lector1":110, "lector4":114, "lector2":115, "lector3":110}
+INFO Received reply
+lector4 {"lector4":115, "lector2":115, "lector3":110, "lector1":110}
+INFO leer fichero 
+lector4 {"lector4":116, "lector2":115, "lector3":110, "lector1":113}
+INFO Received Request
+lector4 {"lector4":117, "lector2":115, "lector3":110, "lector1":113}
+INFO Sending Reply
+lector4 {"lector3":115, "lector1":113, "lector4":118, "lector2":115}
+INFO Received Request
+lector4 {"lector4":119, "lector2":115, "lector3":115, "lector1":113}
+INFO Sending Reply
+lector4 {"lector4":120, "lector2":122, "lector3":115, "lector1":113}
+INFO Received Request
+lector4 {"lector3":115, "lector1":113, "lector4":121, "lector2":122}
+INFO Sending Reply
+lector4 {"lector1":113, "lector4":122, "lector2":122, "lector3":115}
+INFO Sending Request
+lector4 {"lector4":123, "lector2":122, "lector3":115, "lector1":113}
+INFO Sending Request
+lector4 {"lector4":124, "lector2":122, "lector3":115, "lector1":113}
+INFO Sending Request
+lector4 {"lector4":125, "lector2":122, "lector3":115, "lector1":123}
+INFO Received reply
+lector4 {"lector4":126, "lector2":122, "lector3":123, "lector1":123}
+INFO Received reply
+lector4 {"lector4":127, "lector2":128, "lector3":123, "lector1":123}
+INFO Received reply
+lector4 {"lector2":128, "lector3":123, "lector1":123, "lector4":128}
+INFO leer fichero 
+lector4 {"lector1":127, "lector4":129, "lector2":130, "lector3":123}
+INFO Received Request
+lector4 {"lector3":123, "lector1":127, "lector4":130, "lector2":130}
+INFO Sending Reply
+lector4 {"lector4":131, "lector2":130, "lector3":128, "lector1":127}
+INFO Received Request
+lector4 {"lector1":127, "lector4":132, "lector2":130, "lector3":128}
+INFO Sending Reply

@@ -43,7 +43,6 @@ func main() {
 	fragmento := args[3]
 
 	gestorfichero := gestorfichero.NewGestor(file)
-	//ms := ms.New(pid, usersFile, []ms.Message{ra.Request{}, ra.Reply{}, ra.Escribir{}})
 	ra := ra.New(pid, usersFile, typeOfProcess, logger, gestorfichero)
 	time.Sleep(5000 * time.Millisecond)
 	for i := 0; i < 10; i++ {
