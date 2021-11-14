@@ -12,14 +12,13 @@ package main
 import (
 	"bufio"
 	"crypto/x509"
-	"encoding/gob"
 	"encoding/pem"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"net"
+	"net/http"
 	"net/rpc"
 	"os"
 	"strconv"
@@ -48,13 +47,15 @@ const (
 	OMISSION = iota // IOTA == 3
 )
 
+type peticion struct {
+	interval  com.TPInterval
+	respuesta chan ([]int)
+}
+
 type PrimesImpl struct {
-	delayMaxMilisegundos int
-	delayMinMiliSegundos int
-	behaviourPeriod      int
-	behaviour            int
-	i                    int
-	mutex                sync.Mutex
+	req   chan (peticion)
+	i     int
+	mutex sync.Mutex
 }
 
 func NewSshClient(user string, host string, port int, privateKeyPath string, privateKeyPassword string) (*SshClient, error) {
@@ -209,7 +210,7 @@ func FindPrimes(interval com.TPInterval) (primes []int) {
 	return primes
 }
 
-func lanzaworker(maquina []maquina, id int) {
+func lanzaworker(maquina []maquina, id int, puertoInicio int) {
 	ssh, err := NewSshClient(
 		"a801950",
 		maquina[id].ip,
@@ -220,53 +221,41 @@ func lanzaworker(maquina []maquina, id int) {
 	if err != nil {
 		log.Printf("SSH init error %v", err)
 	}
-	for i := 30100; i < 50000; i++ {
+	for i := puertoInicio; i < 50000; i++ {
 		maquina[id].puerto = strconv.Itoa(i)
 
-		output, _ := ssh.RunCommand("cd SSDD/practica1 && go run worker.go " + maquina[id].ip + ":" + maquina[id].puerto)
+		output, _ := ssh.RunCommand("cd SSDD/practica3 && go run worker.go " + maquina[id].ip + ":" + maquina[id].puerto)
+		//	fmt.Println("fallito en el puerto " + strconv.Itoa(i))
 		fmt.Println(output)
 
 	}
 }
 
-func handleClients(id int, maquina []maquina, clients chan net.Conn) {
+func handleClients(id int, maquina []maquina, peticiones chan peticion) {
 	worker, err := rpc.DialHTTP("tcp", maquina[id].ip+":"+maquina[id].puerto)
 	if err != nil {
 		log.Fatal("dialing:", err)
 	}
 	var reply []int
-	err = worker.Call("PrimesImpl.FindPrimes", interval, &reply)
-
-	//	time.Sleep(time.Duration(60000) * time.Millisecond)
-	tcpAddr, err := net.ResolveTCPAddr("tcp", maquina[id].ip+":"+maquina[id].puerto)
-	checkError(err)
-
-	worker, err := net.DialTCP("tcp", nil, tcpAddr)
-	checkError(err)
-
-	encoderS := gob.NewEncoder(worker)
-	decoderS := gob.NewDecoder(worker)
-
+	//	err = worker.Call("PrimesImpl.FindPrimes", interval, &reply)
+	fmt.Println("Lanzado woker %d", id)
 	for {
-		client, ok := <-clients
+		pet, ok := <-peticiones
 		if ok == false {
+			fmt.Println("peticion MAL. ERROR!")
 			break
 		} else {
-			encoder := gob.NewEncoder(client)
-			decoder := gob.NewDecoder(client)
-			var request com.Request
-
-			err = decoder.Decode(&request)
-			checkError(err)
-			err = encoderS.Encode(&request)
-			checkError(err)
-			var reply com.Reply
-			err = decoderS.Decode(&reply)
-			checkError(err)
-			err = encoder.Encode(&reply)
-			checkError(err)
-
-			client.Close()
+			done := worker.Go("PrimesImpl.FindPrimes", pet.interval, &reply, make(chan *rpc.Call, 1)).Done
+			select {
+			case _ = <-done:
+				pet.respuesta <- reply
+			case <-time.After(4 * time.Second):
+				fmt.Errorf("Timeout in CallTimout\n")
+				peticiones <- pet
+			}
+			//	interval := <-pet.interval
+			//	worker.Call("PrimesImpl.FindPrimes", pet.interval, &reply)
+			//	pet.respuesta <- reply
 		}
 	}
 }
@@ -276,103 +265,72 @@ func handleClients(id int, maquina []maquina, clients chan net.Conn) {
 // 		intervalo [interval.A, interval.B]
 func (p *PrimesImpl) FindPrimes(interval com.TPInterval, primeList *[]int) error {
 	p.mutex.Lock()
-	if p.i%p.behaviourPeriod == 0 {
-		p.behaviourPeriod = rand.Intn(20-2) + 2
-		options := rand.Intn(100)
-		if options > 90 {
-			p.behaviour = CRASH
-		} else if options > 60 {
-			p.behaviour = DELAY
-		} else if options > 40 {
-			p.behaviour = OMISSION
-		} else {
-			p.behaviour = NORMAL
-		}
-		p.i = 0
-	}
-	p.i++
+	var pet peticion
+	pet.interval = interval
+	pet.respuesta = make(chan []int)
+	p.req <- pet
 	p.mutex.Unlock()
-	switch p.behaviour {
-	case DELAY:
-		seconds := rand.Intn(p.delayMaxMilisegundos-p.delayMinMiliSegundos) + p.delayMinMiliSegundos
-		time.Sleep(time.Duration(seconds) * time.Millisecond)
-		*primeList = findPrimes(interval)
-	case CRASH:
-		os.Exit(1)
-	case OMISSION:
-		option := rand.Intn(100)
-		if option > 65 {
-			time.Sleep(time.Duration(10000) * time.Second)
-			*primeList = findPrimes(interval)
-		} else {
-			*primeList = findPrimes(interval)
-		}
-	case NORMAL:
-		*primeList = findPrimes(interval)
-	default:
-		*primeList = findPrimes(interval)
-	}
+	*primeList = <-pet.respuesta
 	return nil
 }
 
 func main() {
-	args := os.Args
-	fileMaquinas := args[1]
-	file, err := os.Open(fileMaquinas)
+	if len(os.Args) == 4 {
+		args := os.Args
+		fileMaquinas := args[1]
+		file, err := os.Open(fileMaquinas)
 
-	CONN_TYPE := "tcp"
+		CONN_TYPE := "tcp"
 
-	listener, err := net.Listen(CONN_TYPE, args[2])
-	checkError(err)
-
-	//handle errors while opening
-	if err != nil {
-		log.Fatalf("Error when opening file: %s", err)
-	}
-	var maquinas []maquina
-	var m maquina
-	nMaquinas := 0
-
-	fileScanner := bufio.NewScanner(file)
-	clients := make(chan net.Conn)
-
-	for fileScanner.Scan() {
-		ip := fileScanner.Text()
-		m.ip = ip
-
-		m.puerto = "30100"
-		maquinas = append(maquinas, m)
-
-		go lanzaworker(maquinas, nMaquinas)
-		nMaquinas = nMaquinas + 1
-
-	}
-	time.Sleep(time.Duration(10000) * time.Millisecond)
-	if err := fileScanner.Err(); err != nil {
-		log.Fatalf("Error while reading file: %s", err)
-	}
-	file.Close()
-	fmt.Println("Estableciendo conexión con los workers...")
-	for i := 0; i < nMaquinas; i++ {
-
-		go handleClients(i, maquinas, clients)
-
-	}
-	primesImpl := new(PrimesImpl)
-	primesImpl.delayMaxMilisegundos = 4000
-	primesImpl.delayMinMiliSegundos = 2000
-	primesImpl.behaviourPeriod = 4
-	primesImpl.i = 1
-	primesImpl.behaviour = NORMAL
-	rpc.Register(primesImpl)
-	//	rpc.HandleHTTP()
-
-	//	http.Serve(listener, nil)
-
-	fmt.Println("Esperando clientes...")
-	for {
-		conn, err := listener.Accept()
-		clients <- conn
+		listener, err := net.Listen(CONN_TYPE, args[2])
+		puertoInicio, _ := strconv.Atoi(args[3])
 		checkError(err)
+
+		//handle errors while opening
+		if err != nil {
+			log.Fatalf("Error when opening file: %s", err)
+		}
+		var maquinas []maquina
+		var m maquina
+		nMaquinas := 0
+
+		fileScanner := bufio.NewScanner(file)
+		//	clients := make(chan net.Conn)
+
+		for fileScanner.Scan() {
+			ip := fileScanner.Text()
+			m.ip = ip
+
+			m.puerto = args[3]
+			maquinas = append(maquinas, m)
+
+			go lanzaworker(maquinas, nMaquinas, puertoInicio)
+			nMaquinas = nMaquinas + 1
+
+		}
+		time.Sleep(time.Duration(20000*nMaquinas) * time.Millisecond)
+		if err := fileScanner.Err(); err != nil {
+			log.Fatalf("Error while reading file: %s", err)
+		}
+		file.Close()
+		fmt.Println("Estableciendo conexión con los workers...")
+		peticiones := make(chan peticion)
+		for i := 0; i < nMaquinas; i++ {
+
+			go handleClients(i, maquinas, peticiones)
+
+		}
+		primesImpl := new(PrimesImpl)
+		primesImpl.req = peticiones
+		primesImpl.i = nMaquinas
+
+		rpc.Register(primesImpl)
+		rpc.HandleHTTP()
+
+		fmt.Println("Esperando clientes...")
+		http.Serve(listener, nil)
+
+	} else {
+		fmt.Println("Usage: go run master.go fileMaquinas.txt <ip:port> puertoInicioWorkers")
 	}
 }
