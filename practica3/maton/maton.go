@@ -9,6 +9,7 @@
 package maton
 
 import (
+	"math/rand"
 	"practica3/ms"
 	"time"
 )
@@ -36,80 +37,91 @@ type Maton struct {
 	ms           *ms.MessageSystem
 	chOk         chan (string)
 	chLeaderBeat chan (string)
+	//	chLider      chan (string)
 }
 
-func (maton *Maton) soyLider() bool {
-	return maton.Id == maton.Coordinador
-}
-
-func New(id int, coordinador int, ficheroMaton string) *Maton {
+func New(id int, coordinador int, ficheroMaton string) *Maton { //, chLider *chan string) *Maton {
 	messageTypes := []ms.Message{OK{}, ELECTION{}, COORDINATOR{}, LEADERBEAT{}}
 	msgs := ms.New(id, ficheroMaton, messageTypes)
-	maton := Maton{id, msgs.NumberOfPeers(), coordinador, &msgs, make(chan string), make(chan string)}
+	maton := Maton{id, msgs.NumberOfPeers(), coordinador, &msgs, make(chan string), make(chan string)} //, *chLider}
 	go maton.Receive()
+	if !maton.soyLider() {
+		go maton.Send()
+	} //else {
+	//		*chLider <- "ok"
+	//	}
 	return &maton
 }
 
-func (maton *Maton) Send() {
+func (m *Maton) Send() {
 	for {
-		time.Sleep(10 * time.Second)
-		if !maton.soyLider() {
-			maton.ms.Send(maton.Coordinador, LEADERBEAT{maton.Id})
-		}
-		go maton.ReceiveLeaderbeat()
-	}
-}
-
-func (maton *Maton) NuevoCoordinador() {
-	for j := 1; j <= maton.N; j++ {
-		if j != maton.Id {
-			maton.ms.Send(maton.Id, COORDINATOR{maton.Id})
+		time.Sleep(time.Duration(rand.Intn(20-10)+10) * time.Second)
+		if !m.soyLider() {
+			m.ms.Send(m.Coordinador, LEADERBEAT{m.Id})
+			go m.ReceiveLeaderbeat()
 		}
 	}
 }
-
-func (maton *Maton) NuevaEleccion() {
-	for j := maton.Id + 1; j <= maton.N; j++ {
-		maton.ms.Send(maton.Id, ELECTION{maton.Id})
-	}
-	maton.ReceiveOk()
+func (m *Maton) soyLider() bool {
+	return m.Id == m.Coordinador
 }
 
-func (maton *Maton) ReceiveOk() {
+func (m *Maton) NuevoCoordinador() {
+	for j := 1; j <= m.N; j++ {
+		if j != m.Id {
+			m.ms.Send(m.Id, COORDINATOR{m.Id})
+		}
+	}
+}
+
+func (m *Maton) NuevaEleccion() {
+	for j := m.Id + 1; j <= m.N; j++ {
+		m.ms.Send(m.Id, ELECTION{m.Id})
+	}
+	m.ReceiveOk()
+}
+
+func (m *Maton) ReceiveOk() {
 	select {
-	case <-maton.chOk:
+	case <-m.chOk:
 		break
 	case <-time.After(10 * time.Second):
-		maton.NuevoCoordinador()
+		m.NuevoCoordinador()
 	}
 }
 
-func (maton *Maton) ReceiveLeaderbeat() {
+func (m *Maton) ReceiveLeaderbeat() {
 	select {
-	case <-maton.chLeaderBeat:
+	case <-m.chLeaderBeat:
 		break
 	case <-time.After(10 * time.Second):
-		maton.NuevaEleccion()
+		m.NuevaEleccion()
 	}
 }
 
-func (maton *Maton) Receive() {
+func (m *Maton) Receive() {
 	for {
-		msg := maton.ms.Receive()
-		switch msg.(type) {
+		msg := m.ms.Receive()
+		switch v := msg.(type) {
 		case OK:
-			maton.chOk <- "ok"
+			m.chOk <- "ok"
 		case COORDINATOR:
-			maton.Coordinador = msg.(COORDINATOR).Id
+			m.Coordinador = v.Id
+			//	m.chLider <- "ok"
+			go m.Send()
 		case ELECTION:
-			if maton.Id > msg.(ELECTION).Id {
-				maton.ms.Send(msg.(ELECTION).Id, OK{})
+			if m.Id > v.Id {
+				m.ms.Send(v.Id, OK{})
 			}
 		case LEADERBEAT:
-			if maton.soyLider() {
-				maton.ms.Send(msg.(LEADERBEAT).Id, LEADERBEAT{maton.Id})
+			if m.soyLider() {
+				comp := rand.Intn(100-2) + 2
+				if (comp % 13) == 0 {
+					time.Sleep(50 * time.Second)
+				}
+				m.ms.Send(v.Id, LEADERBEAT{m.Id})
 			} else {
-				maton.chLeaderBeat <- "ok"
+				m.chLeaderBeat <- "ok"
 			}
 		}
 	}
