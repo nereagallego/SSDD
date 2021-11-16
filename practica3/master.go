@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"practica3/com"
+	"practica3/maton"
 
 	"golang.org/x/crypto/ssh"
 )
@@ -35,10 +36,10 @@ type SshClient struct {
 	Server string
 }
 
-type maquina struct {
-	ip     string
-	puerto string
-}
+// type maquina struct {
+// 	ip     string
+// 	puerto string
+// }
 
 const (
 	NORMAL   = iota // NORMAL == 0
@@ -56,6 +57,11 @@ type PrimesImpl struct {
 	req   chan (peticion)
 	i     int
 	mutex sync.Mutex
+}
+
+type Maquina struct {
+	Ip     string
+	Puerto string
 }
 
 func NewSshClient(user string, host string, port int, privateKeyPath string, privateKeyPassword string) (*SshClient, error) {
@@ -210,10 +216,10 @@ func FindPrimes(interval com.TPInterval) (primes []int) {
 	return primes
 }
 
-func lanzaworker(maquina []maquina, id int, puertoInicio int) {
+func lanzaworker(maquina []Maquina, id int, puertoInicio int) {
 	ssh, err := NewSshClient(
 		"a801950",
-		maquina[id].ip,
+		maquina[id].Ip,
 		22,
 		"/home/a801950/.ssh/id_rsa",
 		"")
@@ -222,22 +228,20 @@ func lanzaworker(maquina []maquina, id int, puertoInicio int) {
 		log.Printf("SSH init error %v", err)
 	}
 	for i := puertoInicio; i < 50000; i++ {
-		maquina[id].puerto = strconv.Itoa(i)
+		maquina[id].Puerto = strconv.Itoa(i)
 
-		output, _ := ssh.RunCommand("cd SSDD/practica3 && go run worker.go " + maquina[id].ip + ":" + maquina[id].puerto)
-		//	fmt.Println("fallito en el puerto " + strconv.Itoa(i))
+		output, _ := ssh.RunCommand("cd SSDD/practica3 && go run worker.go " + maquina[id].Ip + ":" + maquina[id].Puerto)
 		fmt.Println(output)
 
 	}
 }
 
-func handleClients(id int, maquina []maquina, peticiones chan peticion) {
-	worker, err := rpc.DialHTTP("tcp", maquina[id].ip+":"+maquina[id].puerto)
+func handleClients(id int, maquina []Maquina, peticiones chan peticion) {
+	worker, err := rpc.DialHTTP("tcp", maquina[id].Ip+":"+maquina[id].Puerto)
 	if err != nil {
 		log.Fatal("dialing:", err)
 	}
 	var reply []int
-	//	err = worker.Call("PrimesImpl.FindPrimes", interval, &reply)
 	fmt.Println("Lanzado woker %d", id)
 	for {
 		pet, ok := <-peticiones
@@ -249,13 +253,10 @@ func handleClients(id int, maquina []maquina, peticiones chan peticion) {
 			select {
 			case _ = <-done:
 				pet.respuesta <- reply
-			case <-time.After(4 * time.Second):
+			case <-time.After(1500 * time.Millisecond):
 				fmt.Errorf("Timeout in CallTimout\n")
 				peticiones <- pet
 			}
-			//	interval := <-pet.interval
-			//	worker.Call("PrimesImpl.FindPrimes", pet.interval, &reply)
-			//	pet.respuesta <- reply
 		}
 	}
 }
@@ -275,9 +276,10 @@ func (p *PrimesImpl) FindPrimes(interval com.TPInterval, primeList *[]int) error
 }
 
 func main() {
-	if len(os.Args) == 4 {
+	if len(os.Args) == 5 {
 		args := os.Args
 		fileMaquinas := args[1]
+		ficheroMaton := args[4]
 		file, err := os.Open(fileMaquinas)
 
 		CONN_TYPE := "tcp"
@@ -290,24 +292,25 @@ func main() {
 		if err != nil {
 			log.Fatalf("Error when opening file: %s", err)
 		}
-		var maquinas []maquina
-		var m maquina
+		var maquinas []Maquina
+		var m Maquina
 		nMaquinas := 0
 
 		fileScanner := bufio.NewScanner(file)
-		//	clients := make(chan net.Conn)
 
 		for fileScanner.Scan() {
 			ip := fileScanner.Text()
-			m.ip = ip
+			m.Ip = ip
 
-			m.puerto = args[3]
+			m.Puerto = args[3]
 			maquinas = append(maquinas, m)
 
 			go lanzaworker(maquinas, nMaquinas, puertoInicio)
+
 			nMaquinas = nMaquinas + 1
 
 		}
+
 		time.Sleep(time.Duration(20000*nMaquinas) * time.Millisecond)
 		if err := fileScanner.Err(); err != nil {
 			log.Fatalf("Error while reading file: %s", err)
@@ -320,6 +323,7 @@ func main() {
 			go handleClients(i, maquinas, peticiones)
 
 		}
+		maton.New(nMaquinas+1, nMaquinas+1, ficheroMaton)
 		primesImpl := new(PrimesImpl)
 		primesImpl.req = peticiones
 		primesImpl.i = nMaquinas
@@ -331,6 +335,6 @@ func main() {
 		http.Serve(listener, nil)
 
 	} else {
-		fmt.Println("Usage: go run master.go fileMaquinas.txt <ip:port> puertoInicioWorkers")
+		fmt.Println("Usage: go run master.go fileMaquinas.txt <ip:port> puertoInicioWorkers ficheroMaton.txt")
 	}
 }
