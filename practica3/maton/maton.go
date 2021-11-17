@@ -9,6 +9,7 @@
 package maton
 
 import (
+	"fmt"
 	"math/rand"
 	"practica3/ms"
 	"time"
@@ -37,13 +38,14 @@ type Maton struct {
 	ms           *ms.MessageSystem
 	chOk         chan (string)
 	chLeaderBeat chan (string)
+	eleccion     bool
 	//	chLider      chan (string)
 }
 
 func New(id int, coordinador int, ficheroMaton string) *Maton { //, chLider *chan string) *Maton {
 	messageTypes := []ms.Message{OK{}, ELECTION{}, COORDINATOR{}, LEADERBEAT{}}
 	msgs := ms.New(id, ficheroMaton, messageTypes)
-	maton := Maton{id, msgs.NumberOfPeers(), coordinador, &msgs, make(chan string), make(chan string)} //, *chLider}
+	maton := Maton{id, msgs.NumberOfPeers(), coordinador, &msgs, make(chan string), make(chan string), false} //, *chLider}
 	go maton.Receive()
 	if !maton.soyLider() {
 		go maton.Send()
@@ -55,11 +57,19 @@ func New(id int, coordinador int, ficheroMaton string) *Maton { //, chLider *cha
 
 func (m *Maton) Send() {
 	for {
+
 		time.Sleep(time.Duration(rand.Intn(20-10)+10) * time.Second)
-		if !m.soyLider() {
-			m.ms.Send(m.Coordinador, LEADERBEAT{m.Id})
-			go m.ReceiveLeaderbeat()
+		if !m.eleccion {
+			if !m.soyLider() {
+				m.ms.Send(m.Coordinador, LEADERBEAT{m.Id})
+				go m.ReceiveLeaderbeat()
+			}
+		} else {
+			if m.soyLider() {
+				break
+			}
 		}
+
 	}
 }
 func (m *Maton) soyLider() bool {
@@ -84,8 +94,9 @@ func (m *Maton) NuevaEleccion() {
 func (m *Maton) ReceiveOk() {
 	select {
 	case <-m.chOk:
+		fmt.Println("llega ok")
 		break
-	case <-time.After(10 * time.Second):
+	case <-time.After(20 * time.Second):
 		m.NuevoCoordinador()
 	}
 }
@@ -94,7 +105,9 @@ func (m *Maton) ReceiveLeaderbeat() {
 	select {
 	case <-m.chLeaderBeat:
 		break
-	case <-time.After(10 * time.Second):
+	case <-time.After(30 * time.Second):
+		m.eleccion = true
+		fmt.Println("eleccion")
 		m.NuevaEleccion()
 	}
 }
@@ -102,24 +115,31 @@ func (m *Maton) ReceiveLeaderbeat() {
 func (m *Maton) Receive() {
 	for {
 		msg := m.ms.Receive()
+
 		switch v := msg.(type) {
 		case OK:
+			fmt.Println("llega mensaje ok")
 			m.chOk <- "ok"
 		case COORDINATOR:
 			m.Coordinador = v.Id
-			//	m.chLider <- "ok"
+			fmt.Println("Coordinador proceso: ", v.Id)
 			go m.Send()
 		case ELECTION:
+			fmt.Println("llega eleccion")
+			m.eleccion = true
+			m.chLeaderBeat <- "ok"
 			if m.Id > v.Id {
 				m.ms.Send(v.Id, OK{})
 			}
 		case LEADERBEAT:
 			if m.soyLider() {
-				comp := rand.Intn(100-2) + 2
-				if (comp % 13) == 0 {
-					time.Sleep(50 * time.Second)
+				comp := rand.Intn(50-2) + 2
+				if (comp % 7) == 0 {
+					time.Sleep(100 * time.Second)
+				} else {
+					m.ms.Send(v.Id, LEADERBEAT{m.Id})
 				}
-				m.ms.Send(v.Id, LEADERBEAT{m.Id})
+
 			} else {
 				m.chLeaderBeat <- "ok"
 			}
