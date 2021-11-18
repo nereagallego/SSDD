@@ -36,32 +36,16 @@ type SshClient struct {
 	Server string
 }
 
-// type maquina struct {
-// 	ip     string
-// 	puerto string
-// }
-
-const (
-	NORMAL   = iota // NORMAL == 0
-	DELAY    = iota // DELAY == 1
-	CRASH    = iota // CRASH == 2
-	OMISSION = iota // IOTA == 3
-)
-
 type peticion struct {
 	interval  com.TPInterval
 	respuesta chan ([]int)
 }
 
 type PrimesImpl struct {
-	req                  chan (peticion)
-	i                    int
-	mutex                sync.Mutex
-	delayMaxMilisegundos int
-	delayMinMiliSegundos int
-	behaviourPeriod      int
-	behaviour            int
-	maton                *maton.Maton
+	req   chan (peticion)
+	i     int
+	mutex sync.Mutex
+	maton *maton.Maton
 }
 
 type Maquina struct {
@@ -231,8 +215,6 @@ func lanzaworker(maquina []Maquina, id int, puertoInicio int) {
 		"/home/a801950/.ssh/id_rsa",
 		"")
 	fmt.Println("Lanzando worker... ")
-	//	sId := strconv.Itoa(id)
-	//	sCor := strconv.Itoa(coordinador)
 	if err != nil {
 		log.Printf("SSH init error %v", err)
 	}
@@ -256,7 +238,6 @@ func lanzaReplicaMaster(maquina []Maquina, id int, puertoInicio int, fileMaquina
 	fmt.Println("Lanzando replicas del Master... ")
 	sId := strconv.Itoa(id)
 	sN := strconv.Itoa(N)
-	//	sCor := strconv.Itoa(coordinador)
 	if err != nil {
 		log.Printf("SSH init error %v", err)
 	}
@@ -264,7 +245,6 @@ func lanzaReplicaMaster(maquina []Maquina, id int, puertoInicio int, fileMaquina
 		maquina[id].Puerto = strconv.Itoa(i)
 
 		_, _ = ssh.RunCommand("cd SSDD/practica3 && go run master.go " + fileMaquinas + " " + maquina[id].Ip + ":" + maquina[id].Puerto + " 30100 " + ficheroMaton + " no " + sId + " " + sN)
-		//	fmt.Println(output)
 
 	}
 }
@@ -324,11 +304,10 @@ func maquinasStructure(fileMaquinas string, puertoIni int) (int, []Maquina) {
 	for fileScanner.Scan() {
 		ip := fileScanner.Text()
 		m.Ip = ip
+		m.activo = false
 
 		m.Puerto = p
 		maquinas = append(maquinas, m)
-
-		//	go lanzaworker(maquinas, nMaquinas, puertoInicio)
 
 		nMaquinas = nMaquinas + 1
 
@@ -342,9 +321,7 @@ func lineasFichero(fileMaquinas string) int {
 	file, err := os.Open(fileMaquinas)
 	checkError(err)
 	nMaquinas := 0
-	//	var m Maquina
 	fileScanner := bufio.NewScanner(file)
-	//	p := strconv.Itoa(puertoIni)
 
 	for fileScanner.Scan() {
 		_ = fileScanner.Text()
@@ -359,39 +336,47 @@ func lineasFichero(fileMaquinas string) int {
 
 func gestionWorkers(maquinas []Maquina, pIni int, peticiones chan (peticion), fileMaquinas string, nM int) int {
 	var reply []int
+	var j int
 	for {
 		time.Sleep(30 * time.Second)
 		numpeticiones := npeticiones
+		fmt.Println(numpeticiones, " ", nWorkers)
 		if (numpeticiones+1 > nWorkers) && nM >= npeticiones+1 {
+			fmt.Println("necesito mas workers")
 			dif := numpeticiones + 1 - nWorkers
-			for i := 0; i < dif; i++ {
-				j := 0
+			j = 0
+			for i := 0; i < dif; j++ {
+
 				if maquinas[j].activo {
-					i--
+					fmt.Println("activo", j)
 				} else {
-					go lanzaworker(maquinas, i, pIni+nWorkers)
-					go handleClients(i, maquinas, peticiones)
+					fmt.Println("lanzo worker")
+					nWorkers++
+					go lanzaworker(maquinas, j, pIni+nWorkers)
+					go handleClients(j, maquinas, peticiones)
+					i++
 				}
-				j++
 			}
-			//	lanzaworker(maquinas, i, pIni)
 		} else if numpeticiones+1 > nWorkers { // no tengo tantas máquinas como peticiones
 			for i := 0; i < nM; i++ {
 				if !maquinas[i].activo {
+					fmt.Println("lanzo worker")
 					go lanzaworker(maquinas, i, pIni+nWorkers)
 					go handleClients(i, maquinas, peticiones)
 				}
 			}
 		} else if numpeticiones+1 < nWorkers {
 			dif := nWorkers - (numpeticiones + 1)
+			j = 0
 			for i := 0; i < dif; i++ {
-				j := 0
+
 				if maquinas[j].activo {
 					worker, err := rpc.DialHTTP("tcp", maquinas[i].Ip+":"+maquinas[i].Puerto)
 					checkError(err)
-					err = worker.Call("PrimesImpl.Stop", 1, &reply)
+					_ = worker.Go("PrimesImpl.FindPrimes", 1, &reply, make(chan *rpc.Call, 1)).Done
+					fmt.Println("paro worker")
+					maquinas[j].activo = false
 					nWorkers--
-					checkError(err)
 				} else {
 					i--
 				}
@@ -402,13 +387,11 @@ func gestionWorkers(maquinas []Maquina, pIni int, peticiones chan (peticion), fi
 }
 
 func main() {
-	if len(os.Args) == 8 {
+	if len(os.Args) == 7 {
 		args := os.Args
-		soyLider := (args[5] == "Coordinador")
-		fmt.Println(soyLider)
 
-		id, _ := strconv.Atoi(args[6])
-		nM, _ := strconv.Atoi(args[7])
+		id, _ := strconv.Atoi(args[5])
+		nM, _ := strconv.Atoi(args[6])
 		fileMaquinas := args[1]
 		ficheroMaton := args[4]
 		CONN_TYPE := "tcp"
@@ -417,17 +400,14 @@ func main() {
 		puertoInicio, _ := strconv.Atoi(args[3])
 		checkError(err)
 
-		//	Lider := make(chan string)
-		algM := maton.New(id, nM, ficheroMaton) //, &Lider)
+		algM := maton.New(id, nM, ficheroMaton)
 		fmt.Println("creo matón")
 
 		for {
-			//	_ = <-Lider
 			if algM.Coordinador == id {
 				fmt.Println("Master en", args[2])
 				var maquinas []Maquina
 
-				//	nMaquinas := maquinasStructure(maquinas, fileMaquinas, puertoInicio)
 				peticiones := make(chan peticion)
 
 				nMaquinas, maquinas := maquinasStructure(fileMaquinas, puertoInicio)
@@ -456,9 +436,8 @@ func main() {
 			}
 
 		}
-		//	}
 
 	} else {
-		fmt.Println("Usage: go run master.go fileMaquinas.txt <ip:port> puertoInicioWorkers ficheroMaton.txt funcionaComoMaster id nMasters")
+		fmt.Println("Usage: go run master.go fileMaquinas.txt <ip:port> puertoInicioWorkers ficheroMaton.txt id nMasters")
 	}
 }
