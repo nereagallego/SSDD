@@ -228,27 +228,6 @@ func lanzaworker(maquina []Maquina, id int, puertoInicio int) {
 	}
 }
 
-func lanzaReplicaMaster(maquina []Maquina, id int, puertoInicio int, fileMaquinas string, ficheroMaton string, N int) {
-	ssh, err := NewSshClient(
-		"a801950",
-		maquina[id-1].Ip,
-		22,
-		"/home/a801950/.ssh/id_rsa",
-		"")
-	fmt.Println("Lanzando replicas del Master... ")
-	sId := strconv.Itoa(id)
-	sN := strconv.Itoa(N)
-	if err != nil {
-		log.Printf("SSH init error %v", err)
-	}
-	for i := puertoInicio; i < 50000; i++ {
-		maquina[id].Puerto = strconv.Itoa(i)
-
-		_, _ = ssh.RunCommand("cd SSDD/practica3 && go run master.go " + fileMaquinas + " " + maquina[id].Ip + ":" + maquina[id].Puerto + " 30100 " + ficheroMaton + " no " + sId + " " + sN)
-
-	}
-}
-
 func handleClients(id int, maquina []Maquina, peticiones chan peticion) {
 	time.Sleep(20 * time.Second)
 	worker, err := rpc.DialHTTP("tcp", maquina[id].Ip+":"+maquina[id].Puerto)
@@ -315,23 +294,6 @@ func maquinasStructure(fileMaquinas string, puertoIni int) (int, []Maquina) {
 	file.Close()
 
 	return nMaquinas, maquinas
-}
-
-func lineasFichero(fileMaquinas string) int {
-	file, err := os.Open(fileMaquinas)
-	checkError(err)
-	nMaquinas := 0
-	fileScanner := bufio.NewScanner(file)
-
-	for fileScanner.Scan() {
-		_ = fileScanner.Text()
-
-		nMaquinas = nMaquinas + 1
-
-	}
-	file.Close()
-
-	return nMaquinas
 }
 
 func gestionWorkers(maquinas []Maquina, pIni int, peticiones chan (peticion), fileMaquinas string, nM int) int {
