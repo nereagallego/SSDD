@@ -56,6 +56,7 @@ type Maquina struct {
 
 var npeticiones int
 var nWorkers int
+var k int
 
 func NewSshClient(user string, host string, port int, privateKeyPath string, privateKeyPassword string) (*SshClient, error) {
 	// read private key file
@@ -223,13 +224,14 @@ func lanzaworker(maquina []Maquina, id int, puertoInicio int) {
 		maquina[id].Puerto = strconv.Itoa(i)
 
 		output, _ := ssh.RunCommand("cd SSDD/practica3 && go run worker.go " + maquina[id].Ip + ":" + maquina[id].Puerto)
+		k++
 		fmt.Println(output)
 
 	}
 }
 
 func handleClients(id int, maquina []Maquina, peticiones chan peticion) {
-	time.Sleep(20 * time.Second)
+	time.Sleep(35 * time.Second)
 	worker, err := rpc.DialHTTP("tcp", maquina[id].Ip+":"+maquina[id].Puerto)
 	if err != nil {
 		log.Fatal("dialing:", err)
@@ -314,7 +316,8 @@ func gestionWorkers(maquinas []Maquina, pIni int, peticiones chan (peticion), fi
 				} else {
 					fmt.Println("lanzo worker")
 					nWorkers++
-					go lanzaworker(maquinas, j, pIni+nWorkers)
+					go lanzaworker(maquinas, j, pIni+k)
+					k++
 					go handleClients(j, maquinas, peticiones)
 					i++
 				}
@@ -323,8 +326,9 @@ func gestionWorkers(maquinas []Maquina, pIni int, peticiones chan (peticion), fi
 			for i := 0; i < nM; i++ {
 				if !maquinas[i].activo {
 					fmt.Println("lanzo worker")
-					go lanzaworker(maquinas, i, pIni+nWorkers)
-					go handleClients(i, maquinas, peticiones)
+					go lanzaworker(maquinas, j, pIni+k)
+					k++
+					go handleClients(j, maquinas, peticiones)
 				}
 			}
 		} else if numpeticiones+1 < nWorkers {
@@ -357,6 +361,7 @@ func main() {
 		fileMaquinas := args[1]
 		ficheroMaton := args[4]
 		CONN_TYPE := "tcp"
+		k = 0
 
 		listener, err := net.Listen(CONN_TYPE, args[2])
 		puertoInicio, _ := strconv.Atoi(args[3])
@@ -373,8 +378,10 @@ func main() {
 				peticiones := make(chan peticion)
 
 				nMaquinas, maquinas := maquinasStructure(fileMaquinas, puertoInicio)
-				go lanzaworker(maquinas, 0, puertoInicio)
-				go lanzaworker(maquinas, 1, puertoInicio)
+				go lanzaworker(maquinas, 0, puertoInicio+k)
+				k++
+				go lanzaworker(maquinas, 1, puertoInicio+k)
+				k++
 				go handleClients(0, maquinas, peticiones)
 				go handleClients(1, maquinas, peticiones)
 
