@@ -26,6 +26,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
 	"sync"
 	"time"
@@ -73,8 +74,14 @@ type NodoRaft struct {
 	LastApplied int
 	NextIndex   []int
 	MatchIndex  []int
+	Latidos     chan bool
+
+	Hevotado bool
 	// mirar figura 2 para descripción del estado que debe mantenre un nodo Raft
 }
+
+var timeMaxLatido int = 1000 / 20
+var TIME_LATIDO int = 1000 / 18
 
 // Creacion de un nuevo nodo de eleccion
 //
@@ -310,4 +317,84 @@ func (nr *NodoRaft) enviarPeticionVoto(nodo int, args *ArgsPeticionVoto,
 	}
 
 	return true
+}
+
+type Entrada interface{}
+
+type AppendEntriesIn struct {
+	Term         int
+	LeaderId     int
+	PrevLogIndex int
+	PrevLogTerm  int
+	Entries      []AplicaOperacion
+	LeaderCommit int
+}
+
+type AppendEntriesOut struct {
+	Term    int
+	Success bool
+}
+
+func (nr *NodoRaft) AppendEntries(args *AppendEntriesIn, reply *AppendEntriesOut) bool {
+	if args.Term < nr.CurrentTerm {
+		return false
+	}
+	if nr.Logs[args.PrevLogIndex].indice != args.PrevLogTerm {
+		return false
+	}
+	for i := 0; i < len(args.Entries); i++ {
+		nr.Logs[nr.CommitIndex] = args.Entries[i]
+		nr.CommitIndex++
+	}
+	if args.LeaderCommit > nr.CommitIndex {
+		nr.CommitIndex = Min(args.LeaderCommit, nr.CommitIndex)
+	}
+	return true
+}
+
+func (nr *NodoRaft) sendMsg() {
+
+}
+
+func Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func (nr *NodoRaft) EnviaLatidos() {
+	soyLider := true
+	for soyLider {
+		var e []AplicaOperacion
+
+	}
+}
+
+func (nr *NodoRaft) EscuchaLatidos() {
+	lider := true
+
+	for lider {
+		timeE := rand.Intn(timeMaxLatido)
+		select {
+		case enviaLider := <-nr.Latidos:
+			if enviaLider {
+				nr.Hevotado = false
+			}
+		case <-time.After(time.Duration(3*TIME_LATIDO/2+timeE) * time.Millisecond):
+			lider = false
+
+		}
+	}
+}
+
+func (nr *NodoRaft) gestionRaft() {
+	//esperar latidos
+	for {
+		if nr.IdLider == nr.Yo {
+			nr.EnviaLatidos()
+		} else {
+			nr.EscuchaLatidos()
+		}
+	}
 }
