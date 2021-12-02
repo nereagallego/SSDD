@@ -1,11 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"net/rpc"
-	"raft/internal/comun/rpctimeout"
 	"time"
 )
 
@@ -21,8 +19,9 @@ func (t *Arith) Mul(args *Args, reply *int) error {
 }
 
 func main() {
-	arith := new(Arith)
+
 	// Parte Servidor
+	arith := new(Arith)
 	rpc.Register(arith)
 
 	l, e := net.Listen("tcp", ":1234")
@@ -46,22 +45,4 @@ func main() {
 
 	time.Sleep(100 * time.Millisecond)
 
-	// Parte Cliente
-	client, err := rpc.Dial("tcp", "127.0.0.1:1234")
-	if err != nil {
-		log.Fatal("dialing:", err)
-	}
-
-	var replay int
-	err := rpctimeout.CallTimeout(client, &Args{5, 7}, &replay,
-		5*time.Millisecond)
-
-	if err != nil {
-		log.Fatal("arith error:", err)
-	}
-
-	fmt.Println("Arith: %d*%d=%d", args.A, args.B, reply)
 }
-
-//mismo mensaje para latido (vacio) que para meter entradas
-//	funcion de gestionRaft (pone en marcha eleccion si no recibe latido)

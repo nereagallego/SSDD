@@ -77,12 +77,14 @@ type NodoRaft struct {
 	Latidos     chan bool
 
 	Hevotado bool
+	Voto     chan bool
 	// mirar figura 2 para descripción del estado que debe mantenre un nodo Raft
 }
 
 var timeMaxLatido int = 1000 / 20
 var TIME_LATIDO int = 1000 / 18
 var TIME_MSG int = 500
+var TIME_VOTO int = 300
 
 // Creacion de un nuevo nodo de eleccion
 //
@@ -336,21 +338,28 @@ type AppendEntriesReply struct {
 	Success bool
 }
 
-func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) bool {
+func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) error {
 	if args.Term < nr.CurrentTerm {
-		return false
+		reply.Success = false
 	}
 	if nr.Logs[args.PrevLogIndex].indice != args.PrevLogTerm {
-		return false
+		reply.Success = false
 	}
-	for i := 0; i < len(args.Entries); i++ {
-		nr.Logs = append(nr.Logs, args.Entries[i])
-		nr.CommitIndex++
-	}
-	if args.LeaderCommit > nr.CommitIndex {
+	if len(args.Entries) == 0 {
+		nr.Latidos <- true
+		reply.Success = true
+	} else {
+		for i := 0; i < len(args.Entries); i++ {
+			nr.Logs = append(nr.Logs, args.Entries[i])
+			nr.CommitIndex++
+		}
+		reply.Success = true
+		reply.Term = nr.CurrentTerm
+		//	if args.LeaderCommit > nr.CommitIndex {
 		//	nr.CommitIndex = Min(args.LeaderCommit, nr.LastApplied)
+		//	}
 	}
-	return true
+	return nil
 }
 
 func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion) bool {
@@ -360,21 +369,27 @@ func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion) bool {
 	}
 	arg := AppendEntriesArgs{nr.CurrentTerm, nr.IdLider, len(nr.Logs), tam, entradas, nr.CommitIndex}
 	var reply []AppendEntriesReply
-	for i := 0 ; i < len(nr.Nodos); i++ {
-		aux := AppendEntriesReply{0,true}
+	for i := 0; i < len(nr.Nodos); i++ {
+		aux := AppendEntriesReply{0, true}
 		reply = append(reply, aux)
 	}
-	for i := 0 ; i < len(nr.Nodos); i++ {
+	for i := 0; i < len(nr.Nodos); i++ {
 		if i != nr.Yo {
-			go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries",arg,&reply,1000)
+			go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", arg, &reply[i], 1000*time.Millisecond)
 		}
 	}
-	<- time.After(time.Duration(TIME_MSG)*time.Millisecond)
+	time.Sleep(time.Duration(TIME_MSG) * time.Millisecond)
+	count := 0
 	for i := 0; i < len(nr.Nodos); i++ {
 		if reply[i].Success {
-			// contar y comprometer
+			count++
 		}
 	}
+	if count > len(nr.Nodos)-count {
+		// comprometer
+
+	}
+	return true
 }
 
 func Min(a, b int) int {
@@ -388,6 +403,11 @@ func (nr *NodoRaft) EnviaLatidos() {
 	soyLider := true
 	for soyLider {
 		var e []AplicaOperacion
+		out := nr.sendMsg(e)
+		if !out {
+			soyLider = false
+		}
+		time.Sleep(time.Duration(TIME_LATIDO) * time.Millisecond)
 
 	}
 }
@@ -409,29 +429,34 @@ func (nr *NodoRaft) EscuchaLatidos() {
 	}
 }
 
+//devuelve true si exito, false si fallo
 func (nr *NodoRaft) nuevaEleccion() {
 	nr.CurrentTerm++
 	nr.VotedFor = nr.Yo //me voto a mí mismo
-	args := ArgsPeticionVoto{nr.CurrentTerm, nr.Yo, nr.LastApplied, nr.Logs[nr.LastnApplied].indice}
-	var reply RespuestaPeticionVoto
-	
-	end := false
-	mayority := false
+	args := ArgsPeticionVoto{nr.CurrentTerm, nr.Yo, nr.LastApplied, nr.Logs[nr.LastApplied].indice}
+	var reply []RespuestaPeticionVoto
+
 	votes := 0
-	for !end {
-		for i := 0; i < len(nr.Nodos); i++ {
-			nr.enviarPeticionVoto(i ,args, reply)
-			if reply.Term > nr.CurrentTerm {
-				end = true
-			}
-			else if reply.VoteGranted {
-				votes++
-			}
+	//enviar peticion de voto al resto de servidores
+	for i := 0; i < len(nr.Nodos); i++ {
+		go nr.enviarPeticionVoto(i, &args, &reply[i])
+	}
+	fin := false
+	fail := false
+	for !fin {
+		select {
+		case _ = <-nr.Voto:
+			votes++
+		case _ = <-nr.Latidos:
+			fin = true
+			fail = true
+			// si llega latido qué pasa
+		case <-time.After(time.Duration(TIME_VOTO) * time.Millisecond):
+			fin = true
 		}
-		if votes > len(nr.Nodos)-votes {	//eleccion ganada
-			mayoria := true
-			end := true
-		}
+	}
+	if !fail && votes > len(nr.Nodos)-votes { //eleccion ganada
+		nr.IdLider = nr.Yo
 	}
 }
 
@@ -441,8 +466,10 @@ func (nr *NodoRaft) gestionRaft() {
 		if nr.IdLider == nr.Yo {
 			nr.EnviaLatidos()
 		} else {
-			nr.EscuchaLatidos()
+			nr.EscuchaLatidos() //solo sale si no llega latido
 			nr.nuevaEleccion()
+
 		}
+		nr.Hevotado = false
 	}
 }
