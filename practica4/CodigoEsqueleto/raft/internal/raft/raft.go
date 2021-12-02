@@ -31,7 +31,7 @@ import (
 	"sync"
 	"time"
 
-	"practica4/CodigoEsqueleto/raft/internal/comun/rpctimeout"
+	"raft/internal/comun/rpctimeout"
 )
 
 //  false deshabilita por completo los logs de depuracion
@@ -134,6 +134,7 @@ func NuevoNodo(nodos []rpctimeout.HostPort, yo int,
 		nr.Logger = log.New(ioutil.Discard, "", 0)
 	}
 
+	go nr.gestionRaft()
 	// Your initialization code here (2A, 2B)
 
 	return nr
@@ -315,10 +316,13 @@ func (nr *NodoRaft) enviarPeticionVoto(nodo int, args *ArgsPeticionVoto,
 	reply *RespuestaPeticionVoto) bool {
 
 	out := nr.Nodos[nodo].CallTimeout("NodoRaft.PedirVoto", args, reply, 200*time.Millisecond)
+
 	if out != nil {
 		return false
 	}
-
+	if reply.VoteGranted {
+		nr.Voto <- true
+	}
 	return true
 }
 
@@ -375,7 +379,7 @@ func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion) bool {
 	}
 	for i := 0; i < len(nr.Nodos); i++ {
 		if i != nr.Yo {
-			go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", arg, &reply[i], 1000*time.Millisecond)
+			go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", &arg, &reply[i], 1000*time.Millisecond)
 		}
 	}
 	time.Sleep(time.Duration(TIME_MSG) * time.Millisecond)
@@ -402,6 +406,7 @@ func Min(a, b int) int {
 func (nr *NodoRaft) EnviaLatidos() {
 	soyLider := true
 	for soyLider {
+		fmt.Println("Envio latido")
 		var e []AplicaOperacion
 		out := nr.sendMsg(e)
 		if !out {
@@ -419,10 +424,12 @@ func (nr *NodoRaft) EscuchaLatidos() {
 		timeE := rand.Intn(timeMaxLatido)
 		select {
 		case enviaLider := <-nr.Latidos:
+			fmt.Println("He recibido latido")
 			if enviaLider {
 				nr.Hevotado = false
 			}
 		case <-time.After(time.Duration(3*TIME_LATIDO/2+timeE) * time.Millisecond):
+			fmt.Println("Lider ha caido")
 			lider = false
 
 		}
@@ -431,6 +438,7 @@ func (nr *NodoRaft) EscuchaLatidos() {
 
 //devuelve true si exito, false si fallo
 func (nr *NodoRaft) nuevaEleccion() {
+	fmt.Println("Nueva eleccion")
 	nr.CurrentTerm++
 	nr.VotedFor = nr.Yo //me voto a mí mismo
 	args := ArgsPeticionVoto{nr.CurrentTerm, nr.Yo, nr.LastApplied, nr.Logs[nr.LastApplied].indice}
@@ -440,6 +448,7 @@ func (nr *NodoRaft) nuevaEleccion() {
 	//enviar peticion de voto al resto de servidores
 	for i := 0; i < len(nr.Nodos); i++ {
 		go nr.enviarPeticionVoto(i, &args, &reply[i])
+		fmt.Println("Pido voto a ", i)
 	}
 	fin := false
 	fail := false

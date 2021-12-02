@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+type Args struct {
+	A, B int
+}
+
 func main() {
 
 	client, err := rpc.Dial("tcp", "127.0.0.1:1234")
@@ -16,13 +20,14 @@ func main() {
 	}
 
 	var replay int
-	err = rpctimeout.CallTimeout(client, &Args{5, 7}, &replay,
+	args := Args{5, 7}
+	err = rpctimeout.CallTimeout(client, &args, &replay,
 		5*time.Millisecond)
 
 	if err != nil {
 		log.Fatal("arith error:", err)
 	}
 
-	fmt.Println("Arith: %d*%d=%d", args.A, args.B, reply)
+	fmt.Println("Arith: %d*%d=%d", args.A, args.B, replay)
 
 }
