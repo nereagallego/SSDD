@@ -82,6 +82,7 @@ type NodoRaft struct {
 
 var timeMaxLatido int = 1000 / 20
 var TIME_LATIDO int = 1000 / 18
+var TIME_MSG int = 500
 
 // Creacion de un nuevo nodo de eleccion
 //
@@ -321,7 +322,7 @@ func (nr *NodoRaft) enviarPeticionVoto(nodo int, args *ArgsPeticionVoto,
 
 type Entrada interface{}
 
-type AppendEntriesIn struct {
+type AppendEntriesArgs struct {
 	Term         int
 	LeaderId     int
 	PrevLogIndex int
@@ -330,12 +331,12 @@ type AppendEntriesIn struct {
 	LeaderCommit int
 }
 
-type AppendEntriesOut struct {
+type AppendEntriesReply struct {
 	Term    int
 	Success bool
 }
 
-func (nr *NodoRaft) AppendEntries(args *AppendEntriesIn, reply *AppendEntriesOut) bool {
+func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) bool {
 	if args.Term < nr.CurrentTerm {
 		return false
 	}
@@ -343,17 +344,37 @@ func (nr *NodoRaft) AppendEntries(args *AppendEntriesIn, reply *AppendEntriesOut
 		return false
 	}
 	for i := 0; i < len(args.Entries); i++ {
-		nr.Logs[nr.CommitIndex] = args.Entries[i]
+		nr.Logs = append(nr.Logs, args.Entries[i])
 		nr.CommitIndex++
 	}
 	if args.LeaderCommit > nr.CommitIndex {
-		nr.CommitIndex = Min(args.LeaderCommit, nr.CommitIndex)
+		//	nr.CommitIndex = Min(args.LeaderCommit, nr.LastApplied)
 	}
 	return true
 }
 
-func (nr *NodoRaft) sendMsg() {
-
+func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion) bool {
+	tam := 0
+	if len(nr.Logs) > 0 {
+		tam = nr.Logs[len(nr.Logs)].indice
+	}
+	arg := AppendEntriesArgs{nr.CurrentTerm, nr.IdLider, len(nr.Logs), tam, entradas, nr.CommitIndex}
+	var reply []AppendEntriesReply
+	for i := 0 ; i < len(nr.Nodos); i++ {
+		aux := AppendEntriesReply{0,true}
+		reply = append(reply, aux)
+	}
+	for i := 0 ; i < len(nr.Nodos); i++ {
+		if i != nr.Yo {
+			go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries",arg,&reply,1000)
+		}
+	}
+	<- time.After(time.Duration(TIME_MSG)*time.Millisecond)
+	for i := 0; i < len(nr.Nodos); i++ {
+		if reply[i].Success {
+			// contar y comprometer
+		}
+	}
 }
 
 func Min(a, b int) int {
@@ -388,6 +409,32 @@ func (nr *NodoRaft) EscuchaLatidos() {
 	}
 }
 
+func (nr *NodoRaft) nuevaEleccion() {
+	nr.CurrentTerm++
+	nr.VotedFor = nr.Yo //me voto a mí mismo
+	args := ArgsPeticionVoto{nr.CurrentTerm, nr.Yo, nr.LastApplied, nr.Logs[nr.LastnApplied].indice}
+	var reply RespuestaPeticionVoto
+	
+	end := false
+	mayority := false
+	votes := 0
+	for !end {
+		for i := 0; i < len(nr.Nodos); i++ {
+			nr.enviarPeticionVoto(i ,args, reply)
+			if reply.Term > nr.CurrentTerm {
+				end = true
+			}
+			else if reply.VoteGranted {
+				votes++
+			}
+		}
+		if votes > len(nr.Nodos)-votes {	//eleccion ganada
+			mayoria := true
+			end := true
+		}
+	}
+}
+
 func (nr *NodoRaft) gestionRaft() {
 	//esperar latidos
 	for {
@@ -395,6 +442,7 @@ func (nr *NodoRaft) gestionRaft() {
 			nr.EnviaLatidos()
 		} else {
 			nr.EscuchaLatidos()
+			nr.nuevaEleccion()
 		}
 	}
 }
