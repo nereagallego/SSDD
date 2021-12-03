@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/rpc"
-	"practica4/CodigoEsqueleto/raft/comun/rpctimeout"
+	"raft/internal/comun/rpctimeout"
 	"time"
 )
 
@@ -14,11 +14,11 @@ type Args struct {
 
 func main() {
 
-	client, err := rpc.Dial("tcp", "127.0.0.1:1234")
+	client, err := rpc.Dial("tcp", "localhost:3000")
 	if err != nil {
 		log.Fatal("dialing:", err)
 	}
-
+	fmt.Println("conectado")
 	var replay int
 	args := Args{5, 7}
 	err = rpctimeout.CallTimeout(client, &args, &replay,

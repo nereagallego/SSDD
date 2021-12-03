@@ -28,10 +28,9 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"raft/internal/comun/rpctimeout"
 	"sync"
 	"time"
-
-	"raft/internal/comun/rpctimeout"
 )
 
 //  false deshabilita por completo los logs de depuracion
@@ -82,9 +81,9 @@ type NodoRaft struct {
 }
 
 var timeMaxLatido int = 1000 / 20
-var TIME_LATIDO int = 1000 / 18
+var TIME_LATIDO int = 100000 / 18
 var TIME_MSG int = 500
-var TIME_VOTO int = 300
+var TIME_VOTO int = 3000
 
 // Creacion de un nuevo nodo de eleccion
 //
@@ -102,10 +101,12 @@ var TIME_VOTO int = 300
 // poner en marcha Gorutinas para trabajos de larga duracion
 func NuevoNodo(nodos []rpctimeout.HostPort, yo int,
 	canalAplicar chan AplicaOperacion) *NodoRaft {
+	fmt.Println("Intento crear un nodo")
 	nr := &NodoRaft{}
 	nr.Nodos = nodos
 	nr.Yo = yo
 	nr.IdLider = -1
+	nr.LastApplied = 0
 
 	if kEnableDebugLogs {
 		nombreNodo := nodos[yo].Host() + "_" + nodos[yo].Port()
@@ -136,7 +137,7 @@ func NuevoNodo(nodos []rpctimeout.HostPort, yo int,
 
 	go nr.gestionRaft()
 	// Your initialization code here (2A, 2B)
-
+	fmt.Println("Nodo creado")
 	return nr
 }
 
@@ -275,6 +276,7 @@ type RespuestaPeticionVoto struct {
 //
 func (nr *NodoRaft) PedirVoto(args *ArgsPeticionVoto,
 	reply *RespuestaPeticionVoto) error {
+	fmt.Println("Me han pedido que vote")
 	reply.Term = nr.CurrentTerm
 	reply.VoteGranted = args.Term >= nr.CurrentTerm
 	if &nr.VotedFor != nil && !reply.VoteGranted {
@@ -282,6 +284,7 @@ func (nr *NodoRaft) PedirVoto(args *ArgsPeticionVoto,
 	} else {
 		nr.VotedFor = args.CandidateId
 	}
+	fmt.Println("He votado")
 	return nil
 }
 
@@ -314,11 +317,12 @@ func (nr *NodoRaft) PedirVoto(args *ArgsPeticionVoto,
 //
 func (nr *NodoRaft) enviarPeticionVoto(nodo int, args *ArgsPeticionVoto,
 	reply *RespuestaPeticionVoto) bool {
-
-	out := nr.Nodos[nodo].CallTimeout("NodoRaft.PedirVoto", args, reply, 200*time.Millisecond)
+	out := nr.Nodos[nodo].CallTimeout("NodoRaft.PedirVoto", args, reply, time.Duration(TIME_VOTO)*time.Millisecond)
 
 	if out != nil {
 		return false
+	} else {
+		fmt.Println(out)
 	}
 	if reply.VoteGranted {
 		nr.Voto <- true
@@ -441,14 +445,17 @@ func (nr *NodoRaft) nuevaEleccion() {
 	fmt.Println("Nueva eleccion")
 	nr.CurrentTerm++
 	nr.VotedFor = nr.Yo //me voto a mí mismo
-	args := ArgsPeticionVoto{nr.CurrentTerm, nr.Yo, nr.LastApplied, nr.Logs[nr.LastApplied].indice}
+	args := ArgsPeticionVoto{nr.CurrentTerm, nr.Yo, nr.LastApplied, nr.CurrentTerm}
 	var reply []RespuestaPeticionVoto
 
 	votes := 0
 	//enviar peticion de voto al resto de servidores
 	for i := 0; i < len(nr.Nodos); i++ {
-		go nr.enviarPeticionVoto(i, &args, &reply[i])
-		fmt.Println("Pido voto a ", i)
+		reply = append(reply, RespuestaPeticionVoto{0, false})
+		if i != nr.Yo {
+			go nr.enviarPeticionVoto(i, &args, &reply[i])
+			fmt.Println("Pido voto a ", i)
+		}
 	}
 	fin := false
 	fail := false
@@ -456,6 +463,7 @@ func (nr *NodoRaft) nuevaEleccion() {
 		select {
 		case _ = <-nr.Voto:
 			votes++
+			fmt.Println("Me han votado")
 		case _ = <-nr.Latidos:
 			fin = true
 			fail = true
@@ -471,6 +479,7 @@ func (nr *NodoRaft) nuevaEleccion() {
 
 func (nr *NodoRaft) gestionRaft() {
 	//esperar latidos
+	fmt.Println("gestionando")
 	for {
 		if nr.IdLider == nr.Yo {
 			nr.EnviaLatidos()
