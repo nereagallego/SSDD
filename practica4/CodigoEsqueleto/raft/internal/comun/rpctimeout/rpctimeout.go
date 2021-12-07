@@ -25,7 +25,7 @@ func (hp HostPort) CallTimeout(serviceMethod string, args interface{},
 	reply interface{}, timeout time.Duration) error {
 
 	client, err := rpc.Dial("tcp", string(hp))
-
+	//fmt.Println(serviceMethod + " to " + string(hp))
 	if err != nil {
 		// fmt.printf("Error dialing endpoint: %v ", err)
 		return err // Devuelve error de conexion TCP

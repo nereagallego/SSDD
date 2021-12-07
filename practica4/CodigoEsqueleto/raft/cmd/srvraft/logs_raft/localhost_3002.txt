@@ -1,1 +1,1 @@
-localhost_3002 -> 02:51:31.995645 raft.go:133: logger initialized
+localhost_3002 -> 10:28:40.224672 raft.go:134: logger initialized

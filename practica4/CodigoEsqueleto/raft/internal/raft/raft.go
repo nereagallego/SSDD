@@ -38,7 +38,7 @@ import (
 const kEnableDebugLogs = true
 
 // Poner a true para logear a stdout en lugar de a fichero
-const kLogToStdout = false
+const kLogToStdout = true
 
 // Cambiar esto para salida de logs en un directorio diferente
 const kLogOutputDir = "./logs_raft/"
@@ -47,8 +47,8 @@ const kLogOutputDir = "./logs_raft/"
 // comprometidas, envía un AplicaOperacion, con cada una de ellas, al canal
 // "canalAplicar" (funcion NuevoNodo) de la maquina de estados
 type AplicaOperacion struct {
-	indice    int // en la entrada de registro
-	operacion interface{}
+	Indice    int // en la entrada de registro
+	Operacion interface{}
 }
 
 // Tipo de dato Go que representa un solo nodo (réplica) de raft
@@ -81,9 +81,9 @@ type NodoRaft struct {
 }
 
 var timeMaxLatido int = 1000 / 20
-var TIME_LATIDO int = 100000 / 18
+var TIME_LATIDO int = 1000 / 18
 var TIME_MSG int = 500
-var TIME_VOTO int = 3000
+var TIME_VOTO int = 300
 
 // Creacion de un nuevo nodo de eleccion
 //
@@ -105,8 +105,11 @@ func NuevoNodo(nodos []rpctimeout.HostPort, yo int,
 	nr := &NodoRaft{}
 	nr.Nodos = nodos
 	nr.Yo = yo
+	nr.CurrentTerm = 0
 	nr.IdLider = -1
 	nr.LastApplied = 0
+	nr.Latidos = make(chan bool)
+	nr.Voto = make(chan bool)
 
 	if kEnableDebugLogs {
 		nombreNodo := nodos[yo].Host() + "_" + nodos[yo].Port()
@@ -276,15 +279,21 @@ type RespuestaPeticionVoto struct {
 //
 func (nr *NodoRaft) PedirVoto(args *ArgsPeticionVoto,
 	reply *RespuestaPeticionVoto) error {
-	fmt.Println("Me han pedido que vote")
+	//	fmt.Println("Me han pedido que vote")
 	reply.Term = nr.CurrentTerm
 	reply.VoteGranted = args.Term >= nr.CurrentTerm
-	if &nr.VotedFor != nil && !reply.VoteGranted {
+	//if &nr.VotedFor != nil && !reply.VoteGranted {
+	if nr.Hevotado && !reply.VoteGranted {
+		//	fmt.Println("Habia votado: ", nr.Hevotado)
+		//	fmt.Println("My term: ", nr.CurrentTerm, " their term: ", args.Term)
+		//	fmt.Println("No he votado a ", args.CandidateId)
 		reply.VoteGranted = false
 	} else {
+		//	fmt.Println("He votado a ", args.CandidateId)
+		nr.Hevotado = true
 		nr.VotedFor = args.CandidateId
 	}
-	fmt.Println("He votado")
+
 	return nil
 }
 
@@ -320,9 +329,8 @@ func (nr *NodoRaft) enviarPeticionVoto(nodo int, args *ArgsPeticionVoto,
 	out := nr.Nodos[nodo].CallTimeout("NodoRaft.PedirVoto", args, reply, time.Duration(TIME_VOTO)*time.Millisecond)
 
 	if out != nil {
+		//	fmt.Println(out)
 		return false
-	} else {
-		fmt.Println(out)
 	}
 	if reply.VoteGranted {
 		nr.Voto <- true
@@ -347,13 +355,14 @@ type AppendEntriesReply struct {
 }
 
 func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) error {
+	//	fmt.Println("llega append entries")
 	if args.Term < nr.CurrentTerm {
 		reply.Success = false
-	}
-	if nr.Logs[args.PrevLogIndex].indice != args.PrevLogTerm {
-		reply.Success = false
-	}
-	if len(args.Entries) == 0 {
+		//	if nr.Logs[args.PrevLogIndex].Indice != args.PrevLogTerm {
+		//		reply.Success = false
+		//	}
+	} else if len(args.Entries) == 0 {
+		//	fmt.Println("Llega un latido")
 		nr.Latidos <- true
 		reply.Success = true
 	} else {
@@ -367,13 +376,14 @@ func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesR
 		//	nr.CommitIndex = Min(args.LeaderCommit, nr.LastApplied)
 		//	}
 	}
+	reply.Term = nr.CurrentTerm
 	return nil
 }
 
 func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion) bool {
 	tam := 0
 	if len(nr.Logs) > 0 {
-		tam = nr.Logs[len(nr.Logs)].indice
+		tam = nr.Logs[len(nr.Logs)].Indice
 	}
 	arg := AppendEntriesArgs{nr.CurrentTerm, nr.IdLider, len(nr.Logs), tam, entradas, nr.CommitIndex}
 	var reply []AppendEntriesReply
@@ -383,7 +393,10 @@ func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion) bool {
 	}
 	for i := 0; i < len(nr.Nodos); i++ {
 		if i != nr.Yo {
+			//		fmt.Println("Mando el latido a", i)
 			go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", &arg, &reply[i], 1000*time.Millisecond)
+			//	out := nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", &arg, &reply[i], 1000*time.Millisecond)
+			//	fmt.Println(out)
 		}
 	}
 	time.Sleep(time.Duration(TIME_MSG) * time.Millisecond)
@@ -391,6 +404,8 @@ func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion) bool {
 	for i := 0; i < len(nr.Nodos); i++ {
 		if reply[i].Success {
 			count++
+		} else if reply[i].Term > nr.CurrentTerm {
+			return false
 		}
 	}
 	if count > len(nr.Nodos)-count {
@@ -407,12 +422,13 @@ func Min(a, b int) int {
 	return b
 }
 
-func (nr *NodoRaft) EnviaLatidos() {
+func (nr *NodoRaft) enviaLatidos() {
 	soyLider := true
 	for soyLider {
-		fmt.Println("Envio latido")
+
 		var e []AplicaOperacion
 		out := nr.sendMsg(e)
+		fmt.Println("Envio latido")
 		if !out {
 			soyLider = false
 		}
@@ -421,14 +437,14 @@ func (nr *NodoRaft) EnviaLatidos() {
 	}
 }
 
-func (nr *NodoRaft) EscuchaLatidos() {
+func (nr *NodoRaft) escuchaLatidos() error {
 	lider := true
 
 	for lider {
 		timeE := rand.Intn(timeMaxLatido)
 		select {
 		case enviaLider := <-nr.Latidos:
-			fmt.Println("He recibido latido")
+			//	fmt.Println("He recibido latido")
 			if enviaLider {
 				nr.Hevotado = false
 			}
@@ -438,23 +454,25 @@ func (nr *NodoRaft) EscuchaLatidos() {
 
 		}
 	}
+	return nil
 }
 
 //devuelve true si exito, false si fallo
 func (nr *NodoRaft) nuevaEleccion() {
 	fmt.Println("Nueva eleccion")
 	nr.CurrentTerm++
+	nr.Hevotado = true
 	nr.VotedFor = nr.Yo //me voto a mí mismo
 	args := ArgsPeticionVoto{nr.CurrentTerm, nr.Yo, nr.LastApplied, nr.CurrentTerm}
 	var reply []RespuestaPeticionVoto
 
-	votes := 0
+	votes := 1
 	//enviar peticion de voto al resto de servidores
 	for i := 0; i < len(nr.Nodos); i++ {
 		reply = append(reply, RespuestaPeticionVoto{0, false})
 		if i != nr.Yo {
 			go nr.enviarPeticionVoto(i, &args, &reply[i])
-			fmt.Println("Pido voto a ", i)
+			//	fmt.Println("Pido voto a ", i)
 		}
 	}
 	fin := false
@@ -463,7 +481,7 @@ func (nr *NodoRaft) nuevaEleccion() {
 		select {
 		case _ = <-nr.Voto:
 			votes++
-			fmt.Println("Me han votado")
+		//s	fmt.Println("Me han votado")
 		case _ = <-nr.Latidos:
 			fin = true
 			fail = true
@@ -472,6 +490,7 @@ func (nr *NodoRaft) nuevaEleccion() {
 			fin = true
 		}
 	}
+	//nr.Hevotado = false
 	if !fail && votes > len(nr.Nodos)-votes { //eleccion ganada
 		nr.IdLider = nr.Yo
 	}
@@ -480,14 +499,16 @@ func (nr *NodoRaft) nuevaEleccion() {
 func (nr *NodoRaft) gestionRaft() {
 	//esperar latidos
 	fmt.Println("gestionando")
+	nr.Hevotado = false
 	for {
 		if nr.IdLider == nr.Yo {
-			nr.EnviaLatidos()
+			nr.enviaLatidos()
 		} else {
-			nr.EscuchaLatidos() //solo sale si no llega latido
+			nr.Hevotado = false
+			nr.escuchaLatidos() //solo sale si no llega latido
 			nr.nuevaEleccion()
 
 		}
-		nr.Hevotado = false
+		//nr.Hevotado = false
 	}
 }

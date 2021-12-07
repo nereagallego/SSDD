@@ -2,12 +2,10 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net"
 	"net/rpc"
 	"os"
 	"strconv"
-	"time"
 
 	"raft/internal/comun/rpctimeout"
 
@@ -27,45 +25,30 @@ func (t *Arith) Mul(args *Args, reply *int) error {
 
 func main() {
 	args := os.Args
-	if len(os.Args) == 2 {
+	if len(os.Args) >= 2 {
 
-		i, _ := strconv.Atoi(args[1])
-		var hosts []rpctimeout.HostPort
-		//	hosts = append(hosts, rpctimeout.HostPort("localhost:3000"))
-		//	hosts = append(hosts, rpctimeout.HostPort("localhost:3001"))
-		//	hosts = append(hosts, rpctimeout.HostPort("localhost:3002"))
+		me, _ := strconv.Atoi(os.Args[1])
+		//check.CheckError(err, "Main, mal numero entero de indice de nodo:")
 
-		hosts = append(hosts, rpctimeout.MakeHostPort("localhost", "3000"))
-		hosts = append(hosts, rpctimeout.MakeHostPort("localhost", "3001"))
-		hosts = append(hosts, rpctimeout.MakeHostPort("localhost", "3002"))
-		// Parte Servidor
-
-		arith := new()
-		rpc.Register(arith)
-		fmt.Println("Operacion registrada")
-
-		_, e := net.Listen("tcp", string(hosts[i]))
-		if e != nil {
-			log.Fatal("listen error:", e)
+		var nodos []rpctimeout.HostPort
+		// Resto de argumento son los end points como strings
+		// De todas la replicas-> pasarlos a HostPort
+		for _, endPoint := range os.Args[2:] {
+			nodos = append(nodos, rpctimeout.HostPort(endPoint))
 		}
 
-		//	conn, _ := l.Accept()
-		fmt.Println("Accept correcto")
-		//	if err != nil {
-		//		continue
+		// Parte Servidor
+		nr := raft.NuevoNodo(nodos, me, make(chan raft.AplicaOperacion, 1000))
+		rpc.Register(nr)
+		//	for {
 		//	}
 
-		//	go rpc.ServeConn(conn)
-		fmt.Println("Operacion rpc registrada")
+		//fmt.Println("Replica escucha en :", me, " de ", os.Args[2:])
 
-		time.Sleep(100 * time.Millisecond)
+		l, _ := net.Listen("tcp", os.Args[2:][me])
+		//	check.CheckError(err, "Main listen error:")
 
-		canal := make(chan raft.AplicaOperacion)
-		fmt.Println("Intento crear un nodo")
-
-		_ = raft.NuevoNodo(hosts, i, canal)
-		for {
-		}
+		rpc.Accept(l)
 
 	} else {
 		fmt.Println("Usage: go run " + args[0] + " endpoint ")
