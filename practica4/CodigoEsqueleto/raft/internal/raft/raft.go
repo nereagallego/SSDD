@@ -80,7 +80,7 @@ type NodoRaft struct {
 	// mirar figura 2 para descripción del estado que debe mantenre un nodo Raft
 }
 
-var timeMaxLatido int = 1000 / 20
+var timeMaxLatido int = 1000
 var TIME_LATIDO int = 1000 / 18
 var TIME_MSG int = 500
 var TIME_VOTO int = 300
@@ -284,12 +284,12 @@ func (nr *NodoRaft) PedirVoto(args *ArgsPeticionVoto,
 	reply.VoteGranted = args.Term >= nr.CurrentTerm
 	//if &nr.VotedFor != nil && !reply.VoteGranted {
 	if nr.Hevotado && !reply.VoteGranted {
-		//	fmt.Println("Habia votado: ", nr.Hevotado)
-		//	fmt.Println("My term: ", nr.CurrentTerm, " their term: ", args.Term)
-		//	fmt.Println("No he votado a ", args.CandidateId)
+		fmt.Println("Habia votado: ", nr.Hevotado)
+		fmt.Println("My term: ", nr.CurrentTerm, " their term: ", args.Term)
+		fmt.Println("No he votado a ", args.CandidateId)
 		reply.VoteGranted = false
 	} else {
-		//	fmt.Println("He votado a ", args.CandidateId)
+		fmt.Println("He votado a ", args.CandidateId)
 		nr.Hevotado = true
 		nr.VotedFor = args.CandidateId
 	}
@@ -363,6 +363,9 @@ func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesR
 		//	}
 	} else if len(args.Entries) == 0 {
 		//	fmt.Println("Llega un latido")
+		if nr.CurrentTerm < args.Term {
+			nr.CurrentTerm = args.Term
+		}
 		nr.Latidos <- true
 		reply.Success = true
 	} else {
@@ -399,7 +402,7 @@ func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion) bool {
 			//	fmt.Println(out)
 		}
 	}
-	time.Sleep(time.Duration(TIME_MSG) * time.Millisecond)
+	//	time.Sleep(time.Duration(TIME_MSG) * time.Millisecond)
 	count := 0
 	for i := 0; i < len(nr.Nodos); i++ {
 		if reply[i].Success {
@@ -424,16 +427,17 @@ func Min(a, b int) int {
 
 func (nr *NodoRaft) enviaLatidos() {
 	soyLider := true
+	fmt.Println("soy lider en el mandato ", nr.CurrentTerm)
 	for soyLider {
 
 		var e []AplicaOperacion
 		out := nr.sendMsg(e)
-		fmt.Println("Envio latido")
+		//fmt.Println("Envio latido")
 		if !out {
 			soyLider = false
+		} else {
+			time.Sleep(time.Duration(TIME_LATIDO) * time.Millisecond)
 		}
-		time.Sleep(time.Duration(TIME_LATIDO) * time.Millisecond)
-
 	}
 }
 
@@ -446,7 +450,7 @@ func (nr *NodoRaft) escuchaLatidos() error {
 		case enviaLider := <-nr.Latidos:
 			//	fmt.Println("He recibido latido")
 			if enviaLider {
-				nr.Hevotado = false
+				//	nr.Hevotado = false
 			}
 		case <-time.After(time.Duration(3*TIME_LATIDO/2+timeE) * time.Millisecond):
 			fmt.Println("Lider ha caido")
@@ -481,10 +485,11 @@ func (nr *NodoRaft) nuevaEleccion() {
 		select {
 		case _ = <-nr.Voto:
 			votes++
-		//s	fmt.Println("Me han votado")
+			fmt.Println("Me han votado")
 		case _ = <-nr.Latidos:
 			fin = true
 			fail = true
+			fmt.Println("ha llegado un latido")
 			// si llega latido qué pasa
 		case <-time.After(time.Duration(TIME_VOTO) * time.Millisecond):
 			fin = true
