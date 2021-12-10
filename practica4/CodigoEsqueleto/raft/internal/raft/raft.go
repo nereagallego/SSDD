@@ -47,7 +47,7 @@ const kLogOutputDir = "./logs_raft/"
 // comprometidas, envía un AplicaOperacion, con cada una de ellas, al canal
 // "canalAplicar" (funcion NuevoNodo) de la maquina de estados
 type AplicaOperacion struct {
-	Indice    int // en la entrada de registro
+	Indice    int // en la entrada de registro // mandato
 	Operacion interface{}
 }
 
@@ -82,7 +82,7 @@ type NodoRaft struct {
 
 var timeMaxLatido int = 1000
 var TIME_LATIDO int = 1000 / 18
-var TIME_MSG int = 500
+var TIME_MSG int = 10
 var TIME_VOTO int = 300
 
 // Creacion de un nuevo nodo de eleccion
@@ -108,8 +108,10 @@ func NuevoNodo(nodos []rpctimeout.HostPort, yo int,
 	nr.CurrentTerm = 0
 	nr.IdLider = -1
 	nr.LastApplied = 0
+	nr.CommitIndex = 0
 	nr.Latidos = make(chan bool)
 	nr.Voto = make(chan bool)
+	nr.Logs = []AplicaOperacion{}
 
 	if kEnableDebugLogs {
 		nombreNodo := nodos[yo].Host() + "_" + nodos[yo].Port()
@@ -193,7 +195,22 @@ func (nr *NodoRaft) someterOperacion(
 	idLider := -1
 
 	// Vuestro codigo aqui
-
+	//	arg := AppendEntriesArgs{nr.CurrentTerm, nr.Yo, nr.CommitIndex, nr.Logs[nr.CommitIndex].Indice, []AplicaOperacion{AplicaOperacion{nr.CommitIndex + 1, operacion}}}
+	prevLogIndex := -1
+	prevLogTerm := -1
+	if len(nr.Logs) > 0 {
+		prevLogIndex = len(nr.Logs) - 1
+		prevLogTerm = nr.Logs[len(nr.Logs)-1].Indice
+	}
+	out := nr.sendMsg([]AplicaOperacion{AplicaOperacion{nr.CurrentTerm, operacion}}, prevLogIndex, prevLogTerm)
+	nr.Logs = append(nr.Logs, AplicaOperacion{nr.CurrentTerm, operacion})
+	if out {
+		indice = prevLogIndex + 1
+		mandato = nr.CurrentTerm
+		EsLider = nr.Yo == nr.IdLider
+		idLider = nr.IdLider
+		nr.CommitIndex++
+	}
 	return indice, mandato, EsLider, idLider
 }
 
@@ -341,12 +358,12 @@ func (nr *NodoRaft) enviarPeticionVoto(nodo int, args *ArgsPeticionVoto,
 type Entrada interface{}
 
 type AppendEntriesArgs struct {
-	Term         int
-	LeaderId     int
-	PrevLogIndex int
-	PrevLogTerm  int
-	Entries      []AplicaOperacion
-	LeaderCommit int
+	Term         int               // leader's term
+	LeaderId     int               // leader ID
+	PrevLogIndex int               // index of log entry immediaty preceding new ones
+	PrevLogTerm  int               // term of prevLogIndex entry
+	Entries      []AplicaOperacion // log entries to store (enpty for heartbeat)
+	LeaderCommit int               // leader commitIndex
 }
 
 type AppendEntriesReply struct {
@@ -358,16 +375,18 @@ func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesR
 	//	fmt.Println("llega append entries")
 	if args.Term < nr.CurrentTerm {
 		reply.Success = false
-		//	if nr.Logs[args.PrevLogIndex].Indice != args.PrevLogTerm {
-		//		reply.Success = false
-		//	}
 	} else if len(args.Entries) == 0 {
 		//	fmt.Println("Llega un latido")
 		if nr.CurrentTerm < args.Term {
 			nr.CurrentTerm = args.Term
 		}
+		nr.IdLider = args.LeaderId
 		nr.Latidos <- true
 		reply.Success = true
+	} else if nr.Logs[args.PrevLogIndex].Indice != args.PrevLogTerm {
+		reply.Success = false
+		//	}
+
 	} else {
 		for i := 0; i < len(args.Entries); i++ {
 			nr.Logs = append(nr.Logs, args.Entries[i])
@@ -383,12 +402,12 @@ func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesR
 	return nil
 }
 
-func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion) bool {
-	tam := 0
-	if len(nr.Logs) > 0 {
-		tam = nr.Logs[len(nr.Logs)].Indice
-	}
-	arg := AppendEntriesArgs{nr.CurrentTerm, nr.IdLider, len(nr.Logs), tam, entradas, nr.CommitIndex}
+func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion, prevLogIndex int, prevLogTerm int) bool {
+	// tam := 0
+	// if len(nr.Logs) > 0 {
+	// 	tam = nr.Logs[len(nr.Logs)].Indice
+	// }
+	arg := AppendEntriesArgs{nr.CurrentTerm, nr.IdLider, prevLogIndex, prevLogTerm, entradas, nr.CommitIndex}
 	var reply []AppendEntriesReply
 	for i := 0; i < len(nr.Nodos); i++ {
 		aux := AppendEntriesReply{0, true}
@@ -402,7 +421,7 @@ func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion) bool {
 			//	fmt.Println(out)
 		}
 	}
-	//	time.Sleep(time.Duration(TIME_MSG) * time.Millisecond)
+	time.Sleep(time.Duration(TIME_MSG) * time.Millisecond)
 	count := 0
 	for i := 0; i < len(nr.Nodos); i++ {
 		if reply[i].Success {
@@ -411,10 +430,22 @@ func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion) bool {
 			return false
 		}
 	}
-	if count > len(nr.Nodos)-count {
-		// comprometer
+	// if !(count > len(nr.Nodos)-count) && len(entradas) > 0 {
+	// 	for count <= len(nr.Nodos)-count {
+	// 		for i := 0; i < len(nr.Nodos); i++ {
+	// 			if i != nr.Yo && !reply[i].Success {
+	// 				go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", &arg, &reply[i], 1000*time.Millisecond)
+	// 			}
+	// 		}
+	// 		time.Sleep(time.Duration(TIME_MSG) * time.Millisecond)
+	// 		for i := 0; i < len(nr.Nodos); i++ {
+	// 			if reply[i].Success {
+	// 				count++
+	// 			}
+	// 		}
+	// 	}
 
-	}
+	// }
 	return true
 }
 
@@ -431,7 +462,7 @@ func (nr *NodoRaft) enviaLatidos() {
 	for soyLider {
 
 		var e []AplicaOperacion
-		out := nr.sendMsg(e)
+		out := nr.sendMsg(e, 0, 0)
 		//fmt.Println("Envio latido")
 		if !out {
 			soyLider = false
