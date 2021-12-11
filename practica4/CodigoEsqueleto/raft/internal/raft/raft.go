@@ -189,27 +189,34 @@ func (nr *NodoRaft) obtenerEstado() (int, int, bool, int) {
 // Cuarto valor es el lider, es el indice del líder si no es él
 func (nr *NodoRaft) someterOperacion(
 	operacion interface{}) (int, int, bool, int) {
-	indice := -1
-	mandato := -1
-	EsLider := true
-	idLider := -1
 
+	indice, mandato, EsLider, idLider := -1, -1, true, -1
 	// Vuestro codigo aqui
-	//	arg := AppendEntriesArgs{nr.CurrentTerm, nr.Yo, nr.CommitIndex, nr.Logs[nr.CommitIndex].Indice, []AplicaOperacion{AplicaOperacion{nr.CommitIndex + 1, operacion}}}
-	prevLogIndex := -1
-	prevLogTerm := -1
+	prevLogIndex, prevLogTerm := -1, -1
+
 	if len(nr.Logs) > 0 {
 		prevLogIndex = len(nr.Logs) - 1
 		prevLogTerm = nr.Logs[len(nr.Logs)-1].Indice
 	}
-	out := nr.sendMsg([]AplicaOperacion{AplicaOperacion{nr.CurrentTerm, operacion}}, prevLogIndex, prevLogTerm)
-	nr.Logs = append(nr.Logs, AplicaOperacion{nr.CurrentTerm, operacion})
+	var entries []AplicaOperacion
+	entries = append(entries, AplicaOperacion{nr.CurrentTerm, operacion})
+
+	return nr.gestionaOperacion(entries, prevLogIndex, prevLogTerm, indice, mandato, EsLider, idLider)
+}
+
+func (nr *NodoRaft) gestionaOperacion(entries []AplicaOperacion, prevLogIndex int, prevLogTerm int, indice int, mandato int, EsLider bool, idLider int) (int, int, bool, int) {
+	out, mayoria := nr.sendMsg(entries, prevLogIndex, prevLogTerm)
+	for i := 0; i < len(entries); i++ {
+		nr.Logs = append(nr.Logs, entries[i])
+	}
 	if out {
 		indice = prevLogIndex + 1
 		mandato = nr.CurrentTerm
 		EsLider = nr.Yo == nr.IdLider
 		idLider = nr.IdLider
-		nr.CommitIndex++
+		if mayoria {
+			nr.CommitIndex++
+		}
 	}
 	return indice, mandato, EsLider, idLider
 }
@@ -249,7 +256,7 @@ type ResultadoRemoto struct {
 func (nr *NodoRaft) SometerOperacionRaft(operacion *interface{},
 	reply *ResultadoRemoto) error {
 	reply.IndiceRegistro, reply.Mandato,
-		reply.EsLider, reply.IdLider = nr.someterOperacion(operacion)
+		reply.EsLider, reply.IdLider = nr.someterOperacion(*operacion)
 	return nil
 }
 
@@ -296,14 +303,9 @@ type RespuestaPeticionVoto struct {
 //
 func (nr *NodoRaft) PedirVoto(args *ArgsPeticionVoto,
 	reply *RespuestaPeticionVoto) error {
-	//	fmt.Println("Me han pedido que vote")
 	reply.Term = nr.CurrentTerm
 	reply.VoteGranted = args.Term >= nr.CurrentTerm
-	//if &nr.VotedFor != nil && !reply.VoteGranted {
 	if nr.Hevotado && !reply.VoteGranted {
-		fmt.Println("Habia votado: ", nr.Hevotado)
-		fmt.Println("My term: ", nr.CurrentTerm, " their term: ", args.Term)
-		fmt.Println("No he votado a ", args.CandidateId)
 		reply.VoteGranted = false
 	} else {
 		fmt.Println("He votado a ", args.CandidateId)
@@ -372,41 +374,42 @@ type AppendEntriesReply struct {
 }
 
 func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) error {
-	//	fmt.Println("llega append entries")
 	if args.Term < nr.CurrentTerm {
 		reply.Success = false
 	} else if len(args.Entries) == 0 {
-		//	fmt.Println("Llega un latido")
 		if nr.CurrentTerm < args.Term {
 			nr.CurrentTerm = args.Term
 		}
 		nr.IdLider = args.LeaderId
 		nr.Latidos <- true
 		reply.Success = true
-	} else if nr.Logs[args.PrevLogIndex].Indice != args.PrevLogTerm {
+	} else if (args.PrevLogIndex != -1 && (len(nr.Logs) == 0 || nr.Logs[args.PrevLogIndex].Indice != args.PrevLogTerm)) || (args.PrevLogIndex == -1 && len(nr.Logs) != 0) {
 		reply.Success = false
-		//	}
-
 	} else {
 		for i := 0; i < len(args.Entries); i++ {
 			nr.Logs = append(nr.Logs, args.Entries[i])
-			nr.CommitIndex++
+			nr.CommitIndex++ //?
 		}
 		reply.Success = true
-		reply.Term = nr.CurrentTerm
-		//	if args.LeaderCommit > nr.CommitIndex {
-		//	nr.CommitIndex = Min(args.LeaderCommit, nr.LastApplied)
-		//	}
+		fmt.Println("ta weno")
 	}
 	reply.Term = nr.CurrentTerm
 	return nil
 }
 
-func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion, prevLogIndex int, prevLogTerm int) bool {
-	// tam := 0
-	// if len(nr.Logs) > 0 {
-	// 	tam = nr.Logs[len(nr.Logs)].Indice
-	// }
+func (nr *NodoRaft) countSuccessReply(reply []AppendEntriesReply) int {
+	count := 0
+	for i := 0; i < len(nr.Nodos); i++ {
+		if reply[i].Success {
+			count++
+		} else if reply[i].Term > nr.CurrentTerm {
+			return -1
+		}
+	}
+	return count
+}
+
+func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion, prevLogIndex int, prevLogTerm int) (bool, bool) {
 	arg := AppendEntriesArgs{nr.CurrentTerm, nr.IdLider, prevLogIndex, prevLogTerm, entradas, nr.CommitIndex}
 	var reply []AppendEntriesReply
 	for i := 0; i < len(nr.Nodos); i++ {
@@ -415,38 +418,15 @@ func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion, prevLogIndex int, prevLo
 	}
 	for i := 0; i < len(nr.Nodos); i++ {
 		if i != nr.Yo {
-			//		fmt.Println("Mando el latido a", i)
-			go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", &arg, &reply[i], 1000*time.Millisecond)
-			//	out := nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", &arg, &reply[i], 1000*time.Millisecond)
-			//	fmt.Println(out)
+			go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", &arg, &reply[i], 100*time.Millisecond)
 		}
 	}
 	time.Sleep(time.Duration(TIME_MSG) * time.Millisecond)
-	count := 0
-	for i := 0; i < len(nr.Nodos); i++ {
-		if reply[i].Success {
-			count++
-		} else if reply[i].Term > nr.CurrentTerm {
-			return false
-		}
+	count := nr.countSuccessReply(reply)
+	if count == -1 {
+		return false, false
 	}
-	// if !(count > len(nr.Nodos)-count) && len(entradas) > 0 {
-	// 	for count <= len(nr.Nodos)-count {
-	// 		for i := 0; i < len(nr.Nodos); i++ {
-	// 			if i != nr.Yo && !reply[i].Success {
-	// 				go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", &arg, &reply[i], 1000*time.Millisecond)
-	// 			}
-	// 		}
-	// 		time.Sleep(time.Duration(TIME_MSG) * time.Millisecond)
-	// 		for i := 0; i < len(nr.Nodos); i++ {
-	// 			if reply[i].Success {
-	// 				count++
-	// 			}
-	// 		}
-	// 	}
-
-	// }
-	return true
+	return true, count > (len(nr.Nodos) - count)
 }
 
 func Min(a, b int) int {
@@ -462,13 +442,17 @@ func (nr *NodoRaft) enviaLatidos() {
 	for soyLider {
 
 		var e []AplicaOperacion
-		out := nr.sendMsg(e, 0, 0)
-		//fmt.Println("Envio latido")
+		out, _ := nr.sendMsg(e, 0, 0)
 		if !out {
 			soyLider = false
-		} else {
-			time.Sleep(time.Duration(TIME_LATIDO) * time.Millisecond)
 		}
+		select {
+		case _ = <-nr.Latidos:
+			soyLider = false
+		case <-time.After(time.Duration(TIME_LATIDO) * time.Millisecond):
+
+		}
+
 	}
 }
 
@@ -478,23 +462,36 @@ func (nr *NodoRaft) escuchaLatidos() error {
 	for lider {
 		timeE := rand.Intn(timeMaxLatido)
 		select {
-		case enviaLider := <-nr.Latidos:
-			//	fmt.Println("He recibido latido")
-			if enviaLider {
-				//	nr.Hevotado = false
-			}
+		case _ = <-nr.Latidos:
+
 		case <-time.After(time.Duration(3*TIME_LATIDO/2+timeE) * time.Millisecond):
 			fmt.Println("Lider ha caido")
 			lider = false
-
 		}
 	}
 	return nil
 }
 
+func (nr *NodoRaft) receive() (bool, int) {
+	fin := false
+	votes := 1
+	fail := false
+	for !fin {
+		select {
+		case _ = <-nr.Voto:
+			votes++
+		case _ = <-nr.Latidos: // ha llegado un latido
+			fin = true
+			fail = true
+		case <-time.After(time.Duration(TIME_VOTO) * time.Millisecond):
+			fin = true
+		}
+	}
+	return fail, votes
+}
+
 //devuelve true si exito, false si fallo
 func (nr *NodoRaft) nuevaEleccion() {
-	fmt.Println("Nueva eleccion")
 	nr.CurrentTerm++
 	nr.Hevotado = true
 	nr.VotedFor = nr.Yo //me voto a mí mismo
@@ -507,26 +504,9 @@ func (nr *NodoRaft) nuevaEleccion() {
 		reply = append(reply, RespuestaPeticionVoto{0, false})
 		if i != nr.Yo {
 			go nr.enviarPeticionVoto(i, &args, &reply[i])
-			//	fmt.Println("Pido voto a ", i)
 		}
 	}
-	fin := false
-	fail := false
-	for !fin {
-		select {
-		case _ = <-nr.Voto:
-			votes++
-			fmt.Println("Me han votado")
-		case _ = <-nr.Latidos:
-			fin = true
-			fail = true
-			fmt.Println("ha llegado un latido")
-			// si llega latido qué pasa
-		case <-time.After(time.Duration(TIME_VOTO) * time.Millisecond):
-			fin = true
-		}
-	}
-	//nr.Hevotado = false
+	fail, votes := nr.receive()
 	if !fail && votes > len(nr.Nodos)-votes { //eleccion ganada
 		nr.IdLider = nr.Yo
 	}
