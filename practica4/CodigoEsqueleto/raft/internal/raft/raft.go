@@ -47,7 +47,7 @@ const kLogOutputDir = "./logs_raft/"
 // comprometidas, envía un AplicaOperacion, con cada una de ellas, al canal
 // "canalAplicar" (funcion NuevoNodo) de la maquina de estados
 type AplicaOperacion struct {
-	Indice    int // en la entrada de registro // mandato
+	Mandato   int // en la entrada de registro // mandato
 	Operacion interface{}
 }
 
@@ -196,7 +196,7 @@ func (nr *NodoRaft) someterOperacion(
 
 	if len(nr.Logs) > 0 {
 		prevLogIndex = len(nr.Logs) - 1
-		prevLogTerm = nr.Logs[len(nr.Logs)-1].Indice
+		prevLogTerm = nr.Logs[len(nr.Logs)-1].Mandato
 	}
 	var entries []AplicaOperacion
 	entries = append(entries, AplicaOperacion{nr.CurrentTerm, operacion})
@@ -383,7 +383,7 @@ func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesR
 		nr.IdLider = args.LeaderId
 		nr.Latidos <- true
 		reply.Success = true
-	} else if (args.PrevLogIndex != -1 && (len(nr.Logs) == 0 || nr.Logs[args.PrevLogIndex].Indice != args.PrevLogTerm)) || (args.PrevLogIndex == -1 && len(nr.Logs) != 0) {
+	} else if (args.PrevLogIndex != -1 && (len(nr.Logs) == 0 || nr.Logs[args.PrevLogIndex].Mandato != args.PrevLogTerm)) || (args.PrevLogIndex == -1 && len(nr.Logs) != 0) {
 		reply.Success = false
 	} else {
 		for i := 0; i < len(args.Entries); i++ {
