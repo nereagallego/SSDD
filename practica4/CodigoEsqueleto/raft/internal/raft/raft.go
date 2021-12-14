@@ -208,6 +208,7 @@ func (nr *NodoRaft) gestionaOperacion(entries []AplicaOperacion, prevLogIndex in
 	out, mayoria := nr.sendMsg(entries, prevLogIndex, prevLogTerm)
 	for i := 0; i < len(entries); i++ {
 		nr.Logs = append(nr.Logs, entries[i])
+		fmt.Println("Entrada añadida")
 	}
 	if out {
 		indice = prevLogIndex + 1
