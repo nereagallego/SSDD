@@ -391,7 +391,7 @@ func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesR
 			nr.CommitIndex++ //?
 		}
 		reply.Success = true
-		fmt.Println("ta weno")
+		fmt.Println("entrada añadida")
 	}
 	reply.Term = nr.CurrentTerm
 	return nil
