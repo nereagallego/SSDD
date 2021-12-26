@@ -43,12 +43,18 @@ const kLogToStdout = true
 // Cambiar esto para salida de logs en un directorio diferente
 const kLogOutputDir = "./logs_raft/"
 
+type TipoOperacion struct {
+	Operacion string // La operaciones posibles son "leer" y "escribir"
+	Clave     string
+	Valor     string // en el caso de la lectura Valor = ""
+}
+
 // A medida que el nodo Raft conoce las operaciones de las  entradas de registro
 // comprometidas, envía un AplicaOperacion, con cada una de ellas, al canal
 // "canalAplicar" (funcion NuevoNodo) de la maquina de estados
 type AplicaOperacion struct {
 	Mandato   int // en la entrada de registro // mandato
-	Operacion interface{}
+	Operacion TipoOperacion
 }
 
 // Tipo de dato Go que representa un solo nodo (réplica) de raft
@@ -69,8 +75,8 @@ type NodoRaft struct {
 	VotedFor    int // Candidato que he votado (null si nadi)
 	Logs        []AplicaOperacion
 
-	CommitIndex int
-	LastApplied int
+	CommitIndex int // Ultima entrada añadida al reistro
+	LastApplied int // Ultima entrada añadida a la maquina de estados
 	NextIndex   []int
 	MatchIndex  []int
 	Latidos     chan bool
@@ -107,11 +113,14 @@ func NuevoNodo(nodos []rpctimeout.HostPort, yo int,
 	nr.Yo = yo
 	nr.CurrentTerm = 0
 	nr.IdLider = -1
-	nr.LastApplied = 0
-	nr.CommitIndex = 0
+	nr.LastApplied = -1
+	nr.CommitIndex = -1
 	nr.Latidos = make(chan bool)
 	nr.Voto = make(chan bool)
 	nr.Logs = []AplicaOperacion{}
+	for i := 0; i < len(nodos); i++ {
+		nr.NextIndex = append(nr.NextIndex, -1)
+	}
 
 	if kEnableDebugLogs {
 		nombreNodo := nodos[yo].Host() + "_" + nodos[yo].Port()
@@ -188,38 +197,47 @@ func (nr *NodoRaft) obtenerEstado() (int, int, bool, int) {
 // El tercer valor es true si el nodo cree ser el lider
 // Cuarto valor es el lider, es el indice del líder si no es él
 func (nr *NodoRaft) someterOperacion(
-	operacion interface{}) (int, int, bool, int) {
+	operacion TipoOperacion) (int, int, bool, int, string) {
 
-	indice, mandato, EsLider, idLider := -1, -1, true, -1
+	indice, mandato, EsLider, idLider, valorADevolver := -1, -1, nr.IdLider == nr.Yo, nr.IdLider, ""
+
+	if !EsLider {
+		return -1, -1, false, nr.IdLider, valorADevolver
+	}
 	// Vuestro codigo aqui
 	prevLogIndex, prevLogTerm := -1, -1
 
 	if len(nr.Logs) > 0 {
-		prevLogIndex = len(nr.Logs) - 1
-		prevLogTerm = nr.Logs[len(nr.Logs)-1].Mandato
+		prevLogIndex = nr.CommitIndex
+		prevLogTerm = nr.Logs[nr.CommitIndex].Mandato
 	}
 	var entries []AplicaOperacion
 	entries = append(entries, AplicaOperacion{nr.CurrentTerm, operacion})
 
-	return nr.gestionaOperacion(entries, prevLogIndex, prevLogTerm, indice, mandato, EsLider, idLider)
+	return nr.gestionaOperacion(entries, prevLogIndex, prevLogTerm, indice, mandato, EsLider, idLider) // !!!!!!
 }
 
-func (nr *NodoRaft) gestionaOperacion(entries []AplicaOperacion, prevLogIndex int, prevLogTerm int, indice int, mandato int, EsLider bool, idLider int) (int, int, bool, int) {
-	out, mayoria := nr.sendMsg(entries, prevLogIndex, prevLogTerm)
+func (nr *NodoRaft) gestionaOperacion(entries []AplicaOperacion, prevLogIndex int, prevLogTerm int, indice int, mandato int, EsLider bool, idLider int) (int, int, bool, int, string) {
+
 	for i := 0; i < len(entries); i++ {
 		nr.Logs = append(nr.Logs, entries[i])
+		nr.CommitIndex++
 		fmt.Println("Entrada añadida")
 	}
+
+	out, mayoria := nr.sendMsg(entries, prevLogIndex, prevLogTerm)
+	valorADevolver := ""
+
 	if out {
 		indice = prevLogIndex + 1
 		mandato = nr.CurrentTerm
 		EsLider = nr.Yo == nr.IdLider
 		idLider = nr.IdLider
 		if mayoria {
-			nr.CommitIndex++
+			// aplicar a la maquina de estados
 		}
 	}
-	return indice, mandato, EsLider, idLider
+	return indice, mandato, EsLider, idLider, valorADevolver
 }
 
 // -----------------------------------------------------------------------
@@ -250,14 +268,16 @@ func (nr *NodoRaft) ObtenerEstadoNodo(args Vacio, reply *EstadoRemoto) error {
 }
 
 type ResultadoRemoto struct {
+	ValorADevolver string
 	IndiceRegistro int
 	EstadoParcial
 }
 
-func (nr *NodoRaft) SometerOperacionRaft(operacion *interface{},
+func (nr *NodoRaft) SometerOperacionRaft(operacion TipoOperacion,
 	reply *ResultadoRemoto) error {
-	reply.IndiceRegistro, reply.Mandato,
-		reply.EsLider, reply.IdLider = nr.someterOperacion(*operacion)
+
+	reply.IndiceRegistro, reply.Mandato, reply.EsLider, reply.IdLider,
+		reply.ValorADevolver = nr.someterOperacion(operacion)
 	return nil
 }
 
@@ -274,10 +294,10 @@ func (nr *NodoRaft) SometerOperacionRaft(operacion *interface{},
 // Nombres de campos deben comenzar con letra mayuscula !
 //
 type ArgsPeticionVoto struct {
-	Term         int
-	CandidateId  int
-	LastLogIndex int
-	LastLogTerm  int
+	Term         int // Mandato de quien solicita voto
+	CandidateId  int // ID candidato que solicita voto
+	LastLogIndex int // Indice de la última entrada en el registro
+	LastLogTerm  int // Mandato de la última entrada en el registro
 }
 
 //
@@ -292,8 +312,8 @@ type ArgsPeticionVoto struct {
 //
 //
 type RespuestaPeticionVoto struct {
-	Term        int
-	VoteGranted bool
+	Term        int  // Mandato actual de a quien solicitas voto
+	VoteGranted bool // True si y solo si me votan
 }
 
 //
@@ -305,7 +325,11 @@ type RespuestaPeticionVoto struct {
 func (nr *NodoRaft) PedirVoto(args *ArgsPeticionVoto,
 	reply *RespuestaPeticionVoto) error {
 	reply.Term = nr.CurrentTerm
-	reply.VoteGranted = args.Term >= nr.CurrentTerm
+	ultimoMandato := -1
+	if nr.CommitIndex != -1 {
+		ultimoMandato = nr.Logs[nr.CommitIndex].Mandato
+	}
+	reply.VoteGranted = (args.LastLogIndex > ultimoMandato) || (args.LastLogTerm == ultimoMandato && args.LastLogIndex >= nr.CommitIndex)
 	if nr.Hevotado && !reply.VoteGranted {
 		reply.VoteGranted = false
 	} else {
@@ -384,12 +408,18 @@ func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesR
 		nr.IdLider = args.LeaderId
 		nr.Latidos <- true
 		reply.Success = true
-	} else if (args.PrevLogIndex != -1 && (len(nr.Logs) == 0 || nr.Logs[args.PrevLogIndex].Mandato != args.PrevLogTerm)) || (args.PrevLogIndex == -1 && len(nr.Logs) != 0) {
+	} else if (args.PrevLogIndex != -1 && (nr.CommitIndex == -1 || nr.Logs[args.PrevLogIndex].Mandato != args.PrevLogTerm)) || (args.PrevLogIndex == -1 && len(nr.Logs) != 0) {
 		reply.Success = false
 	} else {
+		nr.CommitIndex = args.PrevLogIndex
 		for i := 0; i < len(args.Entries); i++ {
-			nr.Logs = append(nr.Logs, args.Entries[i])
-			nr.CommitIndex++ //?
+			if args.PrevLogIndex+i < nr.CommitIndex {
+				nr.Logs[args.PrevLogIndex+i] = args.Entries[i]
+			} else {
+				nr.Logs = append(nr.Logs, args.Entries[i])
+				//?
+			}
+			nr.CommitIndex++
 		}
 		reply.Success = true
 		fmt.Println("entrada añadida")
@@ -405,23 +435,31 @@ func (nr *NodoRaft) countSuccessReply(reply []AppendEntriesReply) int {
 			count++
 		} else if reply[i].Term > nr.CurrentTerm {
 			return -1
+		} else {
+
 		}
 	}
 	return count
 }
 
 func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion, prevLogIndex int, prevLogTerm int) (bool, bool) {
+
 	arg := AppendEntriesArgs{nr.CurrentTerm, nr.IdLider, prevLogIndex, prevLogTerm, entradas, nr.CommitIndex}
+
 	var reply []AppendEntriesReply
+
 	for i := 0; i < len(nr.Nodos); i++ {
-		aux := AppendEntriesReply{0, true}
+		aux := AppendEntriesReply{0, false}
 		reply = append(reply, aux)
+		nr.NextIndex[i] = nr.CommitIndex
 	}
+
 	for i := 0; i < len(nr.Nodos); i++ {
 		if i != nr.Yo {
 			go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", &arg, &reply[i], 100*time.Millisecond)
 		}
 	}
+
 	time.Sleep(time.Duration(TIME_MSG) * time.Millisecond)
 	count := nr.countSuccessReply(reply)
 	if count == -1 {
