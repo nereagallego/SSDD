@@ -10,7 +10,7 @@ import (
 type HostPort string // Con la forma, "host:puerto", con host mediante DNS o IP
 
 func MakeHostPort(host, port string) HostPort {
-	return HostPort(host + port)
+	return HostPort(host + ":" + port)
 }
 
 func (hp HostPort) Host() string {
@@ -25,7 +25,7 @@ func (hp HostPort) CallTimeout(serviceMethod string, args interface{},
 	reply interface{}, timeout time.Duration) error {
 
 	client, err := rpc.Dial("tcp", string(hp))
-
+	//fmt.Println(serviceMethod + " to " + string(hp))
 	if err != nil {
 		// fmt.printf("Error dialing endpoint: %v ", err)
 		return err // Devuelve error de conexion TCP

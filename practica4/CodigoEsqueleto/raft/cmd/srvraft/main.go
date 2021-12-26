@@ -45,8 +45,9 @@ func main() {
 
 		//fmt.Println("Replica escucha en :", me, " de ", os.Args[2:])
 
-		l, _ := net.Listen("tcp", os.Args[2:][me])
-		//	check.CheckError(err, "Main listen error:")
+		l, err := net.Listen("tcp", os.Args[2:][me])
+		fmt.Println(err)
+		//check.CheckError(err, "Main listen error:")
 
 		rpc.Accept(l)
 
