@@ -235,6 +235,7 @@ func (nr *NodoRaft) gestionaOperacion(entries []AplicaOperacion, prevLogIndex in
 		idLider = nr.IdLider
 		if mayoria {
 			// aplicar a la maquina de estados
+			fmt.Println("Aplicar a la maquina de estados")
 		}
 	}
 	return indice, mandato, EsLider, idLider, valorADevolver
@@ -324,12 +325,14 @@ type RespuestaPeticionVoto struct {
 //
 func (nr *NodoRaft) PedirVoto(args *ArgsPeticionVoto,
 	reply *RespuestaPeticionVoto) error {
+
 	reply.Term = nr.CurrentTerm
 	ultimoMandato := -1
 	if nr.CommitIndex != -1 {
 		ultimoMandato = nr.Logs[nr.CommitIndex].Mandato
 	}
-	reply.VoteGranted = (args.LastLogIndex > ultimoMandato) || (args.LastLogTerm == ultimoMandato && args.LastLogIndex >= nr.CommitIndex)
+	fmt.Println("Ultimo mandato: ", ultimoMandato, " ,nr.CommitIndex: ", nr.CommitIndex, " ,args.LastLogTerm: ", args.LastLogTerm, " ,args.LastLogIndex: ", args.LastLogIndex)
+	reply.VoteGranted = (args.LastLogTerm > ultimoMandato) || (args.LastLogTerm == ultimoMandato && args.LastLogIndex >= nr.CommitIndex && args.Term >= nr.CurrentTerm)
 	if nr.Hevotado && !reply.VoteGranted {
 		reply.VoteGranted = false
 	} else {
@@ -396,9 +399,11 @@ type AppendEntriesArgs struct {
 type AppendEntriesReply struct {
 	Term    int
 	Success bool
+	Alive   bool // para reenviar registros anteriores a seguidores que continuan vivos
 }
 
 func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) error {
+	reply.Alive = true
 	if args.Term < nr.CurrentTerm {
 		reply.Success = false
 	} else if len(args.Entries) == 0 {
@@ -428,30 +433,61 @@ func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesR
 	return nil
 }
 
+func (nr *NodoRaft) entradas(index int) []AplicaOperacion {
+	var entradas []AplicaOperacion
+	for i := index; i <= nr.CommitIndex; i++ {
+		entradas = append(entradas, nr.Logs[i])
+	}
+	return entradas
+}
+
 func (nr *NodoRaft) countSuccessReply(reply []AppendEntriesReply) int {
 	count := 0
-	for i := 0; i < len(nr.Nodos); i++ {
-		if reply[i].Success {
-			count++
-		} else if reply[i].Term > nr.CurrentTerm {
-			return -1
-		} else {
+	//	fin := false
+	noAlivenoSucced := true
 
+	for noAlivenoSucced {
+		count = 0
+		noAlivenoSucced = false
+		for i := 0; i < len(nr.Nodos); i++ {
+			if i != nr.Yo {
+				if reply[i].Success {
+					count++
+				} else if reply[i].Term > nr.CurrentTerm {
+					return -1
+				} else if reply[i].Alive {
+					fmt.Println(nr.NextIndex[i])
+					nr.NextIndex[i]--
+					noAlivenoSucced = true
+					ultimoMandato := -1
+					//	lastLogIndex := -1
+					if nr.NextIndex[i]-1 >= 0 {
+						ultimoMandato = nr.Logs[nr.NextIndex[i]-1].Mandato
+						//nr.
+					}
+					arg := AppendEntriesArgs{nr.CurrentTerm, nr.IdLider, nr.NextIndex[i] - 1, ultimoMandato, nr.entradas(nr.NextIndex[i]), nr.CommitIndex}
+					go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", &arg, &reply[i], 100*time.Millisecond)
+					fmt.Println("Mando al nodo ", i, " la entrada ", nr.NextIndex[i])
+				}
+			}
 		}
+		time.Sleep(time.Duration(TIME_MSG) * 5 * time.Millisecond)
+		fmt.Println("next iteration")
 	}
 	return count
 }
 
 func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion, prevLogIndex int, prevLogTerm int) (bool, bool) {
-
 	arg := AppendEntriesArgs{nr.CurrentTerm, nr.IdLider, prevLogIndex, prevLogTerm, entradas, nr.CommitIndex}
 
 	var reply []AppendEntriesReply
 
 	for i := 0; i < len(nr.Nodos); i++ {
-		aux := AppendEntriesReply{0, false}
+		aux := AppendEntriesReply{0, false, false}
 		reply = append(reply, aux)
-		nr.NextIndex[i] = nr.CommitIndex
+		if len(entradas) > 0 {
+			nr.NextIndex[i] = nr.CommitIndex
+		}
 	}
 
 	for i := 0; i < len(nr.Nodos); i++ {
@@ -461,7 +497,11 @@ func (nr *NodoRaft) sendMsg(entradas []AplicaOperacion, prevLogIndex int, prevLo
 	}
 
 	time.Sleep(time.Duration(TIME_MSG) * time.Millisecond)
-	count := nr.countSuccessReply(reply)
+	count := 0
+	if len(entradas) > 0 {
+		fmt.Println("busco mayoria")
+		count = nr.countSuccessReply(reply)
+	}
 	if count == -1 {
 		return false, false
 	}
@@ -497,12 +537,11 @@ func (nr *NodoRaft) enviaLatidos() {
 
 func (nr *NodoRaft) escuchaLatidos() error {
 	lider := true
-
+	fmt.Println("escucho latidos")
 	for lider {
 		timeE := rand.Intn(timeMaxLatido)
 		select {
 		case _ = <-nr.Latidos:
-
 		case <-time.After(time.Duration(3*TIME_LATIDO/2+timeE) * time.Millisecond):
 			fmt.Println("Lider ha caido")
 			lider = false
@@ -520,6 +559,7 @@ func (nr *NodoRaft) receive() (bool, int) {
 		case _ = <-nr.Voto:
 			votes++
 		case _ = <-nr.Latidos: // ha llegado un latido
+			fmt.Println("Esperaba voto y ha llegado latido")
 			fin = true
 			fail = true
 		case <-time.After(time.Duration(TIME_VOTO) * time.Millisecond):
@@ -531,10 +571,11 @@ func (nr *NodoRaft) receive() (bool, int) {
 
 //devuelve true si exito, false si fallo
 func (nr *NodoRaft) nuevaEleccion() {
+	fmt.Println("inicio eleccion")
 	nr.CurrentTerm++
 	nr.Hevotado = true
 	nr.VotedFor = nr.Yo //me voto a mí mismo
-	args := ArgsPeticionVoto{nr.CurrentTerm, nr.Yo, nr.LastApplied, nr.CurrentTerm}
+	args := ArgsPeticionVoto{nr.CurrentTerm, nr.Yo, nr.CommitIndex, nr.CommitIndex}
 	var reply []RespuestaPeticionVoto
 
 	votes := 1
