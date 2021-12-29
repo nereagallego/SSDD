@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"raft/internal/comun/check"
 	"raft/internal/comun/rpctimeout"
 	"raft/internal/raft"
 	"time"
@@ -29,7 +30,9 @@ func main() {
 		var argumento raft.TipoOperacion
 		argumento.Operacion = "leer"
 		argumento.Clave = "holita"
+		argumento.Valor = "caracolita"
 		err := master.CallTimeout("NodoRaft.SometerOperacionRaft", &argumento, &replay, 2000*time.Millisecond)
+		check.CheckError(err, "Main calltimeout")
 		//out := client.Call("NodoRaft.SometerOperacionRaft", &arg, &replay)
 		//	fmt.Println(out)
 
