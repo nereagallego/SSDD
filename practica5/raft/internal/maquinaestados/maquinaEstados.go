@@ -6,7 +6,6 @@ package maquinaestados
 //
 
 import (
-	"fmt"
 	"sync"
 )
 
@@ -41,7 +40,6 @@ func (me *MaquinaEstados) Receive() {
 	for {
 		op := <-me.CanalAplicar
 		if op.Operacion.Operacion == "leer" {
-			fmt.Println("leo")
 			me.CanalRespuesta <- me.Leer(op.Operacion.Clave)
 		} else if op.Operacion.Operacion == "escribir" {
 			me.Escribir(op.Operacion.Clave, op.Operacion.Valor)

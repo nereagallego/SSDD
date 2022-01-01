@@ -230,35 +230,27 @@ func (nr *NodoRaft) gestionaOperacion(entries []maquinaestados.AplicaOperacion, 
 		idLider = nr.IdLider
 		nr.Mux.Unlock()
 		if mayoria {
-			fmt.Println("tengo mayoria")
-			fmt.Println("commit index: ", nr.CommitIndex, " last applied: ", nr.LastApplied)
-			// aplicar a la maquina de estados
-			nr.Mux.Lock()
-			//	n := 0
-			for i := nr.LastApplied + 1; i <= nr.CommitIndex; i++ {
-				nr.CanalAplicar <- nr.Logs[i]
-				valorADevolver = <-nr.CanalRespuesta
-				fmt.Println(valorADevolver)
-				//		if nr.Logs[i].Operacion.Operacion == "leer" {
-
-				//			nr.MaquinaEstados.Leer(nr.Logs[i].Operacion.Clave)
-				//		} else if nr.Logs[i].Operacion.Operacion == "escribir" {
-				//			nr.MaquinaEstados.Escribir(nr.Logs[i].Operacion.Clave, nr.Logs[i].Operacion.Valor)
-				//			valorADevolver = ""
-				//		}
-				nr.LastApplied++
-				//	n++
-			}
-			nr.Mux.Unlock()
-			for i := 0; i < len(nr.Nodos); i++ {
-				if i != nr.Yo && alive[i] {
-					go nr.Nodos[i].CallTimeout("NodoRaft.AplicarOperacion", nr.LastApplied, Vacio{}, time.Duration(TIME_MSG)*time.Millisecond)
-				}
-			}
-			fmt.Println("Aplicar a la maquina de estados")
+			valorADevolver = nr.hayMayoria(alive, valorADevolver)
 		}
 	}
 	return indice, mandato, EsLider, idLider, valorADevolver
+}
+
+func (nr *NodoRaft) hayMayoria(alive []bool, valorADevolver string) string {
+	nr.Mux.Lock()
+	for i := nr.LastApplied + 1; i <= nr.CommitIndex; i++ {
+		nr.CanalAplicar <- nr.Logs[i]
+		valorADevolver = <-nr.CanalRespuesta
+		nr.LastApplied++
+	}
+	nr.Mux.Unlock()
+	for i := 0; i < len(nr.Nodos); i++ {
+		if i != nr.Yo && alive[i] {
+			go nr.Nodos[i].CallTimeout("NodoRaft.AplicarOperacion", nr.LastApplied, Vacio{}, time.Duration(TIME_MSG)*time.Millisecond)
+		}
+	}
+	fmt.Println("Aplicada a la maquina de estados")
+	return valorADevolver
 }
 
 // -----------------------------------------------------------------------
@@ -292,10 +284,7 @@ func (nr *NodoRaft) AplicarOperacion(lastApplied int, reply *Vacio) error {
 	fmt.Println("aplico a la maquina de estados")
 	for i := nr.LastApplied + 1; i <= lastApplied; i++ {
 		nr.CanalAplicar <- nr.Logs[i]
-		fmt.Println(<-nr.CanalRespuesta)
-		//	if nr.Logs[i].Operacion.Operacion == "escribir" {
-		//		nr.MaquinaEstados.Escribir(nr.Logs[i].Operacion.Clave, nr.Logs[i].Operacion.Valor)
-		//	}
+		_ = <-nr.CanalRespuesta
 		nr.LastApplied++
 	}
 	return nil
@@ -366,15 +355,10 @@ func (nr *NodoRaft) PedirVoto(args *ArgsPeticionVoto,
 		ultimoMandato = nr.Logs[nr.CommitIndex].Mandato
 		nr.Mux.Unlock()
 	}
-	//	fmt.Println("Ultimo mandato: ", ultimoMandato, " ,nr.CommitIndex: ", nr.CommitIndex, " ,args.LastLogTerm: ", args.LastLogTerm, " ,args.LastLogIndex: ", args.LastLogIndex)
 	nr.Mux.Lock()
 	reply.VoteGranted = (args.LastLogTerm > ultimoMandato) || (args.LastLogTerm == ultimoMandato && args.LastLogIndex >= nr.CommitIndex && args.Term >= nr.CurrentTerm)
 	if nr.Hevotado || !reply.VoteGranted {
-		if nr.Hevotado {
-			fmt.Println("he votado")
-		} else {
-			fmt.Println("menos actualizado que yo")
-		}
+
 		reply.VoteGranted = false
 
 	} else {
@@ -503,16 +487,7 @@ func (nr *NodoRaft) countSuccessReply(reply []AppendEntriesReply, alive []bool) 
 				} else if reply[i].Term > nr.CurrentTerm {
 					return -1, alive
 				} else if reply[i].Alive {
-					nr.NextIndex[i]--
-					noAlivenoSucced = true
-					//	alive[i] = true
-					ultimoMandato := -1
-					if nr.NextIndex[i]-1 >= 0 {
-						ultimoMandato = nr.Logs[nr.NextIndex[i]-1].Mandato
-					}
-					arg := AppendEntriesArgs{nr.CurrentTerm, nr.IdLider, nr.NextIndex[i] - 1, ultimoMandato, nr.entradas(nr.NextIndex[i]), nr.CommitIndex}
-					go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", &arg, &reply[i], 100*time.Millisecond)
-					fmt.Println("Mando al nodo ", i, " la entrada ", nr.NextIndex[i])
+					noAlivenoSucced = nr.sigueVivo(noAlivenoSucced, i, reply)
 				}
 			}
 		}
@@ -520,6 +495,19 @@ func (nr *NodoRaft) countSuccessReply(reply []AppendEntriesReply, alive []bool) 
 
 	}
 	return count, alive
+}
+
+func (nr *NodoRaft) sigueVivo(noAlivenoSucced bool, i int, reply []AppendEntriesReply) bool {
+	nr.NextIndex[i]--
+	noAlivenoSucced = true
+	ultimoMandato := -1
+	if nr.NextIndex[i]-1 >= 0 {
+		ultimoMandato = nr.Logs[nr.NextIndex[i]-1].Mandato
+	}
+	arg := AppendEntriesArgs{nr.CurrentTerm, nr.IdLider, nr.NextIndex[i] - 1, ultimoMandato, nr.entradas(nr.NextIndex[i]), nr.CommitIndex}
+	go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", &arg, &reply[i], 100*time.Millisecond)
+	fmt.Println("Mando al nodo ", i, " la entrada ", nr.NextIndex[i])
+	return noAlivenoSucced
 }
 
 func (nr *NodoRaft) sendMsg(entradas []maquinaestados.AplicaOperacion, prevLogIndex int, prevLogTerm int) (bool, bool, []bool) {
