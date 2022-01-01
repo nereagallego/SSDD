@@ -6,6 +6,7 @@ import (
 	"os"
 	"raft/internal/comun/check"
 	"raft/internal/comun/rpctimeout"
+	"raft/internal/maquinaestados"
 	"raft/internal/raft"
 	"time"
 )
@@ -16,21 +17,17 @@ type Args struct {
 
 func main() {
 	args := os.Args
-	if len(os.Args) == 2 {
-		//	client, err := rpc.Dial("tcp", args[1])
-		//	if err != nil {
-		//		log.Fatal("dialing:", err)
-		//	}
+	if len(os.Args) == 5 {
 		fmt.Println("conectado")
 		var replay raft.ResultadoRemoto
 		//	arg := Args{5, 7}
 		//	var arg string = "holita"
 		var master rpctimeout.HostPort
 		master = rpctimeout.HostPort(args[1])
-		var argumento raft.TipoOperacion
-		argumento.Operacion = "leer"
-		argumento.Clave = "holita"
-		argumento.Valor = "caracolita"
+		var argumento maquinaestados.TipoOperacion
+		argumento.Operacion = args[2]
+		argumento.Clave = args[3]
+		argumento.Valor = args[4]
 		err := master.CallTimeout("NodoRaft.SometerOperacionRaft", &argumento, &replay, 2000*time.Millisecond)
 		check.CheckError(err, "Main calltimeout")
 		//out := client.Call("NodoRaft.SometerOperacionRaft", &arg, &replay)
@@ -43,6 +40,6 @@ func main() {
 
 		//	fmt.Println("Arith: %d*%d=%d", arg.A, arg.B, replay)
 	} else {
-		fmt.Println("Usage: go run " + args[0] + " endpointMaster")
+		fmt.Println("Usage: go run " + args[0] + " endpointMaster operacion clave valor")
 	}
 }

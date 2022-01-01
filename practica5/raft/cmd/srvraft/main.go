@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"raft/internal/comun/rpctimeout"
+	"raft/internal/maquinaestados"
 
 	"raft/internal/raft"
 )
@@ -38,7 +39,7 @@ func main() {
 		}
 
 		// Parte Servidor
-		nr := raft.NuevoNodo(nodos, me, make(chan raft.AplicaOperacion, 1000))
+		nr := raft.NuevoNodo(nodos, me, make(chan maquinaestados.AplicaOperacion, 1000))
 		rpc.Register(nr)
 		//	for {
 		//	}
