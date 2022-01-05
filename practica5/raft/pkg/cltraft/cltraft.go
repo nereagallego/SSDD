@@ -28,7 +28,11 @@ func main() {
 		argumento.Operacion = args[2]
 		argumento.Clave = args[3]
 		argumento.Valor = args[4]
-		err := master.CallTimeout("NodoRaft.SometerOperacionRaft", &argumento, &replay, 2000*time.Millisecond)
+		var reply raft.EstadoRemoto
+		err := master.CallTimeout("NodoRaft.ObtenerEstadoNodo", &raft.Vacio{}, &reply, 10*time.Millisecond)
+		fmt.Println(reply)
+		check.CheckError(err, "RPC error ObtenerEstadoRemoto")
+		//	err := master.CallTimeout("NodoRaft.SometerOperacionRaft", &argumento, &replay, 2000*time.Millisecond)
 		check.CheckError(err, "Main calltimeout")
 		//out := client.Call("NodoRaft.SometerOperacionRaft", &arg, &replay)
 		//	fmt.Println(out)

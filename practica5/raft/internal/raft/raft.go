@@ -578,7 +578,8 @@ func (nr *NodoRaft) escuchaLatidos() error {
 		timeE := rand.Intn(timeMaxLatido)
 		select {
 		case _ = <-nr.Latidos:
-		case <-time.After(time.Duration(3*(TIME_LATIDO+timeE)/2) * time.Millisecond):
+		case <-time.After(time.Duration(3*(TIME_LATIDO)/2+timeE) * time.Millisecond):
+			nr.Logger.Println("ha caido el lider")
 			fmt.Println("Lider ha caido")
 			lider = false
 		}
@@ -630,6 +631,7 @@ func (nr *NodoRaft) nuevaEleccion() {
 	fail, votes := nr.receive()
 	if !fail && votes > len(nr.Nodos)-votes { //eleccion ganada
 		nr.IdLider = nr.Yo
+
 	}
 }
 
@@ -637,6 +639,7 @@ func (nr *NodoRaft) gestionRaft() {
 	//esperar latidos
 	fmt.Println("gestionando")
 	nr.Hevotado = false
+	time.Sleep(time.Duration(7000) * time.Millisecond)
 	for {
 		if nr.IdLider == nr.Yo {
 			nr.Hevotado = false

@@ -3,6 +3,7 @@ package testintegracionraft1
 import (
 	"fmt"
 	"raft/internal/comun/check"
+
 	//"log"
 	//"crypto/rand"
 	"os"
@@ -18,14 +19,14 @@ import (
 
 const (
 	//hosts
-	MAQUINA1 = "127.0.0.1"
-	MAQUINA2 = "127.0.0.1"
-	MAQUINA3 = "127.0.0.1"
+	MAQUINA1 = "155.210.154.195"
+	MAQUINA2 = "155.210.154.196"
+	MAQUINA3 = "155.210.154.197"
 
 	//puertos
-	PUERTOREPLICA1 = "29001"
-	PUERTOREPLICA2 = "29002"
-	PUERTOREPLICA3 = "29003"
+	PUERTOREPLICA1 = "29404"
+	PUERTOREPLICA2 = "29404"
+	PUERTOREPLICA3 = "29404"
 
 	//nodos replicas
 	REPLICA1 = MAQUINA1 + ":" + PUERTOREPLICA1
@@ -183,11 +184,13 @@ func (cfg *configDespliegue) soloArranqueYparadaTest1(t *testing.T) {
 
 // Primer lider en marcha - 3 NODOS RAFT
 func (cfg *configDespliegue) elegirPrimerLiderTest2(t *testing.T) {
-	t.Skip("SKIPPED ElegirPrimerLiderTest2")
+	//t.Skip("SKIPPED ElegirPrimerLiderTest2")
 
 	fmt.Println(t.Name(), ".....................")
 
 	cfg.startDistributedProcesses()
+
+	time.Sleep(2500 * time.Millisecond)
 
 	// Se ha elegido lider ?
 	fmt.Printf("Probando lider en curso\n")
@@ -201,17 +204,20 @@ func (cfg *configDespliegue) elegirPrimerLiderTest2(t *testing.T) {
 
 // Fallo de un primer lider y reeleccion de uno nuevo - 3 NODOS RAFT
 func (cfg *configDespliegue) falloAnteriorElegirNuevoLiderTest3(t *testing.T) {
-	t.Skip("SKIPPED FalloAnteriorElegirNuevoLiderTest3")
+	//	t.Skip("SKIPPED FalloAnteriorElegirNuevoLiderTest3")
 
 	fmt.Println(t.Name(), ".....................")
 
 	cfg.startDistributedProcesses()
-
+	time.Sleep(2500 * time.Millisecond)
 	fmt.Printf("Lider inicial\n")
 	cfg.pruebaUnLider(3)
 
 	// Desconectar lider
 	// ???
+	cfg.stopLider(3)
+	time.Sleep(5000 * time.Millisecond)
+	//	cfg.stopLider(3)
 
 	fmt.Printf("Comprobar nuevo lider\n")
 	cfg.pruebaUnLider(3)
@@ -340,7 +346,23 @@ func (cfg *configDespliegue) startDistributedProcesses() {
 	}
 
 	// aproximadamente 500 ms para cada arranque por ssh en portatil
-	time.Sleep(2500 * time.Millisecond)
+	time.Sleep(8000 * time.Millisecond)
+}
+
+func (cfg *configDespliegue) stopLider(numreplicas int) {
+	lider := -1
+	var reply raft.Vacio
+	for i := 0; i < numreplicas; i++ {
+		_, _, c, _ := cfg.obtenerEstadoRemoto(i)
+		if c {
+			lider = i
+			cfg.t.Log("Kill leader ", i)
+			err := cfg.nodosRaft[i].CallTimeout("NodoRaft.ParaNodo",
+				raft.Vacio{}, &reply, 10*time.Millisecond)
+			check.CheckError(err, "Error en llamada RPC Para nodo")
+		}
+	}
+	despliegue.ExecMutipleHosts(EXECREPLICACMD+" "+strconv.Itoa(lider)+" "+rpctimeout.HostPortArrayToString(cfg.nodosRaft), []string{cfg.nodosRaft[lider].Host()}, cfg.cr, PRIVKEYFILE)
 }
 
 //
@@ -359,12 +381,16 @@ func (cfg *configDespliegue) comprobarEstadoRemoto(idNodoDeseado int,
 	mandatoDeseado int, esLiderDeseado bool, IdLiderDeseado int) {
 	idNodo, mandato, esLider, idLider := cfg.obtenerEstadoRemoto(idNodoDeseado)
 
-	//cfg.t.Log("Estado replica 0: ", idNodo, mandato, esLider, idLider, "\n")
+	cfg.t.Log("Estado replica ", idNodoDeseado, " : ", idNodo, mandato, esLider, idLider, "\n")
 
 	if idNodo != idNodoDeseado || mandato != mandatoDeseado ||
 		esLider != esLiderDeseado || idLider != IdLiderDeseado {
+		for s := range cfg.cr {
+			fmt.Println(s)
+		}
 		cfg.t.Fatalf("Estado incorrecto en replica %d en subtest %s",
 			idNodoDeseado, cfg.t.Name())
+
 	}
 
 }
