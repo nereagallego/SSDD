@@ -3,6 +3,7 @@ package testintegracionraft1
 import (
 	"fmt"
 	"raft/internal/comun/check"
+	"raft/internal/maquinaestados"
 
 	//"log"
 	//"crypto/rand"
@@ -19,14 +20,14 @@ import (
 
 const (
 	//hosts
-	MAQUINA1 = "155.210.154.195"
+	MAQUINA1 = "155.210.154.198"
 	MAQUINA2 = "155.210.154.196"
 	MAQUINA3 = "155.210.154.197"
 
-	//puertos
-	PUERTOREPLICA1 = "29404"
-	PUERTOREPLICA2 = "29404"
-	PUERTOREPLICA3 = "29404"
+	//puerto6
+	PUERTOREPLICA1 = "29597"
+	PUERTOREPLICA2 = "29597"
+	PUERTOREPLICA3 = "29597"
 
 	//nodos replicas
 	REPLICA1 = MAQUINA1 + ":" + PUERTOREPLICA1
@@ -84,7 +85,31 @@ func TestPrimerasPruebas(t *testing.T) { // (m *testing.M) {
 }
 
 // TEST primer rango
-func TestAcuerdosConFallos(t *testing.T) { // (m *testing.M) {
+//func TestAcuerdosConFallos(t *testing.T) { // (m *testing.M) {
+// <setup code>
+// Crear canal de resultados de ejecuciones ssh en maquinas remotas
+//	cfg := makeCfgDespliegue(t,
+//		3,
+//		[]string{REPLICA1, REPLICA2, REPLICA3},
+//		[]bool{true, true, true})
+
+// tear down code
+// eliminar procesos en máquinas remotas
+//	defer cfg.stop()
+
+// Test5: Se consigue acuerdo a pesar de desconexiones de seguidor
+//	t.Run("T5:AcuerdoAPesarDeDesconexionesDeSeguidor ",
+//		func(t *testing.T) { cfg.AcuerdoApesarDeSeguidor(t) })
+
+//	t.Run("T5:SinAcuerdoPorFallos ",
+//		func(t *testing.T) { cfg.SinAcuerdoPorFallos(t) })
+
+//	t.Run("T5:SometerConcurrentementeOperaciones ",
+//		func(t *testing.T) { cfg.SometerConcurrentementeOperaciones(t) })
+
+//}
+
+func TestPrimero(t *testing.T) { // (m *testing.M) {
 	// <setup code>
 	// Crear canal de resultados de ejecuciones ssh en maquinas remotas
 	cfg := makeCfgDespliegue(t,
@@ -97,13 +122,43 @@ func TestAcuerdosConFallos(t *testing.T) { // (m *testing.M) {
 	defer cfg.stop()
 
 	// Test5: Se consigue acuerdo a pesar de desconexiones de seguidor
-	t.Run("T5:AcuerdoAPesarDeDesconexionesDeSeguidor ",
+	t.Run("T1:AcuerdoAPesarDeDesconexionesDeSeguidor ",
 		func(t *testing.T) { cfg.AcuerdoApesarDeSeguidor(t) })
 
-	t.Run("T5:SinAcuerdoPorFallos ",
+}
+
+func TestSegundo(t *testing.T) { // (m *testing.M) {
+	// <setup code>
+	// Crear canal de resultados de ejecuciones ssh en maquinas remotas
+	cfg := makeCfgDespliegue(t,
+		3,
+		[]string{REPLICA1, REPLICA2, REPLICA3},
+		[]bool{true, true, true})
+
+	// tear down code
+	// eliminar procesos en máquinas remotas
+	defer cfg.stop()
+
+	// Test5: Se consigue acuerdo a pesar de desconexiones de seguidor
+	t.Run("T2:NoAcuerdoDesconexionesDeSeguidores ",
 		func(t *testing.T) { cfg.SinAcuerdoPorFallos(t) })
 
-	t.Run("T5:SometerConcurrentementeOperaciones ",
+}
+
+func TestTercero(t *testing.T) { // (m *testing.M) {
+	// <setup code>
+	// Crear canal de resultados de ejecuciones ssh en maquinas remotas
+	cfg := makeCfgDespliegue(t,
+		3,
+		[]string{REPLICA1, REPLICA2, REPLICA3},
+		[]bool{true, true, true})
+
+	// tear down code
+	// eliminar procesos en máquinas remotas
+	defer cfg.stop()
+
+	// Test5: Se consigue acuerdo a pesar de desconexiones de seguidor
+	t.Run("T3:OperacionesConcurrentes",
 		func(t *testing.T) { cfg.SometerConcurrentementeOperaciones(t) })
 
 }
@@ -158,7 +213,7 @@ func (cfg *configDespliegue) stop() {
 
 // Se pone en marcha una replica ?? - 3 NODOS RAFT
 func (cfg *configDespliegue) soloArranqueYparadaTest1(t *testing.T) {
-	//t.Skip("SKIPPED soloArranqueYparadaTest1")
+	t.Skip("SKIPPED soloArranqueYparadaTest1")
 
 	fmt.Println(t.Name(), ".....................")
 
@@ -184,7 +239,7 @@ func (cfg *configDespliegue) soloArranqueYparadaTest1(t *testing.T) {
 
 // Primer lider en marcha - 3 NODOS RAFT
 func (cfg *configDespliegue) elegirPrimerLiderTest2(t *testing.T) {
-	//t.Skip("SKIPPED ElegirPrimerLiderTest2")
+	t.Skip("SKIPPED ElegirPrimerLiderTest2")
 
 	fmt.Println(t.Name(), ".....................")
 
@@ -204,7 +259,7 @@ func (cfg *configDespliegue) elegirPrimerLiderTest2(t *testing.T) {
 
 // Fallo de un primer lider y reeleccion de uno nuevo - 3 NODOS RAFT
 func (cfg *configDespliegue) falloAnteriorElegirNuevoLiderTest3(t *testing.T) {
-	//	t.Skip("SKIPPED FalloAnteriorElegirNuevoLiderTest3")
+	t.Skip("SKIPPED FalloAnteriorElegirNuevoLiderTest3")
 
 	fmt.Println(t.Name(), ".....................")
 
@@ -216,7 +271,7 @@ func (cfg *configDespliegue) falloAnteriorElegirNuevoLiderTest3(t *testing.T) {
 	// Desconectar lider
 	// ???
 	cfg.stopLider(3)
-	time.Sleep(5000 * time.Millisecond)
+	time.Sleep(5500 * time.Millisecond)
 	//	cfg.stopLider(3)
 
 	fmt.Printf("Comprobar nuevo lider\n")
@@ -233,6 +288,57 @@ func (cfg *configDespliegue) tresOperacionesComprometidasEstable(t *testing.T) {
 	t.Skip("SKIPPED tresOperacionesComprometidasEstable")
 
 	// A completar ???
+	fmt.Println(t.Name(), ".....................")
+	cfg.startDistributedProcesses()
+
+	time.Sleep(6000 * time.Millisecond)
+	//	fmt.Printf("Lider inicial\n")
+	cfg.pruebaUnLider(3)
+
+	idLider := cfg.leader(3)
+
+	time.Sleep(4 * time.Second)
+	var op maquinaestados.TipoOperacion
+	op.Operacion = "escribir"
+	op.Clave = "holita"
+	op.Valor = "caracolita"
+	cfg.comprometerOperacion(idLider, op, "escrito")
+
+	op.Operacion = "leer"
+	op.Clave = "holita"
+	op.Valor = ""
+	cfg.comprometerOperacion(idLider, op, "caracolita")
+
+	op.Operacion = "leer"
+	op.Clave = "holit"
+	op.Valor = ""
+	cfg.comprometerOperacion(idLider, op, "")
+
+}
+
+func (cfg *configDespliegue) leader(numreplicas int) int {
+	//var reply raft.Vacio
+	for i := 0; i < numreplicas; i++ {
+		_, _, c, _ := cfg.obtenerEstadoRemoto(i)
+		if c {
+			return i
+		}
+	}
+	return -1
+
+}
+
+func (cfg *configDespliegue) comprometerOperacion(replica int, op maquinaestados.TipoOperacion, resultadoDeseado string) {
+	fmt.Println("Intento comprometer en la replica ", replica, " la entrada ", op.Operacion, " ", op.Clave, " ", op.Valor)
+	var reply raft.ResultadoRemoto
+	err := cfg.nodosRaft[replica].CallTimeout("NodoRaft.SometerOperacionRaft", &op, &reply, 2000*time.Millisecond)
+	check.CheckError(err, "Error en llamada RPC SometerOperacionRaft")
+
+	if reply.IndiceRegistro == -1 || reply.ValorADevolver != resultadoDeseado || !reply.EsLider {
+		cfg.t.Fatalf("Estado incorrecto en replica %d en subtest %s, resultado obtenido: %s, resultado deseado: %s",
+			replica, cfg.t.Name(), reply.ValorADevolver, resultadoDeseado)
+	}
+
 }
 
 // Se consigue acuerdo a pesar de desconexiones de seguidor -- 3 NODOS RAFT
@@ -242,35 +348,143 @@ func (cfg *configDespliegue) AcuerdoApesarDeSeguidor(t *testing.T) {
 	// A completar ???
 
 	// Comprometer una entrada
+	fmt.Println(t.Name(), ".....................")
+	cfg.startDistributedProcesses()
 
 	//  Obtener un lider y, a continuación desconectar una de los nodos Raft
+	time.Sleep(6000 * time.Millisecond)
+	//	fmt.Printf("Lider inicial\n")
+	cfg.pruebaUnLider(3)
+
+	cfg.desconectaSeguidor(3)
+
+	idLider := cfg.leader(3)
+
+	time.Sleep(4 * time.Second)
+	var op maquinaestados.TipoOperacion
+	op.Operacion = "escribir"
+	op.Clave = "holita"
+	op.Valor = "caracolita"
+	cfg.comprometerOperacion(idLider, op, "escrito")
+
+	op.Operacion = "leer"
+	op.Clave = "holita"
+	op.Valor = ""
+	cfg.comprometerOperacion(idLider, op, "caracolita")
+
+	op.Operacion = "leer"
+	op.Clave = "holit"
+	op.Valor = ""
+	cfg.comprometerOperacion(idLider, op, "")
 
 	// Comprobar varios acuerdos con una réplica desconectada
 
 	// reconectar nodo Raft previamente desconectado y comprobar varios acuerdos
 }
 
+func (cfg *configDespliegue) desconectaSeguidor(numreplicas int) {
+	var reply raft.Vacio
+	for i := 0; i < numreplicas; i++ {
+		_, _, c, _ := cfg.obtenerEstadoRemoto(i)
+		if !c {
+			err := cfg.nodosRaft[i].CallTimeout("NodoRaft.ParaNodo",
+				raft.Vacio{}, &reply, 10*time.Millisecond)
+			cfg.t.Log("Paro la replica ", i)
+			check.CheckError(err, "Error en llamada RPC Para nodo")
+			break
+		}
+	}
+}
+
+func (cfg *configDespliegue) NOcomprometerOperacion(replica int, op maquinaestados.TipoOperacion, resultadoDeseado string) {
+	fmt.Println("Intento comprometer en la replica ", replica, " la entrada ", op.Operacion, " ", op.Clave, " ", op.Valor)
+	var reply raft.ResultadoRemoto
+	err := cfg.nodosRaft[replica].CallTimeout("NodoRaft.SometerOperacionRaft", &op, &reply, 2000*time.Millisecond)
+	check.CheckError(err, "Error en llamada RPC SometerOperacionRaft")
+
+	if reply.IndiceRegistro == -1 || reply.ValorADevolver != resultadoDeseado || !reply.EsLider {
+		cfg.t.Fatalf("Estado incorrecto en replica %d en subtest %s",
+			replica, cfg.t.Name())
+	}
+
+}
+
 // NO se consigue acuerdo al desconectarse mayoría de seguidores -- 3 NODOS RAFT
 func (cfg *configDespliegue) SinAcuerdoPorFallos(t *testing.T) {
 	t.Skip("SKIPPED SinAcuerdoPorFallos")
 
-	// A completar ???
+	fmt.Println(t.Name(), ".....................")
+	cfg.startDistributedProcesses()
 
-	// Comprometer una entrada
+	//  Obtener un lider y, a continuación desconectar una de los nodos Raft
+	time.Sleep(5000 * time.Millisecond)
+	//	fmt.Printf("Lider inicial\n")
+	cfg.pruebaUnLider(3)
 
-	//  Obtener un lider y, a continuación desconectar 2 de los nodos Raft
+	idLider := cfg.desconectaSeguidores(3)
 
-	// Comprobar varios acuerdos con 2 réplicas desconectada
+	time.Sleep(4 * time.Second)
+	var op maquinaestados.TipoOperacion
+	op.Operacion = "escribir"
+	op.Clave = "holita"
+	op.Valor = "caracolita"
+	cfg.comprometerOperacion(idLider, op, "error")
 
-	// reconectar lo2 nodos Raft  desconectados y probar varios acuerdos
+	op.Operacion = "leer"
+	op.Clave = "holita"
+	op.Valor = ""
+	cfg.comprometerOperacion(idLider, op, "error")
+
+	op.Operacion = "leer"
+	op.Clave = "holit"
+	op.Valor = ""
+	cfg.comprometerOperacion(idLider, op, "error")
+}
+
+func (cfg *configDespliegue) desconectaSeguidores(numreplicas int) int {
+	var reply raft.Vacio
+	lider := -1
+	for i := 0; i < numreplicas; i++ {
+		_, _, c, _ := cfg.obtenerEstadoRemoto(i)
+		if !c {
+			cfg.t.Log("Paro la replica ", i)
+			err := cfg.nodosRaft[i].CallTimeout("NodoRaft.ParaNodo",
+				raft.Vacio{}, &reply, 10*time.Millisecond)
+			check.CheckError(err, "Error en llamada RPC Para nodo")
+		} else {
+			lider = i
+		}
+	}
+	return lider
 }
 
 // Se somete 5 operaciones de forma concurrente -- 3 NODOS RAFT
 func (cfg *configDespliegue) SometerConcurrentementeOperaciones(t *testing.T) {
-	t.Skip("SKIPPED SometerConcurrentementeOperaciones")
+	//t.Skip("SKIPPED SometerConcurrentementeOperaciones")
 
 	// A completar ???
+	//	t.Skip("SKIPPED SinAcuerdoPorFallos")
 
+	fmt.Println(t.Name(), ".....................")
+	cfg.startDistributedProcesses()
+
+	//  Obtener un lider y, a continuación desconectar una de los nodos Raft
+	time.Sleep(5000 * time.Millisecond)
+	//	fmt.Printf("Lider inicial\n")
+	cfg.pruebaUnLider(3)
+
+	idLider := cfg.leader(3)
+
+	var op maquinaestados.TipoOperacion
+	op.Operacion = "leer"
+	op.Clave = "holita"
+	op.Valor = ""
+
+	for i := 0; i < 5; i++ {
+		cfg.comprometerOperacionConc(idLider, op, i)
+	}
+
+	cfg.comprobarMandato(3)
 	// un bucle para estabilizar la ejecucion
 
 	// Obtener un lider y, a continuación someter una operacion
@@ -280,6 +494,29 @@ func (cfg *configDespliegue) SometerConcurrentementeOperaciones(t *testing.T) {
 	// Comprobar estados de nodos Raft, sobre todo
 	// el avance del mandato en curso e indice de registro de cada uno
 	// que debe ser identico entre ellos
+}
+
+func (cfg *configDespliegue) comprometerOperacionConc(replica int, op maquinaestados.TipoOperacion, resultadoDeseado int) {
+	fmt.Println("Intento comprometer en la replica ", replica, " la entrada ", op.Operacion, " ", op.Clave, " ", op.Valor)
+	var reply raft.ResultadoRemoto
+	err := cfg.nodosRaft[replica].CallTimeout("NodoRaft.SometerOperacionRaft", &op, &reply, 5000*time.Millisecond)
+	check.CheckError(err, "Error en llamada RPC SometerOperacionRaft")
+
+	if reply.IndiceRegistro != resultadoDeseado || !reply.EsLider {
+		cfg.t.Fatalf("Estado incorrecto en replica %d en subtest %s, resultado obtenido: %d, resultado deseado: %d",
+			replica, cfg.t.Name(), reply.IndiceRegistro, resultadoDeseado)
+	}
+
+}
+
+func (cfg *configDespliegue) comprobarMandato(numreplicas int) {
+	for i := 0; i+1 < numreplicas; i++ {
+		_, a, _, _ := cfg.obtenerEstadoRemoto(i)
+		_, b, _, _ := cfg.obtenerEstadoRemoto(i + 1)
+		if a != b {
+			cfg.t.Fatalf("Estado incorrecto en replica %d o  en la replica %d en subtest %s", i, i+1, cfg.t.Name())
+		}
+	}
 }
 
 // --------------------------------------------------------------------------

@@ -189,12 +189,12 @@ func (nr *NodoRaft) obtenerEstado() (int, int, bool, int) {
 // El tercer valor es true si el nodo cree ser el lider
 // Cuarto valor es el lider, es el indice del líder si no es él
 func (nr *NodoRaft) someterOperacion(
-	operacion maquinaestados.TipoOperacion) (int, int, bool, int, string) {
+	operacion maquinaestados.TipoOperacion) (string, int, int, bool, int) {
 
-	indice, mandato, EsLider, idLider, valorADevolver := -1, -1, nr.IdLider == nr.Yo, nr.IdLider, ""
+	indice, mandato, EsLider, idLider := -1, nr.CurrentTerm, nr.IdLider == nr.Yo, nr.IdLider
 
 	if !EsLider {
-		return -1, -1, false, nr.IdLider, valorADevolver
+		return "error", -1, nr.CurrentTerm, false, nr.IdLider
 	}
 	// Vuestro codigo aqui
 	prevLogIndex, prevLogTerm := -1, -1
@@ -204,12 +204,12 @@ func (nr *NodoRaft) someterOperacion(
 		prevLogTerm = nr.Logs[nr.CommitIndex].Mandato
 	}
 	var entries []maquinaestados.AplicaOperacion
-	entries = append(entries, maquinaestados.AplicaOperacion{nr.CurrentTerm, operacion})
+	entries = append(entries, maquinaestados.AplicaOperacion{Mandato: nr.CurrentTerm, Operacion: operacion})
 
 	return nr.gestionaOperacion(entries, prevLogIndex, prevLogTerm, indice, mandato, EsLider, idLider) // !!!!!!
 }
 
-func (nr *NodoRaft) gestionaOperacion(entries []maquinaestados.AplicaOperacion, prevLogIndex int, prevLogTerm int, indice int, mandato int, EsLider bool, idLider int) (int, int, bool, int, string) {
+func (nr *NodoRaft) gestionaOperacion(entries []maquinaestados.AplicaOperacion, prevLogIndex int, prevLogTerm int, indice int, mandato int, EsLider bool, idLider int) (string, int, int, bool, int) {
 
 	nr.Mux.Lock()
 	for i := 0; i < len(entries); i++ {
@@ -220,7 +220,7 @@ func (nr *NodoRaft) gestionaOperacion(entries []maquinaestados.AplicaOperacion, 
 	nr.Mux.Unlock()
 
 	out, mayoria, alive := nr.sendMsg(entries, prevLogIndex, prevLogTerm)
-	valorADevolver := ""
+	valorADevolver := "error"
 
 	if out {
 		nr.Mux.Lock()
@@ -233,7 +233,7 @@ func (nr *NodoRaft) gestionaOperacion(entries []maquinaestados.AplicaOperacion, 
 			valorADevolver = nr.hayMayoria(alive, valorADevolver)
 		}
 	}
-	return indice, mandato, EsLider, idLider, valorADevolver
+	return valorADevolver, indice, mandato, EsLider, idLider
 }
 
 func (nr *NodoRaft) hayMayoria(alive []bool, valorADevolver string) string {
@@ -275,6 +275,10 @@ type EstadoRemoto struct {
 	EstadoParcial
 }
 
+type EstadoRegistro struct {
+	LastApplied int
+}
+
 func (nr *NodoRaft) ObtenerEstadoNodo(args Vacio, reply *EstadoRemoto) error {
 	reply.IdNodo, reply.Mandato, reply.EsLider, reply.IdLider = nr.obtenerEstado()
 	return nil
@@ -296,11 +300,10 @@ type ResultadoRemoto struct {
 	EstadoParcial
 }
 
-func (nr *NodoRaft) SometerOperacionRaft(operacion maquinaestados.TipoOperacion,
-	reply *ResultadoRemoto) error {
+func (nr *NodoRaft) SometerOperacionRaft(operacion *maquinaestados.TipoOperacion, reply *ResultadoRemoto) error {
+	fmt.Println("Someter operacion ", operacion.Operacion, " ", operacion.Clave, " ", operacion.Valor)
 
-	reply.IndiceRegistro, reply.Mandato, reply.EsLider, reply.IdLider,
-		reply.ValorADevolver = nr.someterOperacion(operacion)
+	reply.ValorADevolver, reply.IndiceRegistro, reply.Mandato, reply.EsLider, reply.IdLider = nr.someterOperacion(*operacion)
 	return nil
 }
 

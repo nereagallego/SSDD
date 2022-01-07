@@ -43,7 +43,7 @@ func (me *MaquinaEstados) Receive() {
 			me.CanalRespuesta <- me.Leer(op.Operacion.Clave)
 		} else if op.Operacion.Operacion == "escribir" {
 			me.Escribir(op.Operacion.Clave, op.Operacion.Valor)
-			me.CanalRespuesta <- ""
+			me.CanalRespuesta <- "escrito"
 		}
 	}
 }
