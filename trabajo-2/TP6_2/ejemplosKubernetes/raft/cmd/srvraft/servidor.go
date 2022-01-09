@@ -25,6 +25,7 @@ func (t *Arith) Mul(args *Args, reply *int) error {
 
 func main() {
 	args := os.Args
+
 	if len(os.Args) >= 2 {
 
 		//	me, _ := strconv.Atoi(os.Args[1])
@@ -39,7 +40,7 @@ func main() {
 		// Resto de argumento son los end points como strings
 		// De todas la replicas-> pasarlos a HostPort
 		i := 0
-		for _, endPoint := range os.Args[3:] {
+		for _, endPoint := range os.Args[2:] {
 			nodos = append(nodos, rpctimeout.HostPort(endPoint))
 			if endPoint == miIp {
 				me = i

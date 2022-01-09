@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: almacen
   labels:
-    app: rep
+    app: almacen
 spec:
   clusterIP: None
   selector:      # tiene que coincidir con label definido en pod de StatefulSet
-    app: rep  # Para dar de alta automaticamente en DNS a los PODS ligados
+    app: almacen  # Para dar de alta automaticamente en DNS a los PODS ligados
   ports:
   - port: 6000
     name: servidor-port
@@ -18,18 +18,19 @@ spec:
 kind: StatefulSet
 apiVersion: apps/v1
 metadata:
-  name: r
+  name: raft
 spec:
   serviceName: almacen
-  replicas: 2
+  replicas: 3
   podManagementPolicy: Parallel   # por defecto seria OrderedReady (secuencial)
+  
   selector:
     matchLabels:
-      app: rep    # tiene que corresponder a .spec.template.metadata.labels
+      app: almacen    # tiene que corresponder a .spec.template.metadata.labels
   template:
     metadata:
       labels:
-        app: rep
+        app: almacen
     spec:
       terminationGracePeriodSeconds: 10
       containers:
@@ -44,23 +45,35 @@ spec:
               fieldPath: metadata.name
         command:
         - servidor
-        args:
+#        args:
         - $(MINOMBREPOD).$(MISUBDOMINIODNS):6000
-        - r-0.$(MISUBDOMINIODNS):6000
-        - r-1.$(MISUBDOMINIODNS):6000
-#        - r-2.$(MISUBDOMINIODNS):6000
+        - raft-0.$(MISUBDOMINIODNS):6000
+        - raft-1.$(MISUBDOMINIODNS):6000
+        - raft-2.$(MISUBDOMINIODNS):6000
         ports:
         - containerPort: 6000
         volumeMounts:
-        - name: fichero
-          mountPath: ./
+        - name: www
+          mountPath: /usr/share/nginx/html
   volumeClaimTemplates:
-    - metadata:
-        name: fichero
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 1Gi
+  - metadata:
+      name: www
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 1Gi
+#        volumeMounts:
+#        - name: fichero
+#          mountPath: ./
+#  volumeClaimTemplates:
+#    - metadata:
+#        name: fichero
+#      spec:
+#        accessModes: [ "ReadWriteOnce" ]
+#        resources:
+#          requests:
+#            storage: 1Gi
 
 
