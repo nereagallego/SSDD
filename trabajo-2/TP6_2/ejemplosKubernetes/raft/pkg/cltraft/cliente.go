@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"raft/internal/comun/check"
 	"raft/internal/comun/rpctimeout"
@@ -35,10 +35,10 @@ func main() {
 		//out := client.Call("NodoRaft.SometerOperacionRaft", &arg, &replay)
 		//	fmt.Println(out)
 
-		fmt.Println(replay.ValorADevolver)
+		log.Println(replay.ValorADevolver)
 
 		//	fmt.Println("Arith: %d*%d=%d", arg.A, arg.B, replay)
 	} else {
-		fmt.Println("Usage: go run " + args[0] + " endpointMaster operacion clave valor")
+		log.Println("Usage: go run " + args[0] + " endpointMaster operacion clave valor")
 	}
 }

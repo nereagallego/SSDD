@@ -21,7 +21,7 @@ metadata:
   name: r
 spec:
   serviceName: almacen
-  replicas: 3
+  replicas: 2
   podManagementPolicy: Parallel   # por defecto seria OrderedReady (secuencial)
   selector:
     matchLabels:
@@ -44,11 +44,23 @@ spec:
               fieldPath: metadata.name
         command:
         - servidor
-        - $(MINOMBREPOD).$(MISUBDOMINIODNS):6000
         args:
-          - .spec.replicas
-          - $(MISUBDOMINIODNS)
+        - $(MINOMBREPOD).$(MISUBDOMINIODNS):6000
+        - r-0.$(MISUBDOMINIODNS):6000
+        - r-1.$(MISUBDOMINIODNS):6000
+#        - r-2.$(MISUBDOMINIODNS):6000
         ports:
         - containerPort: 6000
+        volumeMounts:
+        - name: fichero
+          mountPath: ./
+  volumeClaimTemplates:
+    - metadata:
+        name: fichero
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
 
 

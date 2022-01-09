@@ -5,7 +5,6 @@ import (
 	"net"
 	"net/rpc"
 	"os"
-	"strconv"
 
 	"raft/internal/comun/rpctimeout"
 	"raft/internal/maquinaestados"
@@ -26,29 +25,35 @@ func (t *Arith) Mul(args *Args, reply *int) error {
 
 func main() {
 	args := os.Args
-	if len(os.Args) >= 3 {
+	if len(os.Args) >= 2 {
 
 		//	me, _ := strconv.Atoi(os.Args[1])
 		miIp := os.Args[1]
-		numReplicas, _ := strconv.Atoi(os.Args[2])
-		dom := os.Args[3]
+		//	numReplicas, _ := strconv.Atoi(os.Args[2])
+		//	dom := os.Args[3]
+		me := -1
 
 		//check.CheckError(err, "Main, mal numero entero de indice de nodo:")
 
 		var nodos []rpctimeout.HostPort
 		// Resto de argumento son los end points como strings
 		// De todas la replicas-> pasarlos a HostPort
-		//	for _, endPoint := range os.Args[3:] {
-		//		nodos = append(nodos, rpctimeout.HostPort(endPoint))
-		//	}
-		me := -1
-		for i := 0; i < numReplicas; i++ {
-			ip := "r-" + strconv.Itoa(i) + "." + dom
-			nodos = append(nodos, rpctimeout.HostPort(ip))
-			if ip == miIp {
+		i := 0
+		for _, endPoint := range os.Args[3:] {
+			nodos = append(nodos, rpctimeout.HostPort(endPoint))
+			if endPoint == miIp {
 				me = i
 			}
+			i++
 		}
+
+		//	for i := 0; i < numReplicas; i++ {
+		//	ip := "r-" + strconv.Itoa(i) + "." + dom
+		//		nodos = append(nodos, rpctimeout.HostPort(ip))
+		//		if ip == miIp {
+		//			me = i
+		//		}
+		//	}
 		if me == -1 {
 			os.Exit(1)
 		}
