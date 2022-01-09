@@ -143,7 +143,7 @@ func NuevoNodo(nodos []rpctimeout.HostPort, yo int,
 
 	go nr.gestionRaft()
 	// Your initialization code here (2A, 2B)
-	fmt.Println("Nodo creado")
+	log.Println("Nodo creado")
 	return nr
 }
 
@@ -215,7 +215,7 @@ func (nr *NodoRaft) gestionaOperacion(entries []maquinaestados.AplicaOperacion, 
 	for i := 0; i < len(entries); i++ {
 		nr.Logs = append(nr.Logs, entries[i])
 		nr.CommitIndex++
-		fmt.Println("Entrada añadida")
+		log.Println("Entrada añadida")
 	}
 	nr.Mux.Unlock()
 
@@ -249,7 +249,7 @@ func (nr *NodoRaft) hayMayoria(alive []bool, valorADevolver string) string {
 			go nr.Nodos[i].CallTimeout("NodoRaft.AplicarOperacion", nr.LastApplied, Vacio{}, time.Duration(TIME_MSG)*time.Millisecond)
 		}
 	}
-	fmt.Println("Aplicada a la maquina de estados")
+	log.Println("Aplicada a la maquina de estados")
 	return valorADevolver
 }
 
@@ -285,7 +285,7 @@ func (nr *NodoRaft) ObtenerEstadoNodo(args Vacio, reply *EstadoRemoto) error {
 }
 
 func (nr *NodoRaft) AplicarOperacion(lastApplied int, reply *Vacio) error {
-	fmt.Println("aplico a la maquina de estados")
+	log.Println("aplico a la maquina de estados")
 	for i := nr.LastApplied + 1; i <= lastApplied; i++ {
 		nr.CanalAplicar <- nr.Logs[i]
 		_ = <-nr.CanalRespuesta
@@ -301,7 +301,7 @@ type ResultadoRemoto struct {
 }
 
 func (nr *NodoRaft) SometerOperacionRaft(operacion *maquinaestados.TipoOperacion, reply *ResultadoRemoto) error {
-	fmt.Println("Someter operacion ", operacion.Operacion, " ", operacion.Clave, " ", operacion.Valor)
+	log.Println("Someter operacion ", operacion.Operacion, " ", operacion.Clave, " ", operacion.Valor)
 
 	reply.ValorADevolver, reply.IndiceRegistro, reply.Mandato, reply.EsLider, reply.IdLider = nr.someterOperacion(*operacion)
 	return nil
@@ -365,7 +365,7 @@ func (nr *NodoRaft) PedirVoto(args *ArgsPeticionVoto,
 		reply.VoteGranted = false
 
 	} else {
-		fmt.Println("He votado a ", args.CandidateId)
+		log.Println("He votado a ", args.CandidateId)
 		nr.Hevotado = true
 		nr.VotedFor = args.CandidateId
 	}
@@ -410,7 +410,7 @@ func (nr *NodoRaft) enviarPeticionVoto(nodo int, args *ArgsPeticionVoto,
 		return false
 	}
 	if reply.VoteGranted {
-		fmt.Println("me han votado")
+		log.Println("me han votado")
 		nr.Voto <- true
 	}
 	return true
@@ -456,7 +456,7 @@ func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesR
 				nr.Logs = append(nr.Logs, args.Entries[i])
 			}
 			nr.CommitIndex++
-			fmt.Println("entrada añadida")
+			log.Println("entrada añadida")
 		}
 		reply.Success = true
 		nr.Mux.Unlock()
@@ -509,7 +509,7 @@ func (nr *NodoRaft) sigueVivo(noAlivenoSucced bool, i int, reply []AppendEntries
 	}
 	arg := AppendEntriesArgs{nr.CurrentTerm, nr.IdLider, nr.NextIndex[i] - 1, ultimoMandato, nr.entradas(nr.NextIndex[i]), nr.CommitIndex}
 	go nr.Nodos[i].CallTimeout("NodoRaft.AppendEntries", &arg, &reply[i], 100*time.Millisecond)
-	fmt.Println("Mando al nodo ", i, " la entrada ", nr.NextIndex[i])
+	log.Println("Mando al nodo ", i, " la entrada ", nr.NextIndex[i])
 	return noAlivenoSucced
 }
 
@@ -537,7 +537,7 @@ func (nr *NodoRaft) sendMsg(entradas []maquinaestados.AplicaOperacion, prevLogIn
 	time.Sleep(time.Duration(TIME_MSG) * time.Millisecond)
 	count := 0
 	if len(entradas) > 0 {
-		fmt.Println("busco mayoria")
+		log.Println("busco mayoria")
 		count, alive = nr.countSuccessReply(reply, alive)
 	}
 	if count == -1 {
@@ -555,7 +555,7 @@ func Min(a, b int) int {
 
 func (nr *NodoRaft) enviaLatidos() {
 	soyLider := true
-	fmt.Println("soy lider en el mandato ", nr.CurrentTerm)
+	log.Println("soy lider en el mandato ", nr.CurrentTerm)
 	var e []maquinaestados.AplicaOperacion
 	for soyLider {
 		out, _, _ := nr.sendMsg(e, 0, 0)
@@ -564,26 +564,26 @@ func (nr *NodoRaft) enviaLatidos() {
 		}
 		select {
 		case _ = <-nr.Latidos:
-			fmt.Println("era lider y ha llegado un latido")
+			log.Println("era lider y ha llegado un latido")
 			soyLider = false
 		case <-time.After(time.Duration(TIME_LATIDO) * time.Millisecond):
 
 		}
 
 	}
-	fmt.Println("ya no soy lider")
+	log.Println("ya no soy lider")
 }
 
 func (nr *NodoRaft) escuchaLatidos() error {
 	lider := true
-	fmt.Println("escucho latidos")
+	log.Println("escucho latidos")
 	for lider {
 		timeE := rand.Intn(timeMaxLatido)
 		select {
 		case _ = <-nr.Latidos:
 		case <-time.After(time.Duration(3*(TIME_LATIDO)/2+timeE) * time.Millisecond):
 			nr.Logger.Println("ha caido el lider")
-			fmt.Println("Lider ha caido")
+			log.Println("Lider ha caido")
 			lider = false
 		}
 	}
@@ -597,10 +597,10 @@ func (nr *NodoRaft) receive() (bool, int) {
 	for !fin {
 		select {
 		case _ = <-nr.Voto:
-			fmt.Println("me han votado")
+			log.Println("me han votado")
 			votes++
 		case _ = <-nr.Latidos: // ha llegado un latido
-			fmt.Println("Esperaba voto y ha llegado latido")
+			log.Println("Esperaba voto y ha llegado latido")
 			fin = true
 			fail = true
 		case <-time.After(time.Duration(TIME_VOTO) * time.Millisecond):
@@ -612,7 +612,7 @@ func (nr *NodoRaft) receive() (bool, int) {
 
 //devuelve true si exito, false si fallo
 func (nr *NodoRaft) nuevaEleccion() {
-	fmt.Println("inicio eleccion")
+	log.Println("inicio eleccion")
 	nr.CurrentTerm++
 	nr.Hevotado = true
 	nr.VotedFor = nr.Yo //me voto a mí mismo
@@ -640,7 +640,7 @@ func (nr *NodoRaft) nuevaEleccion() {
 
 func (nr *NodoRaft) gestionRaft() {
 	//esperar latidos
-	fmt.Println("gestionando")
+	log.Println("gestionando")
 	nr.Hevotado = false
 	time.Sleep(time.Duration(7000) * time.Millisecond)
 	for {
