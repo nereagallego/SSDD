@@ -438,6 +438,7 @@ func (nr *NodoRaft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesR
 	if args.Term < nr.CurrentTerm {
 		reply.Success = false
 	} else if len(args.Entries) == 0 {
+		log.Println("latido de: ", args.LeaderId)
 		if nr.CurrentTerm < args.Term {
 			nr.CurrentTerm = args.Term
 		}

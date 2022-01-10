@@ -13,8 +13,18 @@ spec:
     name: servidor-port
     protocol: TCP
     targetPort: 6000
-
 ---
+#kind: PersistentVolumeClaim
+#apiVersion: v1
+#metadata:
+#  name: www
+#spec:
+#  storageClassName: "" # Empty string must be explicitly set otherwise default StorageClass will be set
+#  accessModes: [ "ReadWriteOnce" ]
+#  resources:
+#    requests:
+#      storage: 1Gi
+#---
 kind: StatefulSet
 apiVersion: apps/v1
 metadata:
@@ -44,26 +54,26 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         command:
-        - servidor
-#        args:
+        - /servidor
+        args:
         - $(MINOMBREPOD).$(MISUBDOMINIODNS):6000
         - raft-0.$(MISUBDOMINIODNS):6000
         - raft-1.$(MISUBDOMINIODNS):6000
         - raft-2.$(MISUBDOMINIODNS):6000
         ports:
         - containerPort: 6000
-        volumeMounts:
-        - name: www
-          mountPath: /usr/share/nginx/html
-  volumeClaimTemplates:
-  - metadata:
-      name: www
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "standard"
-      resources:
-        requests:
-          storage: 1Gi
+#        volumeMounts:
+#        - name: www
+#          mountPath: ./
+#  volumeClaimTemplates:
+#  - metadata:
+#      name: www
+#    spec:
+#      accessModes: [ "ReadWriteOnce" ]
+#      storageClassName: ""
+#      resources:
+#        requests:
+#          storage: 1Gi
 #        volumeMounts:
 #        - name: fichero
 #          mountPath: ./
