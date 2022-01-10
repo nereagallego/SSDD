@@ -1,5 +1,5 @@
 FROM alpine
 
-COPY cliente /usr/local/bin/cliente
+COPY cliente /cliente
 
 EXPOSE 7000

@@ -39,7 +39,11 @@ spec:
           fieldPath: metadata.name
     command:
     - /cliente
-    - almacen.default.svc.cluster.local
+    args:
+    - almacen.default.svc.cluster.local:6000
+    - escribir
+    - holita
+    - cesar
     ports:
     - containerPort: 6000
 #---
