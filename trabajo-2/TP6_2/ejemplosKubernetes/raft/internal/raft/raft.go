@@ -78,7 +78,7 @@ type NodoRaft struct {
 var timeMaxLatido int = 1000
 var TIME_LATIDO int = 1000 / 18
 var TIME_MSG int = 10
-var TIME_VOTO int = 300
+var TIME_VOTO int = 500
 
 // Creacion de un nuevo nodo de eleccion
 //
@@ -582,7 +582,7 @@ func (nr *NodoRaft) escuchaLatidos() error {
 		timeE := rand.Intn(timeMaxLatido)
 		select {
 		case _ = <-nr.Latidos:
-		case <-time.After(time.Duration(3*(TIME_LATIDO)/2+timeE) * time.Millisecond):
+		case <-time.After(time.Duration(3*(TIME_LATIDO+timeE)/2) * time.Millisecond):
 			nr.Logger.Println("ha caido el lider")
 			log.Println("Lider ha caido")
 			lider = false
